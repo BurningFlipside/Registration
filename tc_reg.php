@@ -1,0 +1,136 @@
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+require_once('class.RegisterWizardPage.php');
+$page = new RegisterWizardPage('Theme Camp', 'Camp');
+
+$page->add_js_from_src('js/tc_reg.js');
+
+$index = $page->add_wizard_step('Basic Questions');
+$page->add_form_group($index, 'This camp has been previously registered at Flipside', 'camp_reg_prev', 'checkbox', 'This camp has been registered at Burning Flipside in a previous year.', array('class'=>'ignore', 'data-tabcontrol'=>'prev_camp'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'I would like to be part of a village', 'village', 'checkbox', 'This camp is either part of a village or would like to be.', array('class'=>'ignore', 'data-tabcontrol'=>'village_step'));
+$page->add_spacer($index);
+
+$index = $page->add_wizard_step('Previous Camp Information','prev_camp');
+$page->add_form_group($index, 'Previous Camp Name(s):', 'prevInfo_name', 'text', 'A list of names your camp has used previously.');
+$page->add_spacer($index);
+$page->add_form_group($index, 'Previous Number of Campers:', 'prevInfo_campers', 'text', 'The number of campers your camp had in the most recent year it was registered at Flipside.');
+$page->add_spacer($index);
+
+$index = $page->add_wizard_step('Village Information','village_step');
+$page->add_form_group($index, 'Village Name(s):', 'villageInfo_name', 'text', 'The name of the village this camp would like to be affiliated with. Leave blank if you are not part of a village, but would like to be.');
+$page->add_spacer($index);
+$page->add_form_group($index, 'What you would like your village to be like', 'villageInfo_desc', 'textarea', 'A description of what your camp would like to see in a village.');
+$page->add_spacer($index);
+
+$index = $page->add_wizard_step('Camp Contacts');
+$page->add_form_group($index, 'The camp lead is the only camp contact', 'just_me', 'checkbox', 'The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound.', array('class'=>'ignore'));
+$page->add_spacer($index);
+$accordion_ref = $page->add_accordion($index);
+$panels = array('Camp Lead', 'Safety Lead', 'Cleanup Lead', 'Volunteering', 'Sound Lead');
+$all_panels = array(
+                  array('label'=>'Name:', 'name'=>'name', 'type'=>'text', 'tooltip'=>'This is the name of the %s', 'required'=>TRUE),
+                  array('label'=>'Burner Name:', 'name'=>'burnerName', 'type'=>'text', 'tooltip'=>'This is the burner name/nickname of the %s'),
+                  array('label'=>'Email:', 'name'=>'email', 'type'=>'text', 'tooltip'=>'This is the email address of the %s', 'required'=>TRUE),
+                  array('label'=>'Phone:', 'name'=>'phone', 'type'=>'text', 'tooltip'=>'This is the phone number of the %s'),
+                  array('label'=>'This number can receive SMS messages:', 'name'=>'sms', 'type'=>'checkbox', 'tooltip'=>'This phone number can be used to recieve text messages'),
+              );
+$other = array(
+    'Safety Lead' => array('label'=>'How will your camp handle Safety/Fire/Injury issues?', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'How will your camp handle Safety/Fire/Injury issues?', 'required'=>TRUE),
+    'Cleanup Lead' => array('label'=>'How will your camp ensure you leave no trace?', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'How will your camp ensure you leave no trace?', 'required'=>TRUE),
+    'Volunteering'=> array('label'=>'Volunteer skills for the event:', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'What skills would your camp like to share with the event?', 'required'=>TRUE),
+    'Sound Lead' => array('label'=>'Sound System Description:', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'Describe your sound equipment (if any) and how you plan to adhere to the Event Sound Policy')
+);
+$panel_count = count($panels);
+$content_count = count($all_panels);
+for($i = 0; $i < $panel_count; $i++)
+{
+    $panel_ref = $page->add_accordion_panel($accordion_ref, $panels[$i]);
+    $camel = camelize($panels[$i]);
+    $lower = strtolower($panels[$i]);
+    for($j = 0; $j < $content_count; $j++)
+    {
+        $tooltip = sprintf($all_panels[$j]['tooltip'], $lower);
+        if(isset($all_panels[$j]['required']))
+        {
+            $extra = array('required'=>$all_panels[$j]['required']);
+        }
+        else
+        {
+            $extra = FALSE;
+        }
+        $page->add_form_group($panel_ref, $all_panels[$j]['label'], $camel.'_'.$all_panels[$j]['name'], $all_panels[$j]['type'], $tooltip, $extra);
+        $page->add_spacer($panel_ref);
+    }
+    if(isset($other[$panels[$i]]))
+    {
+        $tooltip = sprintf($other[$panels[$i]]['tooltip'], $lower);
+        if(isset($other[$panels[$i]]['required']))
+        {
+            $extra = array('required'=>$other[$panels[$i]]['required']);
+        }
+        else
+        {
+            $extra = FALSE;
+        }
+        $page->add_form_group($panel_ref, $other[$panels[$i]]['label'], $camel.'_'.$other[$panels[$i]]['name'], $other[$panels[$i]]['type'], $tooltip, $extra);
+        $page->add_spacer($panel_ref);
+    }
+}
+
+
+$index = $page->add_wizard_step('Placement Information');
+$page->add_form_group($index, 'Number of Campers:', 'placement_campers', 'text', 'The number of campers your camp plans to have this year.');
+$page->add_spacer($index);
+$options = array(
+    array('value'=>'any', 'text'=>'Any', 'selected'=>TRUE),
+    array('value'=>'effigyLoopLoud', 'text'=>'Effigy Loop - Loud'),
+    array('value'=>'centralLoud', 'text'=>'Central - Loud'),
+    array('value'=>'centralLessLoud', 'text'=>'Central - Less Loud'),
+    array('value'=>'badlandsLoud', 'text'=>'Badlands - Loud'),
+    array('value'=>'badlandsLessLoud', 'text'=>'Badlands - Less Loud')
+);
+$page->add_form_group($index, 'Preference 1:', 'placement_pref1', 'select', 'Your first choice for a general type of placement.', array('options'=>$options));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Preference 2:', 'placement_pref2', 'select', 'Your second choice for a general type of placement.', array('options'=>$options));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Preference 3:', 'placement_pref3', 'select', 'Your third choice for a general type of placement.', array('options'=>$options));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Preference Description:', 'placement_desc', 'textarea', 'Describe your ideal camping spot. Please include any camps you would like to be near or to avoid.');
+$page->add_spacer($index);
+
+$index = $page->add_wizard_step('Camp Infrastructure');
+$page->add_form_group($index, 'Number of Regular Size Tents:', 'placement_tents', 'text', 'Number of Tents less than 10 feet x 10 feet in size');
+$page->add_spacer($index);
+$page->add_raw_html($index, '
+                <table id="structs_table" class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Type</th>
+                            <th>Width (in feet)</th>
+                            <th>Length (in feet)</th>
+                            <th>Height (in feet)</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6">
+                                <div>
+                                    <button type="button" class="btn btn-primary" id="add_new_struct" onclick="add_new_struct_to_table()">Add New Structure</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>');
+
+$page->print_page();
+
+function camelize($value)
+{
+    return lcfirst(strtr(ucwords(strtr($value, array('_' => ' ', '.' => '_ ', '\\' => '_ '))), array(' ' => '')));
+}
+?>
