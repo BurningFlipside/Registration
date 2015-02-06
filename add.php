@@ -13,8 +13,8 @@ $page->body .= '
     <ul>
         <li><a href="tc_reg.php">Register a theme camp</a></li>
         <li><a href="art_reg.php">Register an art project</a></li>
-        <li><a href="art_car.php">Register an art car</a></li>
-        <li><a href="event.php">Register an event</a></li>
+        <li><a href="artCar_reg.php">Register an art car</a></li>
+        <li><a href="event_reg.php">Register an event</a></li>
     </ul>
 </div>';
 

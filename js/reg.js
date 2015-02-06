@@ -23,11 +23,11 @@ function tab_changed(e)
     var last_index = $(e.target).parent().siblings().last().index();
     if(tab_index >= last_index)
     {
-        $('.next').attr('class', 'next disabled');
+        $('.next').html('<a onclick="final_post(event)">Submit</a>');
     }
     else
     {
-        $('.next').attr('class', 'next');
+        $('.next').html('<a href="#">Next <span aria-hidden="true">&rarr;</span></a>');
     }
 }
 
@@ -66,6 +66,11 @@ function post_done(data)
     }
 }
 
+function final_post_done(data)
+{
+    console.log(data);
+}
+
 function post_data()
 {
     console.trace();
@@ -78,6 +83,24 @@ function post_data()
         data: data,
         success: post_done
     });
+}
+
+function final_post(e)
+{
+    e.preventDefault();
+    if(validate_current())
+    {
+        var data = form_data_to_obj();
+        data['_id'] = _id;
+        $.ajax({
+            url: 'ajax/proxy.php',
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            success: final_post_done
+        });
+    }
+    return false;
 }
 
 function next_tab(e)
