@@ -27,7 +27,7 @@ function tab_changed(e)
     }
     else
     {
-        $('.next').html('<a href="#">Next <span aria-hidden="true">&rarr;</span></a>');
+        $('.next').html('<a href="#" onclick="next_tab(event)">Next <span aria-hidden="true">&rarr;</span></a>');
     }
 }
 
@@ -48,6 +48,7 @@ function validate_current()
         if(value == null || value.length == 0)
         {
             control.parents('.form-group').prop('class', 'form-group has-error');
+            control.parents('.panel-collapse').collapse('show');
             ret = false;
         }
         else
@@ -219,8 +220,8 @@ function wizard_init()
     $('input[data-groupcontrol]').each(groupcontrol_change);
      $('input[data-questcontrol]').each(questcontrol_change);
     $('.navbar-nav').click(show_tab);
-    $('.previous a').click(prev_tab);
-    $('.next a').click(next_tab);
+    //$('.previous a').click(prev_tab);
+    //$('.next a').click(next_tab);
     $('.previous').attr('class', 'previous disabled');
     $('a[data-toggle="tab"]').on('shown.bs.tab', tab_changed);
 }

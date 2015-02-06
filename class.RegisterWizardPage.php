@@ -302,7 +302,7 @@ class RegisterWizardPage extends SecurePage
        {
            $ret.=' class="collapsed"';
        }
-       $ret.='data-toggle="collapse" data-parent="#accordion" href="#'.$panel['id'].'" aria-expanded="true" aria-controls="'.$panel['id'].'">';
+       $ret.='data-toggle="collapse" href="#'.$panel['id'].'" aria-expanded="true" aria-controls="'.$panel['id'].'">';
        $ret.=$panel['heading'];
        $ret.='</a></h4></div><div id="'.$panel['id'].'" class="panel-collapse collapse';
        if($selected)
@@ -419,8 +419,8 @@ class RegisterWizardPage extends SecurePage
                 <div class="tab-content">'.$this->print_content().'</div>
                 <nav>
                     <ul class="pager">
-                        <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Previous</a></li>
-                        <li class="next"><a href="#">Next <span aria-hidden="true">&rarr;</span></a></li>
+                        <li class="previous"><a href="#" onclick="prev_tab(event)"><span aria-hidden="true">&larr;</span> Previous</a></li>
+                        <li class="next"><a href="#" onclick="next_tab(event)">Next <span aria-hidden="true">&rarr;</span></a></li>
                     </ul>
                 </nav>
             </div>
