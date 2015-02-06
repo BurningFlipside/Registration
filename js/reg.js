@@ -105,6 +105,40 @@ function tabcontrol_change()
     }
 }
 
+function groupcontrol_change()
+{
+    var control = $(this);
+    var group_id = control.data('groupcontrol');
+    var group_ctrl = $('#'+group_id).parent('.panel');
+    if(control.is(':checked'))
+    {
+        group_ctrl.show();
+        group_ctrl.find('[data-was-required]').attr('required', 'true');
+    }
+    else
+    {
+        group_ctrl.hide();
+        group_ctrl.find('[required]').removeAttr('required').attr('data-was-required', 1);
+    }
+}
+
+function questcontrol_change()
+{
+    var control = $(this);
+    var quest_id = control.data('questcontrol');
+    var group_ctrl = $('#'+quest_id).parents('.form-group');
+    if(control.is(':checked'))
+    {
+        group_ctrl.show();
+        group_ctrl.find('[data-was-required]').attr('required', 'true');
+    }
+    else
+    {
+        group_ctrl.hide();
+        group_ctrl.find('[required]').removeAttr('required').attr('data-was-required', 1);
+    }
+}
+
 function add_val_to_field(obj, fieldname, val)
 {
     if(fieldname.indexOf('[]') != -1)
@@ -156,7 +190,11 @@ function wizard_init()
     _id = getParameterByName('_id');
     $('[title]').tooltip();
     $('input[data-tabcontrol]').change(tabcontrol_change);
+    $('input[data-groupcontrol]').change(groupcontrol_change);
+    $('input[data-questcontrol]').change(questcontrol_change);
     $('input[data-tabcontrol]').each(tabcontrol_change);
+    $('input[data-groupcontrol]').each(groupcontrol_change);
+     $('input[data-questcontrol]').each(questcontrol_change);
     $('.navbar-nav').click(show_tab);
     $('.previous a').click(prev_tab);
     $('.next a').click(next_tab);

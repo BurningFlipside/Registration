@@ -9,7 +9,7 @@ $page = new RegisterWizardPage('Art Project');
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'This project needs logistical help', 'need_logistics', 'checkbox', 'This project has logisical needs such as needing help transporting to the site, heavy equipment needs, outside volunteers etc.', array('class'=>'ignore', 'data-tabcontrol'=>'logistics'));
 $page->add_spacer($index);
-$page->add_form_group($index, 'This project has sound', 'has_sound', 'checkbox', 'This project will utilize amblified sound in some form.', array('class'=>'ignore', 'data-tabcontrol'=>'sound'));
+$page->add_form_group($index, 'This project has sound', 'has_sound', 'checkbox', 'This project will utilize amplified sound in some form.', array('class'=>'ignore', 'data-tabcontrol'=>'sound'));
 $page->add_spacer($index);
 $page->add_form_group($index, 'This project has flame effects or I would like to burn it', 'has_fire', 'checkbox', 'This project has flame effects or I would like to burn this piece.', array('class'=>'ignore', 'data-tabcontrol'=>'fire'));
 $page->add_spacer($index);
@@ -158,6 +158,10 @@ $options = array(
     array('value'=>'sunday', 'text'=>'Sunday')
 );
 $page->add_form_group($index, 'Arrival at Flipside:', 'information_arrival', 'select', 'When do you plan to arrive at Flipside.', array('options'=>$options, 'required'=>TRUE));
+$page->add_spacer($index);
+$page->add_form_group($index, 'This project requires a generator', 'information_power', 'checkbox', 'This project will use a generator.', array('data-questcontrol'=>'information_powerStats'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Power Requirements/Generator Information', 'information_powerStats', 'textarea', 'Please describe your power needs. And if you are bringing a generator and are interested in power sharing describe how much available power you will have.');
 $page->add_spacer($index);
 $page->add_form_group($index, 'Other Information', 'information_other', 'textarea', 'Please tell us ANYTHING that we may have missed');
 $page->add_spacer($index);
