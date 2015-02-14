@@ -48,7 +48,10 @@ function validate_current()
         if(value == null || value.length == 0)
         {
             control.parents('.form-group').prop('class', 'form-group has-error');
-            control.parents('.panel-collapse').collapse('show');
+            if(control.parents('.panel-collapse').length > 0)
+            {
+                control.parents('.panel-collapse').collapse('show');
+            }
             ret = false;
         }
         else
@@ -72,13 +75,76 @@ function final_post_done(data)
     console.log(data);
 }
 
+function get_page_name()
+{
+    var file, n;
+    file = window.location.pathname;
+    n = file.lastIndexOf('/');
+    if(n >= 0)
+    {
+        file = file.substring(n + 1);
+    }
+    return file;
+}
+
+function get_post_url()
+{
+    var url = 'ajax/proxy.php';
+    var page = get_page_name();
+    if(page.startsWith('tc_'))
+    {
+        if(_id == null)
+        {
+            url = 'api/tc/add';
+        }
+        else
+        {
+            url = 'api/tc/edit/'+_id;
+        }
+    }
+    else if(page.startsWith('art_'))
+    {
+        if(_id == null)
+        {
+            url = 'api/art/add';
+        }
+        else
+        {
+            url = 'api/art/edit/'+_id;
+        }
+    }
+    else if(page.startsWith('artCar_'))
+    {
+        if(_id == null)
+        {
+            url = 'api/dmv/add';
+        }
+        else
+        {
+            url = 'api/dmv/edit/'+_id;
+        }
+    }
+    else if(page.startsWith('event_'))
+    {
+        if(_id == null)
+        {
+            url = 'api/event/add';
+        }
+        else
+        {
+            url = 'api/event/edit/'+_id;
+        }
+    }
+    return url;
+}
+
 function post_data()
 {
     console.trace();
     var data = form_data_to_obj();
     data['_id'] = _id;
     $.ajax({
-        url: 'ajax/proxy.php',
+        url: get_post_url(),
         type: 'post',
         dataType: 'json',
         data: data,
@@ -94,7 +160,7 @@ function final_post(e)
         var data = form_data_to_obj();
         data['_id'] = _id;
         $.ajax({
-            url: 'ajax/proxy.php',
+            url: get_post_url(),
             type: 'post',
             dataType: 'json',
             data: data,
@@ -163,10 +229,27 @@ function questcontrol_change()
     }
 }
 
+function copytrigger_changed(e)
+{
+    var control = e.data;
+    var original = $('#'+control.data('copyfrom'));
+    control.val(original.val());
+}
+
+function setup_copycontrol()
+{
+    var control = $(this);
+    var trigger = control.data('copytrigger');
+    var trigger_control = $(trigger);
+    trigger_control.change(control, copytrigger_changed);
+}
+
 function add_val_to_field(obj, fieldname, val)
 {
-    if(fieldname.indexOf('[]') != -1)
+    var index = fieldname.indexOf('[]');
+    if(index != -1)
     {
+        fieldname = fieldname.substr(0, index);
         if(obj[fieldname] === undefined)
         {
             obj[fieldname] = [];
@@ -177,6 +260,37 @@ function add_val_to_field(obj, fieldname, val)
     {
         obj[fieldname] = val;
     }
+}
+
+function handle_files()
+{
+    var files = $(this)[0].files;
+    for(i = 0; i < files.length; i++)
+    {
+        var file = files[i];
+        var imageType = /image.*/;
+        if(!file.type.match(imageType))
+        {
+            alert('Not an image');
+            console.log(file);
+            continue;
+        }
+        var img = $(this).next('.obj');
+        if(img.length == 0)
+        {
+            img = $('<img>', {'class': 'obj', 'style':'max-width: 200px; max-height: 200px;'});
+        }
+        var reader = new FileReader();
+        reader.onloadend = function() {img.attr('src',reader.result);}
+        $(this).after(img);
+        reader.readAsDataURL(file);
+    }
+}
+
+function add_file_to_field(obj, fieldname, control)
+{
+    var src = control.nextAll('.obj').attr('src');
+    obj[fieldname] = src;
 }
 
 function form_data_to_obj()
@@ -199,11 +313,25 @@ function form_data_to_obj()
                 }
                 obj = obj[names[j]];
             }
-            add_val_to_field(obj, names[j], control.val());
+            if(control.attr('type') === 'file')
+            {
+                add_file_to_field(ret, name, control);
+            }
+            else
+            {
+                add_val_to_field(obj, names[j], control.val());
+            }
         }
         else
         {
-            add_val_to_field(ret, name, control.val());
+            if(control.attr('type') === 'file')
+            {
+                add_file_to_field(ret, name, control);
+            }
+            else
+            {
+                add_val_to_field(ret, name, control.val());
+            }
         }
     }
     return ret;
@@ -216,12 +344,12 @@ function wizard_init()
     $('input[data-tabcontrol]').change(tabcontrol_change);
     $('input[data-groupcontrol]').change(groupcontrol_change);
     $('input[data-questcontrol]').change(questcontrol_change);
+    $('input[type=file]').change(handle_files);
     $('input[data-tabcontrol]').each(tabcontrol_change);
     $('input[data-groupcontrol]').each(groupcontrol_change);
-     $('input[data-questcontrol]').each(questcontrol_change);
+    $('input[data-questcontrol]').each(questcontrol_change);
+    $('input[data-copytrigger]').each(setup_copycontrol);
     $('.navbar-nav').click(show_tab);
-    //$('.previous a').click(prev_tab);
-    //$('.next a').click(next_tab);
     $('.previous').attr('class', 'previous disabled');
     $('a[data-toggle="tab"]').on('shown.bs.tab', tab_changed);
 }

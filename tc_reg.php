@@ -61,6 +61,15 @@ for($i = 0; $i < $panel_count; $i++)
         {
             $extra = FALSE;
         }
+        if($i > 0)
+        {
+            if($extra === FALSE)
+            {
+                $extra = array();
+            }
+            $extra['data-copyfrom'] = camelize($panels[0]).'_'.$all_panels[$j]['name'];
+            $extra['data-copytrigger'] = '#just_me';
+        }
         $page->add_form_group($panel_ref, $all_panels[$j]['label'], $camel.'_'.$all_panels[$j]['name'], $all_panels[$j]['type'], $tooltip, $extra);
         $page->add_spacer($panel_ref);
     }

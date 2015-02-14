@@ -10,18 +10,19 @@ $user = FlipSession::get_user();
 if($user)
 {
     $camps = $db->getAllThemeCampsForUser($user->uid[0]);
+    $arts  = $db->getAllArtProjectsForUser($user->uid[0]);
 }
 else
 {
     $camps = array();
+    $arts  = array();
 }
 
 $manage_add = '';
-if(count($camps) > 0)
+if(count($camps) > 0 || count($arts) > 0)
 {
     $manage_add = '
-        <li><a href="add.php">Add a new registration</a></li>
-        <li><a href="tc_reg.php?_id='.$camps[0]->_id.'">Manage Your Registrations</a></li>
+        <li><a href="add.php">Manage Your Registrations</a></li>
     ';
 }
 else
