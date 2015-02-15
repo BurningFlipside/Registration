@@ -89,7 +89,7 @@ function get_page_name()
 
 function get_post_url()
 {
-    var url = 'ajax/proxy.php';
+    var url = null;
     var page = get_page_name();
     if(page.startsWith('tc_'))
     {
@@ -190,6 +190,11 @@ function tabcontrol_change()
     }
     else
     {
+        var others = $('[data-tabcontrol='+tab_id+']:checked');
+        if(others.length > 0)
+        {
+            return;
+        }
         $('#'+tab_id).attr('class', 'disabled');
         $('#'+tab_id+' a').attr('data-toggle', '');
     }
