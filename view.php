@@ -79,6 +79,7 @@ $page->body .= '
                     <table class="table" id="dmvTable">
                         <thead>
                             <tr>
+                                <th>Logo</th>
                                 <th>Name</th>
                                 <th>Teaser</th>
                             </tr>
@@ -99,6 +100,7 @@ $page->body .= '
                     <table class="table" id="eventTable">
                         <thead>
                             <tr>
+                                <th>Logo</th>
                                 <th>Name</th>
                                 <th>Teaser</th>
                             </tr>
