@@ -55,13 +55,13 @@ $page->body .= '
             <textarea class="form-control" rows="6" name="description" id="description" readonly></textarea>
         </div>
     </div>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#contact_dialog">Contact the camp lead</button>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#contact_dialog">Contact the lead</button>
 </div>
 <div id="contact_dialog" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="contact-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="contact-title" class="modal-title">Contact Camp Lead</h4>
+                <h4 id="contact-title" class="modal-title">Contact Lead</h4>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="_id" name="_id"/>
