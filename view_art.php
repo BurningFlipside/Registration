@@ -24,20 +24,20 @@ else
 $page->body .= '
 <div id="content">
     <div class="form-group">
-        <label for="name" class="col-sm-2 control-label">Camp Name:</label>
+        <label for="name" class="col-sm-2 control-label">Art Project Name:</label>
         <div class="col-sm-10">
             <input class="form-control" type="text" name="name" id="name" readonly/>
         </div>
     </div>
     <div class="clearfix visible-sm visible-md visible-lg"></div>
     <div class="form-group">
-        <label for="logo" class="col-sm-2 control-label">Camp Logo:</label>
+        <label for="logo" class="col-sm-2 control-label">Art Project Logo:</label>
         <div class="col-sm-10" id="logo">
         </div>
     </div>
     <div class="clearfix visible-sm visible-md visible-lg"></div>
     <div class="form-group">
-        <label for="site" class="col-sm-2 control-label">Camp Website:</label>
+        <label for="site" class="col-sm-2 control-label">Art Project Website:</label>
         <div class="col-sm-10" id="site">
         </div>
     </div>
