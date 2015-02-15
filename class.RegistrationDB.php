@@ -1,6 +1,5 @@
 <?php
 require_once("/var/www/secure_settings/class.FlipsideSettings.php");
-require_once('class.ThemeCamp.php');
 class RegistrationDB
 {
     private $client;
