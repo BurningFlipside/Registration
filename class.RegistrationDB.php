@@ -23,19 +23,40 @@ class RegistrationDB
         return FALSE;
     }
 
-    function getAllThemeCamps($year = FALSE)
+    function getAllFromCollection($collection, $year = FALSE)
     {
         if($year == FALSE)
         {
             $year = $this->getCurrentYear();
         }
-        $cursor = $this->db->camps->find(array('year'=>$year));
+        $col = $this->db->selectCollection($collection);
+        $cursor = $col->find(array('year'=>$year));
         $ret    = array();
         foreach($cursor as $doc)
         {
             array_push($ret, $doc);
         }
         return $ret;
+    }
+
+    function getAllThemeCamps($year = FALSE)
+    {
+        return $this->getAllFromCollection('tc', $year);
+    }
+
+    function getAllArtProjects($year = FALSE)
+    {
+        return $this->getAllFromCollection('art', $year);
+    }
+
+    function getAllArtCars($year = FALSE)
+    {
+        return $this->getAllFromCollection('dmv', $year);
+    }
+
+    function getAllEvents($year = FALSE)
+    {
+        return $this->getAllFromCollection('event', $year);
     }
 
     function getAllThemeCampsForUser($uid, $year = FALSE)
@@ -97,22 +118,7 @@ class RegistrationDB
             return TRUE;
         }
         return FALSE;
-    }
-
-    function getAllArtProjects($year = FALSE)
-    {
-        if($year == FALSE)
-        {
-            $year = $this->getCurrentYear();
-        }
-        $cursor = $this->db->art->find(array('year'=>$year));
-        $ret    = array();
-        foreach($cursor as $doc)
-        {
-            array_push($ret, $doc);
-        }
-        return $ret;
-    }
+    } 
 
     function getAllArtProjectsForUser($uid, $year = FALSE)
     {
@@ -175,19 +181,7 @@ class RegistrationDB
         return FALSE;
     }
 
-    function getAllArtCars($year = FALSE)
-    {
-        if($year == FALSE)
-        {
-            $year = $this->getCurrentYear();
-        }
-        $cursor = $this->db->dmv->find(array('year'=>$year));
-        $ret    = array();
-        foreach($cursor as $doc)
-        {
-            array_push($ret, $doc);
-        }
-        return $ret;
-    }
+    
 }
+// vim: set tabstop=4 shiftwidth=4 expandtab:
 ?>
