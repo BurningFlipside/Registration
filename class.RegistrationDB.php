@@ -23,14 +23,23 @@ class RegistrationDB
         return FALSE;
     }
 
-    function getAllFromCollection($collection, $year = FALSE)
+    function getAllFromCollection($collection, $year = FALSE, $uid = FALSE)
     {
         if($year == FALSE)
         {
             $year = $this->getCurrentYear();
         }
         $col = $this->db->selectCollection($collection);
-        $cursor = $col->find(array('year'=>$year));
+        $criteria = array();
+        if($year !== '*')
+        {
+            $criteria['year'] = $year;
+        }
+        if($uid !== FALSE)
+        {
+            $criteria['registrars'] = $uid;
+        }
+        $cursor = $col->find($criteria);
         $ret    = array();
         foreach($cursor as $doc)
         {
@@ -41,7 +50,7 @@ class RegistrationDB
 
     function getAllThemeCamps($year = FALSE)
     {
-        return $this->getAllFromCollection('tc', $year);
+        return $this->getAllFromCollection('camps', $year);
     }
 
     function getAllArtProjects($year = FALSE)
