@@ -4,14 +4,16 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Art Project');
 
-//$page->add_js_from_src('js/art_reg.js');
+$page->add_js_from_src('js/art_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'This project needs logistical help', 'need_logistics', 'checkbox', 'This project has logisical needs such as needing help transporting to the site, heavy equipment needs, outside volunteers etc.', array('class'=>'ignore', 'data-tabcontrol'=>'logistics'));
 $page->add_spacer($index);
 $page->add_form_group($index, 'This project has sound', 'has_sound', 'checkbox', 'This project will utilize amplified sound in some form.', array('class'=>'ignore', 'data-tabcontrol'=>'sound'));
 $page->add_spacer($index);
-$page->add_form_group($index, 'This project has flame effects or I would like to burn it', 'has_fire', 'checkbox', 'This project has flame effects or I would like to burn this piece.', array('class'=>'ignore', 'data-tabcontrol'=>'fire'));
+$page->add_form_group($index, 'This project has flame effects', 'has_fe', 'checkbox', 'This project has flame effects (propane or other combustable non-consuming effets).', array('class'=>'ignore', 'data-tabcontrol'=>'fire', 'data-questcontrol'=>'fire_flameEffects'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'I would like to burn this project', 'will_burn', 'checkbox', 'This project has flame effects or I would like to burn this piece.', array('class'=>'ignore', 'data-tabcontrol'=>'fire', 'data-questcontrol'=>'fire_burnPlan'));
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Art Team Contacts');
@@ -54,6 +56,17 @@ for($i = 0; $i < $panel_count; $i++)
             }
             $extra['data-copyfrom'] = camelize($panels[0]).'_'.$all_panels[$j]['name'];
             $extra['data-copytrigger'] = '#just_me';
+        }
+        else
+        {
+            if($all_panels[$j]['name'] === 'email')
+            {
+                if($extra === FALSE)
+                {
+                    $extra = array();
+                }
+                $extra['disabled'] = true;
+            }
         }
         $page->add_form_group($panel_ref, $all_panels[$j]['label'], $camel.'_'.$all_panels[$j]['name'], $all_panels[$j]['type'], $tooltip, $extra);
         $page->add_spacer($panel_ref);

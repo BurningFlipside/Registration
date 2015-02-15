@@ -1,26 +1,3 @@
-function just_me_clicked()
-{
-    if($('#just_me').is(':checked'))
-    {
-        if($('#safetyLead_name').val().length <= 0)
-        {
-            $('#safetyLead_name').val($('#campLead_name').val());
-        }
-        if($('#safetyLead_burnerName').val().length <= 0)
-        {
-            $('#safetyLead_burnerName').val($('#campLead_burnerName').val());
-        }
-        if($('#safetyLead_email').val().length <= 0)
-        {
-            $('#safetyLead_email').val($('#campLead_email').val());
-        }
-        if($('#safetyLead_phone').val().length <= 0)
-        {
-            $('#safetyLead_phone').val($('#campLead_phone').val());
-        }
-    }
-}
-
 function user_ajax_done(data)
 {
     $('#campLead_name').val(data.givenName+' '+data.sn);
@@ -170,7 +147,6 @@ function pop_data()
 function tc_wizard_init()
 {
     //TODO - Make agnostic
-    $('#just_me').change(just_me_clicked);
     pop_data();
 }
 

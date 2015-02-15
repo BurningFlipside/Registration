@@ -27,6 +27,7 @@ $page->add_form_group($index, 'What you would like your village to be like', 'vi
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Camp Contacts');
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert">The email provided for the theme camp lead will be automatically added to the theme camp lead’s newsletter. This newsletter is designed to provide theme camp leads with valuable event and community information. The email addresses will be purged just before theme camp registration opens next year.</div>');
 $page->add_form_group($index, 'The camp lead is the only camp contact', 'just_me', 'checkbox', 'The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound.', array('class'=>'ignore'));
 $page->add_spacer($index);
 $accordion_ref = $page->add_accordion($index);
@@ -69,6 +70,17 @@ for($i = 0; $i < $panel_count; $i++)
             }
             $extra['data-copyfrom'] = camelize($panels[0]).'_'.$all_panels[$j]['name'];
             $extra['data-copytrigger'] = '#just_me';
+        }
+        else
+        {
+            if($all_panels[$j]['name'] === 'email')
+            {
+                if($extra === FALSE)
+                {
+                    $extra = array();
+                }
+                $extra['disabled'] = true;
+            }
         }
         $page->add_form_group($panel_ref, $all_panels[$j]['label'], $camel.'_'.$all_panels[$j]['name'], $all_panels[$j]['type'], $tooltip, $extra);
         $page->add_spacer($panel_ref);
@@ -147,7 +159,7 @@ $page->add_form_group($index, 'Special Considerations:', 'placement_special', 't
 $page->add_spacer($index);
 $page->add_raw_html($index, '<h3>About Early Arrival</h3>
 <p>Early Arrival (arriving Wednesday afternoon) for theme camps was created to help folk with larger, more involved projects and/or infrastructure set up safely, with a bit more time and space before the gates of the event officially open. Many things are taken into consideration when evaluating the benefit of early arrival and it is largely a combination of circumstances that help us to determine where the gift of early arrival is most beneficial. Some structures require a wide perimeter to set up safely, some camps and villages bring in complicated power grids that need to be organized and laid out before the rush, some structures require the assistance of heavy machinery, we try to avoid having large trucks block the road- there are any number of reasons that we will consider it safer and beneficial for the community to invite some people in to get this foundation set. There are no set rules or formulas- we do our best using the information provided us through theme camp registration to assess the benefit of early arrival based on theme camp infrastructure.</p>
-<p>Theme camp early arrival does not exist so that people can have a fully functional camp before the event starts Thursday morning.</p>
+<p style="font-weight: bold;">Theme camp early arrival does not exist so that people can have a fully functional camp before the event starts Thursday morning.</p>
 <p>It requires a great deal of work to help facilitate folk coming in who are setting up their projects. The event volunteers and safety teams work double time to make early arrival possible for those that really need it, so please understand that not everyone who is going to desire early arrival will get a positive response.</p>');
 $page->add_spacer($index);
 $page->add_form_group($index, 'I would like my camp to be considered for Early Arrival', 'earlyArrival_bool', 'checkbox', 'i feel that my camp meets the criterea for Early Arrival and would like the City Planning team to consider allowing us this gift. I understand that checking this does not guarantee my camp Early Arrival.', array('data-questcontrol'=>'earlyArrival_desc'));
@@ -158,16 +170,18 @@ $page->add_spacer($index);
 $index = $page->add_wizard_step('Camp Infrastructure');
 $page->add_form_group($index, 'Number of Standard (4 Person or fewer) Tents:', 'placement_tents', 'text', 'Number of Tents less than 10 feet x 10 feet in size');
 $page->add_spacer($index);
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert">Please note that the only vehicles permitted to be left in theme camp spaces are artified cars/trucks used for car camping and registered RVs. To ensure your vehicle meets our guidelines, please visit <a href="http://www.burningflipside.com/sg" class="alert-link">http://www.burningflipside.com/sg</a> for more information. Vehicles that do not meet our criteria will need to be moved to Parking.</div>');
+$page->add_raw_html($index, '<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Pyro art must be registered separately on the art registration form at <a href="https://secure.burningflipside.com/register/art-reg.php" class="alert-link">https://secure.burningflipside.com/register/art-reg.php</a>. Please do note on that form that this piece is part of a theme camp.</div>');
 $page->add_raw_html($index, '
-                <table id="structs_table" class="table">
+                <table id="structs_table" class="table table-responsive">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Type</th>
-                            <th>Width (in feet)</th>
-                            <th>Length (in feet)</th>
-                            <th>Height (in feet)</th>
-                            <th>Description</th>
+                            <th class="col-xs-1"></th>
+                            <th class="col-xs-2">Type</th>
+                            <th class="col-xs-1">Width (in feet)</th>
+                            <th class="col-xs-1">Length (in feet)</th>
+                            <th class="col-xs-1">Height (in feet)</th>
+                            <th class="col-xs-4">Description</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
