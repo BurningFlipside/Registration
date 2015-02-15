@@ -174,5 +174,20 @@ class RegistrationDB
         }
         return FALSE;
     }
+
+    function getAllArtCars($year = FALSE)
+    {
+        if($year == FALSE)
+        {
+            $year = $this->getCurrentYear();
+        }
+        $cursor = $this->db->dmv->find(array('year'=>$year));
+        $ret    = array();
+        foreach($cursor as $doc)
+        {
+            array_push($ret, $doc);
+        }
+        return $ret;
+    }
 }
 ?>
