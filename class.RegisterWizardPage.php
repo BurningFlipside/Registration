@@ -205,6 +205,10 @@ class RegisterWizardPage extends SecurePage
         {
             $ret.=' required';
         }
+        if(isset($control['disabled']) && $control['disabled'])
+        {
+            $ret.=' disabled';
+        }
         foreach($control as $key=>$value)
         {
             if(substr($key, 0, 5) == 'data-')
