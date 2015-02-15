@@ -23,7 +23,7 @@ class RegistrationDB
         return FALSE;
     }
 
-    function getAllFromCollection($collection, $year = FALSE, $uid = FALSE)
+    private function getAllFromCollection($collection, $year = FALSE, $uid = FALSE)
     {
         if($year == FALSE)
         {
@@ -48,6 +48,17 @@ class RegistrationDB
         return $ret;
     }
 
+    private function getObjectFromCollectionByID($collection, $id)
+    {
+        $col = $this->db->selectCollection($collection);
+        $cursor = $col->find(array('_id'=>new MongoId($id)));
+        foreach($cursor as $doc)
+        {
+            return $doc;
+        }
+        return FALSE;
+    }
+
     function getAllThemeCamps($year = FALSE)
     {
         return $this->getAllFromCollection('camps', $year);
@@ -70,34 +81,42 @@ class RegistrationDB
 
     function getAllThemeCampsForUser($uid, $year = FALSE)
     {
-        if($year == FALSE)
-        {
-            $year = $this->getCurrentYear();
-        }
-        if($year == '*')
-        {
-            $cursor = $this->db->camps->find(array('registrars'=>$uid));
-        }
-        else
-        {
-            $cursor = $this->db->camps->find(array('registrars'=>$uid, 'year'=>$year));
-        }
-        $ret    = array();
-        foreach($cursor as $doc)
-        {
-            array_push($ret, $doc);
-        }
-        return $ret;
+        return $this->getAllFromCollection('camps', $year, $uid);
+    }
+
+    function getAllArtProjectsForUser($uid, $year = FALSE)
+    {
+        return $this->getAllFromCollection('art', $year, $uid);
+    }
+
+    function getAllArtCarsForUser($uid, $year = FALSE)
+    {
+        return $this->getAllFromCollection('dmv', $year, $uid);
+    }
+
+    function getAllEventsForUser($uid, $year = FALSE)
+    {
+        return $this->getAllFromCollection('event', $year, $uid);
     }
 
     function getThemeCampByID($id)
     {
-        $cursor = $this->db->camps->find(array('_id'=>new MongoId($id)));
-        foreach($cursor as $doc)
-        {
-            return $doc;
-        }
-        return FALSE;
+        return $this->getObjectFromCollectionByID('camps', $id);
+    }
+
+    function getArtProjectByID($id)
+    {
+        return $this->getObjectFromCollectionByID('art', $id);
+    }
+
+    function getArtCarByID($id)
+    {
+        return $this->getObjectFromCollectionByID('dmv', $id);
+    }
+
+    function getEventByID($id)
+    {
+        return $this->getObjectFromCollectionByID('event', $id);
     }
 
     function deleteThemeCamp($camp)
@@ -105,14 +124,61 @@ class RegistrationDB
         return $this->db->camps->remove(array('_id'=>new MongoId($camp['_id'])));
     }
 
+    function deleteArtProject($ap)
+    {
+        return $this->db->art->remove(array('_id'=>new MongoId($ap['_id'])));
+    }
+
+    function deleteArtCar($car)
+    {
+        return $this->db->dmv->remove(array('_id'=>new MongoId($car['_id'])));
+    }
+
+    function deleteEvent($event)
+    {
+        return $this->db->event->remove(array('_id'=>new MongoId($event['_id'])));
+    }
+
     function addThemeCamp($camp)
     {
-         $array = $camp;
-         unset($array['_id']);
-         $res = $this->db->camps->insert($array);
+         unset($camp['_id']);
+         $res = $this->db->camps->insert($camp);
          if($res['ok'] == TRUE)
          {
-             return $array['_id'];
+             return $camp['_id'];
+         }
+         return FALSE;
+    }
+
+    function addArtProject($ap)
+    {
+         unset($ap['_id']);
+         $res = $this->db->art->insert($ap);
+         if($res['ok'] == TRUE)
+         {
+             return $ap['_id'];
+         }
+         return FALSE;
+    }
+
+    function addArtCar($car)
+    {
+         unset($car['_id']);
+         $res = $this->db->dmv->insert($car);
+         if($res['ok'] == TRUE)
+         {
+             return $car['_id'];
+         }
+         return FALSE;
+    }
+
+    function addEvent($event)
+    {
+         unset($event['_id']);
+         $res = $this->db->event->insert($event);
+         if($res['ok'] == TRUE)
+         {
+             return $event['_id'];
          }
          return FALSE;
     }
@@ -129,55 +195,6 @@ class RegistrationDB
         return FALSE;
     } 
 
-    function getAllArtProjectsForUser($uid, $year = FALSE)
-    {
-        if($year == FALSE)
-        {
-            $year = $this->getCurrentYear();
-        }
-        if($year == '*')
-        {
-            $cursor = $this->db->art->find(array('registrars'=>$uid));
-        }
-        else
-        {
-            $cursor = $this->db->art->find(array('registrars'=>$uid, 'year'=>$year));
-        }
-        $ret    = array();
-        foreach($cursor as $doc)
-        {
-            array_push($ret, $doc);
-        }
-        return $ret;
-    }
-
-    function getArtProjectByID($id)
-    {
-        $cursor = $this->db->art->find(array('_id'=>new MongoId($id)));
-        foreach($cursor as $doc)
-        {
-            return $doc;
-        }
-        return FALSE;
-    }
-
-    function deleteArtProject($ap)
-    {
-        return $this->db->art->remove(array('_id'=>new MongoId($ap['_id'])));
-    }
-
-    function addArtProject($ap)
-    {
-         $array = $ap;
-         unset($array['_id']);
-         $res = $this->db->art->insert($array);
-         if($res['ok'] == TRUE)
-         {
-             return $array['_id'];
-         }
-         return FALSE;
-    }
-
     function updateArtProject($ap)
     {
         $id = new MongoId($ap['_id']);
@@ -190,7 +207,29 @@ class RegistrationDB
         return FALSE;
     }
 
-    
+    function updateArtCar($car)
+    {
+        $id = new MongoId($car['_id']);
+        unset($car['_id']);
+        $res = $this->db->dmv->update(array('_id' => $id), $car);
+        if($res['ok'] == TRUE)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    function updateEvent($event)
+    {
+        $id = new MongoId($event['_id']);
+        unset($event['_id']);
+        $res = $this->db->event->update(array('_id' => $id), $event);
+        if($res['ok'] == TRUE)
+        {
+            return $event['_id'];
+        }
+        return FALSE;
+    }
 }
 // vim: set tabstop=4 shiftwidth=4 expandtab:
 ?>
