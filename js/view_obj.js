@@ -40,7 +40,12 @@ function get_obj_type()
 {
     var name = get_page_name();
     name = name.substring(5);
-    return name.substring(0, name.length - 4);
+    name = name.substring(0, name.length - 4);
+    if(name === 'tc')
+    {
+        return 'camps';
+    }
+    return name;
 }
 
 function contact_lead()
@@ -48,7 +53,7 @@ function contact_lead()
     if(validate_contact_dialog())
     {
         $.ajax({
-            url: 'api/'+get_obj_type()+'/contact/'+getParameterByName('id'),
+            url: 'api/v1/'+get_obj_type()+'/'+getParameterByName('id')+'/contact',
             type: 'post',
             data: $('#email_text').add('#subject').serialize(),
             dataType: 'json',
@@ -93,7 +98,7 @@ function obj_done(data)
 function init_obj()
 {
     $.ajax({
-        url: 'api/'+get_obj_type()+'/view/'+getParameterByName('id'),
+        url: 'api/v1/'+get_obj_type()+'/'+getParameterByName('id'),
         type: 'get',
         dataType: 'json',
         success: obj_done});

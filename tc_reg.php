@@ -9,7 +9,9 @@ $page->add_js_from_src('js/tc_reg.js');
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'This camp has been previously registered at Flipside', 'camp_reg_prev', 'checkbox', 'This camp has been registered at Burning Flipside in a previous year.', array('class'=>'ignore', 'data-tabcontrol'=>'prev_camp'));
 $page->add_spacer($index);
-$page->add_form_group($index, 'I would like to be part of a village', 'village', 'checkbox', 'This camp is either part of a village or would like to be.', array('class'=>'ignore', 'data-tabcontrol'=>'village_step'));
+$page->add_form_group($index, 'This camp is part of a village', 'village', 'checkbox', 'This camp is already a part of a village.', array('class'=>'ignore', 'data-tabcontrol'=>'village_step'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'This camp is not part of a village, but is interested', 'village_interest', 'checkbox', 'This camp is not part of a village, but is interested in talking to other camps about being in a village together.');
 $page->add_spacer($index);
 $page->add_form_group($index, 'This camp has amplified sound', 'has_sound', 'checkbox', 'This camp has any form of amplified sound.', array('class'=>'ignore', 'data-tabcontrol'=>'sound_step', 'data-groupcontrol'=>'soundLead'));
 $page->add_spacer($index);
@@ -21,9 +23,9 @@ $page->add_form_group($index, 'Previous Number of Campers:', 'prevInfo_campers',
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Village Information','village_step');
-$page->add_form_group($index, 'Village Name(s):', 'villageInfo_name', 'text', 'The name of the village this camp would like to be affiliated with. Leave blank if you are not part of a village, but would like to be.');
+$page->add_form_group($index, 'Village Name:', 'villageInfo_name', 'text', 'The name of the village this camp is affiliated with.');
 $page->add_spacer($index);
-$page->add_form_group($index, 'What you would like your village to be like', 'villageInfo_desc', 'textarea', 'A description of what your camp would like to see in a village.');
+$page->add_form_group($index, 'Please describe the character of your village', 'villageInfo_desc', 'textarea', 'A description of what your camp would like your village to be like.');
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Camp Contacts');
@@ -172,6 +174,7 @@ $page->add_form_group($index, 'Number of Standard (4 Person or fewer) Tents:', '
 $page->add_spacer($index);
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert">Please note that the only vehicles permitted to be left in theme camp spaces are artified cars/trucks used for car camping and registered RVs. To ensure your vehicle meets our guidelines, please visit <a href="http://www.burningflipside.com/sg" class="alert-link">http://www.burningflipside.com/sg</a> for more information. Vehicles that do not meet our criteria will need to be moved to Parking.</div>');
 $page->add_raw_html($index, '<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Pyro art must be registered separately on the art registration form at <a href="https://secure.burningflipside.com/register/art-reg.php" class="alert-link">https://secure.burningflipside.com/register/art-reg.php</a>. Please do note on that form that this piece is part of a theme camp.</div>');
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> Any art pieces to be included on the map and art cars attending Flipside must also be registered on the art registration form or DMV form at <a href="https://secure.burningflipside.com/register/add.php" class="alert-link">https://secure.burningflipside.com/register/add.php</a>.</div>');
 $page->add_raw_html($index, '
                 <table id="structs_table" class="table table-responsive">
                     <thead>
@@ -195,6 +198,19 @@ $page->add_raw_html($index, '
                         </tr>
                     </tfoot>
                 </table>');
+
+if(isset($_GET['is_admin']))
+{
+    $user = FlipSession::get_user(TRUE);
+    if($user->isInGroupNamed('RegistrationAdmins') || $user->isInGroupNamed('CampAdmins'))
+    {
+        $index = $page->add_wizard_step('Admin Data');
+        $page->add_form_group($index, 'Placement ID:', 'location', 'text', 'The ID on the map.');
+        $page->add_spacer($index);
+        $page->add_form_group($index, 'City Planning Notes:', 'cityplanning_notes', 'textarea');
+        $page->add_spacer($index);
+    }
+}
 
 $page->print_page();
 

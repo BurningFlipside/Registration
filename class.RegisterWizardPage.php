@@ -402,6 +402,20 @@ class RegisterWizardPage extends SecurePage
 
     function print_page($header=true)
     {
+        if(!FlipSession::is_logged_in())
+        {
+        $this->body .= '
+    <div id="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">You must <a href="https://profiles.burningflipside.com/login.php?return='.$this->current_url().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Registration system!</h1>
+            </div>
+        </div>
+    </div>
+';
+        }
+        else
+        {
         $this->body = '
         <div id="content">
             <div id="rootwizard">
@@ -429,6 +443,7 @@ class RegisterWizardPage extends SecurePage
                 </nav>
             </div>
         </div>';
+        }
         parent::print_page($header);
     }
 

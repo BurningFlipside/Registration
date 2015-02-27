@@ -64,7 +64,7 @@ function pop_data()
     if(_id !== null)
     {
         $.ajax({
-            url: 'api/art/view/'+_id+'/full',
+            url: 'api/v1/art/'+_id+'?full=true',
             type: 'get',
             dataType: 'json',
             success: art_ajax_done
@@ -85,7 +85,6 @@ function pop_data()
         {
             add_notification($('#content'), 'Your browser is out of date. Due to this some data may not be set automatically. Please make sure it is complete');
         }
-        add_new_struct_to_table();
     }
 }
 

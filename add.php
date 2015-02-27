@@ -27,10 +27,20 @@ if(count($camps) > 0)
 {
     $manage_camp = '<li><a href="tc_reg.php?_id='.$camps[0]['_id'].'">Manage your theme camp</a></li>';
 }
-$manage_art = '<li><a href="art_reg.php">Register an art project</a></li>';
-if(count($arts) > 0)
+$manage_art = '<li><a href="art_reg.php">Register a new art project</a></li>';
+$art_count = count($arts);
+if($art_count == 1)
 {
     $manage_art = '<li><a href="art_reg.php?_id='.$arts[0]['_id'].'">Manage your art project</a></li>';
+}
+else if($art_count >= 1)
+{
+    $manage_art.= '<ul>';
+    for($i = 0; $i < $art_count; $i++)
+    {
+       $manage_art.= '<li><a href="art_reg.php?_id='.$arts[$i]['_id'].'">Manage your art project: '.$arts[$i]['name'].'</a></li>';
+    }
+    $manage_art.= '</ul>';
 }
 $manage_car = '<li><a href="artCar_reg.php">Register an art car</a></li>';
 if(count($cars))

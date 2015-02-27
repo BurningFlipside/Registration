@@ -22,7 +22,7 @@ class RegistrationDB
         return FALSE;
     }
 
-    private function getAllFromCollection($collection, $year = FALSE, $uid = FALSE)
+    function getAllFromCollection($collection, $year = FALSE, $uid = FALSE)
     {
         if($year == FALSE)
         {
@@ -47,13 +47,69 @@ class RegistrationDB
         return $ret;
     }
 
-    private function getObjectFromCollectionByID($collection, $id)
+    function searchFromCollection($collection, $criteria)
+    {
+        $col = $this->db->selectCollection($collection);
+        foreach($criteria as $key=>$value)
+        {
+            if($value[0] === '/')
+            {
+                $criteria[$key] = array('$regex'=>new MongoRegex("$value"));
+            }
+        }
+        $cursor = $col->find($criteria);
+        $ret    = array();
+        foreach($cursor as $doc)
+        {
+            array_push($ret, $doc);
+        }
+        return $ret;
+    }
+
+    function getObjectFromCollectionByID($collection, $id)
     {
         $col = $this->db->selectCollection($collection);
         $cursor = $col->find(array('_id'=>new MongoId($id)));
         foreach($cursor as $doc)
         {
             return $doc;
+        }
+        return FALSE;
+    }
+
+    function addObjectToCollection($collection, $obj)
+    {
+         unset($obj['_id']);
+         $col = $this->db->selectCollection($collection);
+         $res = $col->insert($obj);
+         if($res['ok'] == TRUE)
+         {
+             return $obj['_id'];
+         }
+         return FALSE;
+    }
+
+    function updateObjectInCollection($collection, $obj)
+    {
+        $id = new MongoId($obj['_id']);
+        unset($obj['_id']);
+        $col = $this->db->selectCollection($collection);
+        $res = $col->update(array('_id' => $id), $obj);
+        if($res['ok'] == TRUE)
+        {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    function deleteObjectFromCollection($collection, $obj)
+    {
+        $id = new MongoId($obj['_id']);
+        $col = $this->db->selectCollection($collection);
+        $res = $col->remove(array('_id' => $id));
+        if($res['ok'] == TRUE)
+        {
+            return TRUE;
         }
         return FALSE;
     }

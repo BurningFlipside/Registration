@@ -15,6 +15,28 @@ $page->add_form_group($index, 'Theme Camp (if any)', 'vehicle_camp', 'text', 'So
 $page->add_spacer($index);
 $page->add_form_group($index, 'Vehicle Dimensions', 'vehicle_dimention', 'text', 'Our roads are narrow and pass under pecan trees. Let us know the height, width and length of your vehicle.', array('required'=>'true'));
 $page->add_spacer($index);
+$page->add_form_group($index, 'Number of Passengers', 'vehicle_passengers', 'text', 'The number of passengers you can comfortably carry.', array('required'=>'true'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'This art car has sound', 'has_sound', 'checkbox', 'This art car will utilize amplified sound in some form.', array('class'=>'ignore', 'data-tabcontrol'=>'sound'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'This art car has flame effects', 'has_fe', 'checkbox', 'This art car has flame effects.', array('class'=>'ignore', 'data-tabcontrol'=>'fe'));
+$page->add_spacer($index);
+
+$index = $page->add_wizard_step('Images');
+$page->add_form_group($index, 'Image #1', 'image_1', 'file', 'A picture or drawing of your art car.', array('required'=>'true'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Image #2', 'image_2', 'file', 'A picture or drawing of your art car.');
+$page->add_spacer($index);
+$page->add_form_group($index, 'Image #3', 'image_3', 'file', 'A picture or drawing of your art car.');
+$page->add_spacer($index);
+
+$index = $page->add_wizard_step('Sound', 'sound');
+$page->add_form_group($index, 'Sound System Description', 'sound_desc', 'textarea', 'Describe your sound equipment and how you plan to adhere to the Event Sound Policy');
+$page->add_spacer($index);
+
+$index = $page->add_wizard_step('Flame Effects', 'fe');
+$page->add_form_group($index, 'Flame Effects Description', 'fire_flameEffects', 'textarea', 'Describe any flame effects such as propane or other flame effects.');
+$page->add_spacer($index);
 
 
 $page->print_page();

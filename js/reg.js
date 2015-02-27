@@ -36,15 +36,13 @@ function prev_tab(e)
     $('li.active').prevAll(":not('.disabled')").first().contents().tab('show');
 }
 
-function validate_current()
+function validate_control_set(set)
 {
     var ret = true;
-    var required = $('div.tab-pane.active').find('[required]');
-    if(required.length == 0) return true;
-    for(i = 0; i < required.length; i++)
+    for(i = 0; i < set.length; i++)
     {
-        var control = $(required[i]);
-        var value = control.val()
+        var control = $(set[i]);
+        var value = control.val();
         if(value == null || value.length == 0)
         {
             control.parents('.form-group').prop('class', 'form-group has-error');
@@ -62,6 +60,60 @@ function validate_current()
     return ret;
 }
 
+function validate_current(callback)
+{
+    var ret = true;
+    var required = $('div.tab-pane.active').find('[required]');
+    if(required.length !== 0)
+    {
+        if(validate_control_set(required) === false)
+        {
+            ret = false;
+        }
+    }
+    var special = $('div.tab-pane.active').find('[type=url]');
+    if(special.length !== 0)
+    {
+        for(i = 0; i < special.length; i++)
+        {
+            var raw_control = special[i];
+            var control = $(raw_control);
+            if(raw_control.validity !== undefined && !raw_control.validity.valid)
+            {
+                if(raw_control.validationMessage !== undefined)
+                {
+                    control.attr('title', raw_control.validationMessage);
+                }
+                control.parents('.form-group').prop('class', 'form-group has-error');
+                if(control.parents('.panel-collapse').length > 0)
+                {
+                    control.parents('.panel-collapse').collapse('show');
+                }
+                ret = false;
+            }
+            else
+            {
+                control.parents('.form-group').prop('class', 'form-group has-success');
+                control.removeAttr('title');
+            }
+        }
+    }
+    if(_id === null)
+    {
+        $.ajax({
+            url: get_list_all_url(),
+            data: 'name=/^'+$('#name').val()+'/i',
+            type: 'get',
+            dataType: 'json',
+            success: function(data){if(data.length > 0){ret = false; $('#name').parents('.form-group').prop('class', 'form-group has-error'); callback(false);}else{callback(ret);}}
+        });
+    }
+    else
+    {
+        callback(ret);
+    }
+}
+
 function post_done(data)
 {
     if(data._id !== undefined)
@@ -72,6 +124,14 @@ function post_done(data)
 
 function final_post_done(data)
 {
+    if(data.update == true)
+    {
+        location.href = '/register/add.php';
+    }
+    else
+    {
+        alert('Error! '+data.message);
+    }
     console.log(data);
 }
 
@@ -87,6 +147,29 @@ function get_page_name()
     return file;
 }
 
+function get_list_all_url()
+{
+    var url = null;
+    var page = get_page_name();
+    if(page.startsWith('tc_'))
+    {
+        url = 'api/v1/camps';
+    }
+    else if(page.startsWith('art_'))
+    {
+        url = 'api/v1/art';
+    }
+    else if(page.startsWith('artCar_'))
+    {
+        url = 'api/v1/dmv';
+    }
+    else if(page.startsWith('event_'))
+    {
+        url = 'api/v1/event';
+    }
+    return url;
+}
+
 function get_post_url()
 {
     var url = null;
@@ -95,44 +178,44 @@ function get_post_url()
     {
         if(_id == null)
         {
-            url = 'api/tc/add';
+            url = 'api/v1/camps';
         }
         else
         {
-            url = 'api/tc/edit/'+_id;
+            url = 'api/v1/camps/'+_id;
         }
     }
     else if(page.startsWith('art_'))
     {
         if(_id == null)
         {
-            url = 'api/art/add';
+            url = 'api/v1/art';
         }
         else
         {
-            url = 'api/art/edit/'+_id;
+            url = 'api/v1/art/'+_id;
         }
     }
     else if(page.startsWith('artCar_'))
     {
         if(_id == null)
         {
-            url = 'api/dmv/add';
+            url = 'api/v1/dmv';
         }
         else
         {
-            url = 'api/dmv/edit/'+_id;
+            url = 'api/v1/dmv/'+_id;
         }
     }
     else if(page.startsWith('event_'))
     {
         if(_id == null)
         {
-            url = 'api/event/add';
+            url = 'api/v1/event';
         }
         else
         {
-            url = 'api/event/edit/'+_id;
+            url = 'api/v1/event/'+_id;
         }
     }
     return url;
@@ -152,10 +235,9 @@ function post_data()
     });
 }
 
-function final_post(e)
+function do_final_post(cont)
 {
-    e.preventDefault();
-    if(validate_current())
+    if(cont)
     {
         var data = form_data_to_obj();
         data['_id'] = _id;
@@ -167,16 +249,27 @@ function final_post(e)
             success: final_post_done
         });
     }
+}
+
+function do_next_tab(cont)
+{
+    if(cont)
+    {
+        $('li.active').nextAll(":not('.disabled')").first().contents().tab('show');
+        post_data();
+    }
+}
+
+function final_post(e)
+{
+    e.preventDefault();
+    validate_current(do_final_post);
     return false;
 }
 
 function next_tab(e)
 {
-    if(validate_current())
-    {
-        $('li.active').nextAll(":not('.disabled')").first().contents().tab('show');
-        post_data();
-    }
+    validate_current(do_next_tab)
 }
 
 function tabcontrol_change()
@@ -322,6 +415,10 @@ function form_data_to_obj()
             {
                 add_file_to_field(ret, name, control);
             }
+            else if(control.attr('type') === 'checkbox')
+            {
+                add_val_to_field(obj, names[j], control.is(':checked'));
+            }
             else
             {
                 add_val_to_field(obj, names[j], control.val());
@@ -333,6 +430,10 @@ function form_data_to_obj()
             {
                 add_file_to_field(ret, name, control);
             }
+            else if(control.attr('type') === 'checkbox')
+            {
+                add_val_to_field(ret, name, control.is(':checked'));
+            }
             else
             {
                 add_val_to_field(ret, name, control.val());
@@ -340,6 +441,74 @@ function form_data_to_obj()
         }
     }
     return ret;
+}
+
+function prior_ajax_done(data, prefix)
+{
+    if(prefix === undefined || prefix === 'success')
+    {
+        prefix = '';
+    }
+    for(var key in data)
+    {
+        if(key === '_id')
+        {
+        }
+        else if(typeof(data[key]) === 'object')
+        {
+            prior_ajax_done(data[key], prefix+key+'_');
+        }
+        else if($('#'+prefix+key).length > 0)
+        {
+            var control = $('#'+prefix+key);
+            if(control.filter('select').length > 0)
+            {
+                if(control.val() === data[key])
+                {
+                     continue;
+                }
+                control.val(data[key]);
+            }
+            else if(control.filter('[type=file]').length > 0)
+            {
+                if(data[key].length > 0)
+                {
+                    var img = $('<img>', {'class':'obj', 'src': data[key], 'style':'max-width: 200px; max-height: 200px'});
+                    control.after(img);
+                }
+            }
+            else if(control.filter('[type=checkbox]').length > 0)
+            {
+                if(data[key] === 'true')
+                {
+                    control.attr('checked', 'true');
+                }
+            }
+            else
+            {
+                control.val(data[key]);
+            }
+            if(data[key].length > 0)
+            {
+                var panelID = control.parents('.tab-pane').attr('id');
+                var id = $('a[href=#'+panelID+']').parent().attr('id');
+                $('[data-tabcontrol='+id+']').prop('checked', 'true').change();
+            }
+        }
+    }
+}
+
+function populate_prior_data()
+{
+    if(_id !== null)
+    {
+        $.ajax({
+            url: get_post_url()+'?full=true',
+            type: 'get',
+            dataType: 'json',
+            success: prior_ajax_done
+        });
+    }
 }
 
 function wizard_init()
@@ -357,6 +526,15 @@ function wizard_init()
     $('.navbar-nav').click(show_tab);
     $('.previous').attr('class', 'previous disabled');
     $('a[data-toggle="tab"]').on('shown.bs.tab', tab_changed);
+    if(browser_supports_input_type('url'))
+    {
+        $('#site').attr('type', 'url');
+    }
+    var page = get_page_name();
+    if(page.startsWith('tc_') === false)
+    {
+        populate_prior_data();
+    }
 }
 
 $(wizard_init);

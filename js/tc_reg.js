@@ -119,7 +119,7 @@ function pop_data()
     if(_id !== null)
     {
         $.ajax({
-            url: 'api/tc/view/'+_id+'/full',
+            url: 'api/v1/camps/'+_id+'?full=true',
             type: 'get',
             dataType: 'json',
             success: tc_ajax_done

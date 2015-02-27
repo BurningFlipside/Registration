@@ -1,0 +1,702 @@
+swagger: '2.0'
+info:
+  version: "1.0"
+  title: Burning Flipside Registration System API
+  description: "This is the api to access theme camp, art project, art car, and event registration for Burning Flipside"
+  contact:
+    name: "Problem"
+    email: "problem@burningflipside.com"
+host: secure.burningflipside.com
+basePath: /register/api/v1
+schemes: 
+    - https
+paths:
+  /art:
+    get:
+      tags: 
+        - Art
+      summary: Gets `ArtProject` objects.
+      description: Gets `ArtProject` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfArtProjects
+            type: array
+            items:
+              $ref: "#/definitions/ArtProject"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+        - flipside_auth: 
+          - read:registration
+    post:
+      tags: ["Art"]
+      summary: Create a new `ArtProject` object.
+      description: Creates a new `ArtProject` object owned by the calling user and for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AddReturn"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      parameters: [
+          {
+            name: project,
+            in: body,
+            description: "Art Project Object",
+            required: true,
+            schema: {
+              $ref: "#/definitions/ArtProject"
+            }
+          }
+        ]
+      security: [
+          flipside_auth: ["write:registration"]
+        ]
+  /art/{artId}:
+    get:
+      tags: ["Art"]
+      summary: Obtains the specified `ArtProject` object.
+      description: Obtains the `ArtProject` object with the specified ID.
+      parameters: [
+          {
+            name: artId,
+            in: path,
+            description: ID of the `ArtProject` object,
+            required: true,
+            type: string
+          }
+        ]
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ArtProject"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security: [
+          flipside_auth: ["read:registration"]
+        ]
+    put:
+      tags: ["Art"]
+      summary: Modifies the specified `ArtProject` object.
+      description: Modifies the `ArtProject` object with the specified ID if the user has the rights to do so.
+      consumes: [
+        "application/json",
+        "application/x-www-form-urlencoded"
+        ]
+      parameters: [
+          {
+            name: artId,
+            in: path,
+            description: ID of the `ArtProject` object,
+            required: true,
+            type: string
+          },
+          {
+            name: body,
+            in: body,
+            description: Updated `ArtProject` object,
+            required: true,
+            schema: {
+              $ref: "#/definitions/ArtProject"
+            }
+          }
+        ]
+      responses:
+        # Response code
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security: [
+          flipside_auth: ["write:registration"]
+        ]
+    delete:
+      tags: ["Art"]
+      summary: Deletes the specified `ArtProject` object.
+      description: Deletes the `ArtProject` object with the specified ID if the user has the rights to do so.
+      parameters: [
+          {
+            name: artId,
+            in: path,
+            description: ID of the `ArtProject` object,
+            required: true,
+            type: string
+          }
+        ]
+      responses:
+        # Response code
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security: [
+          flipside_auth: ["write:registration"]
+        ]
+  /art/{artId}/contact:
+    post:
+      tags: ["Art"]
+      summary: Sends an email to the lead of the `ArtProject` object.
+      description: Sends an email to the person specified as the lead in the `ArtProject` object with the user's email as reply-to.
+      parameters: [
+          {
+            name: artId,
+            in: path,
+            description: ID of the `ArtProject` object,
+            required: true,
+            type: string
+          },
+          {
+            name: subject,
+            in: formData,
+            description: The subject of the email you wish to send,
+            required: true,
+            type: string
+          },
+          {
+            name: email_text,
+            in: formData,
+            description: The text of the email you wish to send,
+            required: true,
+            type: string
+          }
+        ]
+      responses:
+        # Response code
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security: [
+          flipside_auth: ["write:registration"]
+        ]
+  /camps:
+    get:
+      tags: ["Theme Camps"]
+      summary: Gets `ThemeCamp` objects.
+      description: Gets `ThemeCamp` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfThemeCamps
+            type: array
+            items:
+              $ref: "#/definitions/ThemeCamp"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security: [
+          flipside_auth: ["read:registration"]
+        ]
+    post:
+      tags: 
+        - Theme Camps
+      summary: Create a new `ThemeCamp` object.
+      description: Creates a new `ThemeCamp` object owned by the calling user and for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AddReturn"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      parameters:
+          - in: body
+            name: camp
+            description: Theme Camp Object
+            required: true
+            schema:
+              $ref: "#/definitions/ThemeCamp"
+      security:
+          - flipside_auth:
+            - write:registration
+  /camps/{campId}:
+    get:
+      tags: 
+        - Theme Camps
+      summary: Obtains the specified `ThemeCamp` object.
+      description: Obtains the `ThemeCamp` object with the specified ID.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      parameters:
+          - in: path
+            name: campId
+            description: ID of the `ThemeCamp` object
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ThemeCamp"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - read:registration
+    put:
+      tags: 
+        - Theme Camps
+      summary: Modifies the specified `ThemeCamp` object.
+      description: Modifies the `ThemeCamp` object with the specified ID if the user has the rights to do so.
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      parameters:
+          - in: path
+            name: campId
+            description: ID of the `ThemeCamp` object
+            required: true
+            type: string
+          - in: body
+            name: body
+            description: Updated `ThemeCamp` object
+            required: true
+            schema:
+              $ref: "#/definitions/ThemeCamp"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+    delete:
+      tags: 
+        - Theme Camps
+      summary: Deletes the specified `ThemeCamp` object.
+      description: Deletes the `ThemeCamp` object with the specified ID if the user has the rights to do so.
+      parameters:
+          - in: path
+            name: campId
+            description: ID of the `ThemeCamp` object
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+  /camps/{campId}/contact:
+    post:
+      tags: 
+        - Theme Camps
+      summary: Sends an email to the lead of the `ThemeCamp` object.
+      description: Sends an email to the person specified as the lead in the `ThemeCamp` object with the user's email as reply-to.
+      parameters:
+          - in: path
+            name: campId
+            description: ID of the `ThemeCamp` object
+            required: true
+            type: string
+          - in: formData
+            name: subject
+            description: The subject of the email you wish to send
+            required: true
+            type: string
+          - in: formData
+            name: email_text
+            description: The text of the email you wish to send
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+  /dmv:
+    get:
+      tags:
+        - DMV
+      summary: Gets `ArtCar` objects.
+      description: Gets `ArtCar` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfArtCars
+            type: array
+            items:
+              $ref: "#/definitions/ArtCar"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - read:registration
+    post:
+      tags: 
+        - DMV
+      summary: Create a new `ArtCar` object.
+      description: Creates a new `ArtCar` object owned by the calling user and for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AddReturn"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      parameters:
+          - in: body
+            name: car
+            description: Art Car Object
+            required: true
+            schema:
+              $ref: "#/definitions/ArtCar"
+      security:
+          - flipside_auth:
+            - write:registration
+  /dmv/{carId}:
+    get:
+      tags: 
+        - DMV
+      summary: Obtains the specified `ArtCar` object.
+      description: Obtains the `ArtCar` object with the specified ID.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      parameters:
+          - in: path
+            name: carId
+            description: ID of the `ArtCar` object
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/ArtCar"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - read:registration
+    put:
+      tags: 
+        - DMV
+      summary: Modifies the specified `ArtCar` object.
+      description: Modifies the `ArtCar` object with the specified ID if the user has the rights to do so.
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      parameters:
+          - in: path
+            name: carId
+            description: ID of the `ArtCar` object
+            required: true
+            type: string
+          - in: body
+            name: body
+            description: Updated `ArtCar` object
+            required: true
+            schema:
+              $ref: "#/definitions/ArtCar"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+    delete:
+      tags: 
+        - DMV
+      summary: Deletes the specified `ArtCar` object.
+      description: Deletes the `ArtCar` object with the specified ID if the user has the rights to do so.
+      parameters:
+          - in: path
+            name: carId
+            description: ID of the `ArtCar` object
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+  /event:
+    get:
+      tags:
+        - Events
+      summary: Gets `Event` objects.
+      description: Gets `Event` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfEvents
+            type: array
+            items:
+              $ref: "#/definitions/Event"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - read:registration
+    post:
+      tags: 
+        - Events
+      summary: Create a new `Event` object.
+      description: Creates a new `Event` object owned by the calling user and for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AddReturn"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      parameters:
+          - in: body
+            name: event
+            description: Event Object
+            required: true
+            schema:
+              $ref: "#/definitions/Event"
+      security:
+          - flipside_auth:
+            - write:registration
+  /event/{eventId}:
+    get:
+      tags: 
+        - Events
+      summary: Obtains the specified `Event` object.
+      description: Obtains the `Event` object with the specified ID.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      parameters:
+          - in: path
+            name: eventId
+            description: ID of the `Event` object
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/Event"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - read:registration
+    put:
+      tags: 
+        - Events
+      summary: Modifies the specified `Event` object.
+      description: Modifies the `Event` object with the specified ID if the user has the rights to do so.
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      parameters:
+          - in: path
+            name: eventId
+            description: ID of the `Event` object
+            required: true
+            type: string
+          - in: body
+            name: body
+            description: Updated `Event` object
+            required: true
+            schema:
+              $ref: "#/definitions/Event"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+    delete:
+      tags: 
+        - Events
+      summary: Deletes the specified `Event` object.
+      description: Deletes the `Event` object with the specified ID if the user has the rights to do so.
+      parameters:
+          - in: path
+            name: eventId
+            description: ID of the `Event` object
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+securityDefinitions:
+  "flipside_auth":
+    type: "oauth2"
+    flow: "accessCode"
+    authorizationUrl: "https://profiles.burningflipside.com/OAUTH2/authorize.php"
+    tokenUrl: "https://profiles.burningflipside.com/OAUTH2/token.php"
+    scopes:
+      "read:registration": "read regisration information"
+      "write:registration": "modify or create registration information"
+definitions:
+  ErrorReturn:
+    properties:
+      "code":
+        type: integer
+      "message":
+        type: string
+      file:
+        type: string
+      "line":
+        type: integer
+  AddReturn:
+    properties:
+      "_id":
+        type: string
+      url:
+        type: string
+  ArtProject:
+    properties:
+      "_id":
+        type: string
+      name:
+        type: string
+      logo:
+        type: string
+        "description": "A base64 encoded version of the provided image."
+      "site":
+        type: string
+  ThemeCamp:
+    properties:
+      "_id":
+        type: string
+      name:
+        type: string
+      logo:
+        type: string
+        "description": "A base64 encoded version of the provided image."
+      "site":
+        type: string
+  ArtCar:
+    properties:
+      "_id":
+        type: string
+      name:
+        type: string
+      logo:
+        type: string
+        "description": "A base64 encoded version of the provided image."
+      "site":
+        type: string
+  Event:
+    properties:
+      "_id":
+        type: string
+      name:
+        type: string
+      logo:
+        type: string
+        "description": "A base64 encoded version of the provided image."
+      "site":
+        type: string
+
+                  

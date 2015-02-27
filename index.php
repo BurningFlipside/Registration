@@ -32,7 +32,7 @@ else
 
 $page->body .= '
 <div id="content">
-    <h1>Welcome to the Burning Flipside Camp Registration System</h1>
+    <h1>Welcome to the Burning Flipside Registration System</h1>
     <p></p>
     <h1>What would you like to do?</h1>
     <ul>
