@@ -30,7 +30,11 @@ function tc_ajax_done(data, prefix)
             var control = $('#'+prefix+key);
             if(control.filter('select').length > 0)
             {
-                if(control.val() === data[key]) continue;
+                if(control.val() === data[key])
+                {
+                     continue;
+                }
+                control.val(data[key]);
             }
             else if(control.filter('[type=file]').length > 0)
             {
@@ -38,6 +42,14 @@ function tc_ajax_done(data, prefix)
                 {
                     var img = $('<img>', {'class':'obj', 'src': data[key], 'style':'max-width: 200px; max-height: 200px'});
                     control.after(img);
+                }
+            }
+            else if(control.filter('[type=checkbox]').length > 0)
+            {
+                if(data[key] === 'true')
+                {
+                    control.click();
+                    control.attr('checked', 'true');
                 }
             }
             else

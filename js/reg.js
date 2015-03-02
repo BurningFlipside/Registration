@@ -496,6 +496,7 @@ function prior_ajax_done(data, prefix)
             {
                 if(data[key] === 'true')
                 {
+                    control.click();
                     control.attr('checked', 'true');
                 }
             }
