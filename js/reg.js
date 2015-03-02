@@ -23,7 +23,7 @@ function tab_changed(e)
     var last_index = $(e.target).parent().siblings().last().index();
     if(tab_index >= last_index)
     {
-        $('.next').html('<a onclick="final_post(event)">Submit</a>');
+        $('.next').html('<a onclick="final_post(event)" style="cursor: pointer;">Submit</a>');
     }
     else
     {
@@ -221,6 +221,19 @@ function get_post_url()
     return url;
 }
 
+function post_error(data)
+{
+    console.log(data);
+    if(data.message !== undefined)
+    {
+        alert("Unable to save data because: "+data.message);
+    }
+    else
+    {
+        alert("Unable to save data for unknown reason!");
+    }
+}
+
 function post_data()
 {
     console.trace();
@@ -231,7 +244,8 @@ function post_data()
         type: 'post',
         dataType: 'json',
         data: data,
-        success: post_done
+        success: post_done,
+        error: post_error
     });
 }
 
@@ -246,7 +260,8 @@ function do_final_post(cont)
             type: 'post',
             dataType: 'json',
             data: data,
-            success: final_post_done
+            success: final_post_done,
+            error: post_error
         });
     }
 }

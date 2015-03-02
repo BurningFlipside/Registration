@@ -217,6 +217,11 @@ function obj_add()
         $obj  = json_decode($body);
         $obj  = get_object_vars($obj);
     }
+    //Ensure minimum fields are set...
+    if(!isset($obj['name']) || !isset($obj['teaser']) || !isset($obj['description']))
+    {
+        throw new Exception('Missing one or more required parameters!', INTERNAL_ERROR);
+    }
     $obj['year'] = $db->getCurrentYear();
     if(!isset($obj['registrars']))
     {
@@ -262,6 +267,11 @@ function obj_edit($id)
         $body = $app->request->getBody();
         $obj  = json_decode($body);
         $obj  = get_object_vars($obj);
+    }
+    //Ensure minimum fields are set...
+    if(!isset($obj['name']) || !isset($obj['teaser']) || !isset($obj['description']))
+    {
+        throw new Exception('Missing one or more required parameters!', INTERNAL_ERROR);
     }
     $obj['year'] = $db->getCurrentYear();
     if(!isset($obj['registrars']))
