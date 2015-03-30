@@ -47,7 +47,7 @@ function validate_user_is_admin($user, $collection)
        'dmv'   => 'DMVAdmins',
        'event' => 'EventAdmins'
    );
-   if(isset($admins['collection']) && $user->isInGroupNamed($admins['collection']))
+   if(isset($admins[$collection]) && $user->isInGroupNamed($admins[$collection]))
    {
        return TRUE;
    }
@@ -70,7 +70,7 @@ function validate_user_has_access($user, $obj, $collection)
        'dmv'   => 'DMVAdmins',
        'event' => 'EventAdmins'
    );
-   if(isset($admins['collection']) && $user->isInGroupNamed($admins['collection']))
+   if(isset($admins[$collection]) && $user->isInGroupNamed($admins[$collection]))
    {
        return TRUE;
    }
