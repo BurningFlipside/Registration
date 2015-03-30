@@ -1,9 +1,9 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once('class.SecurePage.php');
+require_once('class.RegisterPage.php');
 require_once('class.RegistrationDB.php');
-$page = new SecurePage('Burning Flipside - Registration');
+$page = new RegisterPage('Burning Flipside - Registration');
 
 $db = new RegistrationDB();
 $user = FlipSession::get_user();
