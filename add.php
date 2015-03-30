@@ -31,7 +31,7 @@ $manage_art = '<li><a href="art_reg.php">Register a new art project</a></li>';
 $art_count = count($arts);
 if($art_count == 1)
 {
-    $manage_art = '<li><a href="art_reg.php?_id='.$arts[0]['_id'].'">Manage your art project</a></li>';
+    $manage_art.= '<li><a href="art_reg.php?_id='.$arts[0]['_id'].'">Manage your art project</a></li>';
 }
 else if($art_count >= 1)
 {
