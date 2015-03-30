@@ -141,13 +141,22 @@ $page->add_spacer($index);
 $index = $page->add_wizard_step('Placement Information');
 $page->add_form_group($index, 'Number of Campers:', 'placement_campers', 'text', 'The number of campers your camp plans to have this year.');
 $page->add_spacer($index);
+$page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3">
+  <object class="embed-responsive-item" type="application/pdf" data="img/guide_map15a.pdf">
+      <p>
+          <img src="img/guide_map15a.png" class="img-responsive"/>
+          Sorry, your browser is unable to display the full res map in line. Click <a href="img/guide_map15a.pdf">here</a> to download it
+      </p>
+  </object>
+</div>');
 $options = array(
     array('value'=>'any', 'text'=>'Any', 'selected'=>TRUE),
     array('value'=>'effigyLoopLoud', 'text'=>'Effigy Loop - Loud'),
     array('value'=>'centralLoud', 'text'=>'Central - Loud'),
     array('value'=>'centralLessLoud', 'text'=>'Central - Less Loud'),
     array('value'=>'badlandsLoud', 'text'=>'Badlands - Loud'),
-    array('value'=>'badlandsLessLoud', 'text'=>'Badlands - Less Loud')
+    array('value'=>'badlandsLessLoud', 'text'=>'Badlands - Less Loud'),
+    array('value'=>'corralLessLoud', 'text'=>'Corral - Less Loud')
 );
 $page->add_form_group($index, 'Preference 1:', 'placement_pref1', 'select', 'Your first choice for a general type of placement.', array('options'=>$options));
 $page->add_spacer($index);
