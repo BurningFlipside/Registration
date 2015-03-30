@@ -6,69 +6,11 @@ function user_ajax_done(data)
     $('#artLead_phone').val(data.mobile);
 }
 
-function art_ajax_done(data, prefix)
-{
-    if(prefix === undefined || prefix === 'success')
-    {
-        prefix = '';
-    }
-    for(var key in data)
-    {
-        if(key === '_id')
-        {
-        }
-        else if(key === 'structs')
-        {
-            add_existing_structs_to_table(data[key]);
-        }
-        else if(typeof(data[key]) === 'object')
-        {
-            art_ajax_done(data[key], prefix+key+'_');
-        }
-        else if($('#'+prefix+key).length > 0)
-        {
-            var control = $('#'+prefix+key);
-            if(control.filter('select').length > 0)
-            {
-                if(control.val() === data[key]) continue;
-            }
-            else if(control.filter('[type=file]').length > 0)
-            {
-                if(data[key].length > 0)
-                {
-                    var img = $('<img>', {'class':'obj', 'src': data[key], 'style':'max-width: 200px; max-height: 200px'});
-                    control.after(img);
-                }
-            }
-            else
-            {
-                control.val(data[key]);
-            }
-            if(data[key].length > 0)
-            {
-                var panelID = control.parents('.tab-pane').attr('id');
-                var id = $('a[href=#'+panelID+']').parent().attr('id');
-                $('[data-tabcontrol='+id+']').prop('checked', 'true').change();
-            }
-        }
-        else
-        {
-            //console.log(prefix+key);
-            //console.log(data[key]);
-        }
-    }
-}
-
 function pop_data()
 {
     if(_id !== null)
     {
-        $.ajax({
-            url: 'api/v1/art/'+_id+'?full=true',
-            type: 'get',
-            dataType: 'json',
-            success: art_ajax_done
-        });
+        //Now done in reg.js
     }
     else
     {

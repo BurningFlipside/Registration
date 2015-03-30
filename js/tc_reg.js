@@ -71,6 +71,19 @@ function tc_ajax_done(data, prefix)
     }
 }
 
+function tc_ajax_error(data)
+{
+    console.log(data);
+    if(data.message !== undefined)
+    {
+        alert("Unable to load data because: "+data.message);
+    }
+    else
+    {
+        alert("Unable to load data for unknown reason!");
+    } 
+}
+
 function add_new_struct_to_table(type, width, length, height, desc)
 {
     var tbody    = $('#structs_table tbody');
@@ -104,16 +117,16 @@ function add_new_struct_to_table(type, width, length, height, desc)
     dropdown.val(type);
     cell.appendTo(row);
     cell = $('<td/>');
-    $('<input>', {type: "text", name: 'structs_width[]', required: true, class: 'form-control', val: width}).appendTo(cell);
+    $('<input>', {type: "text", name: 'structs_width[]', class: 'form-control', val: width}).appendTo(cell);
     cell.appendTo(row);
     cell = $('<td/>');
-    $('<input>', {type: "text", name: 'structs_length[]', required: true, class: 'form-control', val: length}).appendTo(cell);
+    $('<input>', {type: "text", name: 'structs_length[]', class: 'form-control', val: length}).appendTo(cell);
     cell.appendTo(row);
     cell = $('<td/>');
-    $('<input>', {type: "text", name: 'structs_height[]', required: true, class: 'form-control', val: height}).appendTo(cell);
+    $('<input>', {type: "text", name: 'structs_height[]', class: 'form-control', val: height}).appendTo(cell);
     cell.appendTo(row);
     cell = $('<td/>');
-    $('<input>', {type: "text", name: 'structs_desc[]', required: true, class: 'form-control', val: desc}).appendTo(cell);
+    $('<input>', {type: "text", name: 'structs_desc[]', class: 'form-control', val: desc}).appendTo(cell);
     cell.appendTo(row);
     row.appendTo(tbody);
 }
@@ -134,7 +147,8 @@ function pop_data()
             url: 'api/v1/camps/'+_id+'?full=true',
             type: 'get',
             dataType: 'json',
-            success: tc_ajax_done
+            success: tc_ajax_done,
+            error: tc_ajax_error
         });
     }
     else

@@ -46,6 +46,7 @@ function validate_control_set(set)
         if(value == null || value.length == 0)
         {
             control.parents('.form-group').prop('class', 'form-group has-error');
+            control.parents('tr').prop('class', 'has-error');
             if(control.parents('.panel-collapse').length > 0)
             {
                 control.parents('.panel-collapse').collapse('show');
@@ -58,6 +59,11 @@ function validate_control_set(set)
         }
     }
     return ret;
+}
+
+function preg_quote(str, delimiter)
+{
+    return String(str).replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
 }
 
 function validate_current(callback)
@@ -100,9 +106,11 @@ function validate_current(callback)
     }
     if(_id === null)
     {
+        var name = $('#name').val();
+        name = preg_quote(name);
         $.ajax({
             url: get_list_all_url(),
-            data: 'name=/^'+$('#name').val()+'/i',
+            data: 'name=/^'+encodeURIComponent(name)+'/i',
             type: 'get',
             dataType: 'json',
             success: function(data){if(data.length > 0){ret = false; $('#name').parents('.form-group').prop('class', 'form-group has-error'); callback(false);}else{callback(ret);}}
@@ -128,9 +136,13 @@ function final_post_done(data)
     {
         location.href = '/register/add.php';
     }
-    else
+    else if(data.message !== undefined)
     {
         alert('Error! '+data.message);
+    }
+    else
+    {
+        alert('Error! '+JSON.stringify(data));
     }
     console.log(data);
 }
@@ -514,6 +526,19 @@ function prior_ajax_done(data, prefix)
     }
 }
 
+function prior_ajax_error(data)
+{
+    console.log(data);
+    if(data.message !== undefined)
+    {
+        alert("Unable to load data because: "+data.message);
+    }
+    else
+    {
+        alert("Unable to load data for unknown reason!");
+    }
+}
+
 function populate_prior_data()
 {
     if(_id !== null)
@@ -522,7 +547,8 @@ function populate_prior_data()
             url: get_post_url()+'?full=true',
             type: 'get',
             dataType: 'json',
-            success: prior_ajax_done
+            success: prior_ajax_done,
+            error: prior_ajax_error
         });
     }
 }
