@@ -89,7 +89,7 @@ function add_new_struct_to_table(type, width, length, height, desc)
     var tbody    = $('#structs_table tbody');
     var row      = $('<tr/>');
     var cell     = $('<td/>');
-    var button   = $('<button/>', {type: 'button', class: 'btn btn-link btn-sm', onclick: 'delete_struct_from_table()'});
+    var button   = $('<button/>', {type: 'button', class: 'btn btn-link btn-sm', onclick: 'delete_struct_from_table(this)'});
 
     if(type === undefined) type = '';
     if(width === undefined) width = '';
@@ -137,6 +137,13 @@ function add_existing_structs_to_table(struct)
     {
         add_new_struct_to_table(struct.type[i], struct.width[i], struct.length[i], struct.height[i], struct.desc[i]);
     }
+}
+
+function delete_struct_from_table(control)
+{
+    var tr = $(control).closest('tr');
+    tr.remove();
+    console.log(control);
 }
 
 function pop_data()
