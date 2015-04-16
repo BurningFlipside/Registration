@@ -85,7 +85,7 @@ function data_obtained(data)
 function tc_page_loaded()
 {
     $.ajax({
-        url: '/register/api/v1/camps',
+        url: '/register/api/v1/camps?no_logo=1',
         success: data_obtained
     });
     $('#tc tbody').on('click', 'button[name="edit"]', edit_obj);

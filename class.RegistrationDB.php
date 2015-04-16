@@ -22,9 +22,9 @@ class RegistrationDB
         return FALSE;
     }
 
-    function getAllFromCollection($collection, $year = FALSE, $uid = FALSE)
+    function getAllFromCollection($collection, $year = FALSE, $uid = false, $fields = false)
     {
-        if($year == FALSE)
+        if($year === false)
         {
             $year = $this->getCurrentYear();
         }
@@ -34,11 +34,15 @@ class RegistrationDB
         {
             $criteria['year'] = $year;
         }
-        if($uid !== FALSE)
+        if($uid !== false)
         {
             $criteria['registrars'] = $uid;
         }
         $cursor = $col->find($criteria);
+        if($fields !== false)
+        {
+            $cursor->fields($fields);
+        }
         $ret    = array();
         foreach($cursor as $doc)
         {
@@ -47,7 +51,7 @@ class RegistrationDB
         return $ret;
     }
 
-    function searchFromCollection($collection, $criteria)
+    function searchFromCollection($collection, $criteria, $fields = false)
     {
         $col = $this->db->selectCollection($collection);
         foreach($criteria as $key=>$value)
@@ -58,6 +62,10 @@ class RegistrationDB
             }
         }
         $cursor = $col->find($criteria);
+        if($fields !== false)
+        {
+            $cursor->fields($fields);
+        }
         $ret    = array();
         foreach($cursor as $doc)
         {

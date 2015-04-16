@@ -85,7 +85,7 @@ function data_obtained(data)
 function art_page_loaded()
 {
     $.ajax({
-        url: '/register/api/v1/dmv',
+        url: '/register/api/v1/dmv?no_logo=1',
         success: data_obtained
     });
     $('#dmv tbody').on('click', 'button[name="edit"]', edit_obj);

@@ -95,13 +95,19 @@ function list_obj()
     }
     $collection = get_collection_name();
     $db = new RegistrationDB();
+    $fields = false;
+    if(isset($params['no_logo']))
+    {
+        $fields = array('logo' => false);
+        unset($params['no_logo']);
+    }
     if(count($params))
     {
-        $objs = $db->searchFromCollection($collection, $params);
+        $objs = $db->searchFromCollection($collection, $params, $fields);
     }
     else
     {
-        $objs = $db->getAllFromCollection($collection);
+        $objs = $db->getAllFromCollection($collection, false, false, $fields);
     }
     if(!validate_user_is_admin($app->user, $collection))
     {
