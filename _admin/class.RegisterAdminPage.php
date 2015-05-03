@@ -149,7 +149,7 @@ class RegisterAdminPage extends FlipPage
         return 'http'.(isset($_SERVER['HTTPS'])?'s':'').'://'."{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
     }
 
-    function print_page()
+    function print_page($header=true)
     {
         if($this->user == FALSE)
         {
@@ -160,7 +160,7 @@ class RegisterAdminPage extends FlipPage
             </div>
         </div>';
         }
-        parent::print_page(true);
+        parent::print_page($header);
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */
