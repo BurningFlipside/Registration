@@ -5,7 +5,8 @@ require_once('class.RegisterPage.php');
 require_once('class.RegistrationDB.php');
 $page = new RegisterPage('Burning Flipside - Registration');
 
-$page->add_js_from_src('//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js');
+$page->add_js(JS_DATATABLE_ODATA);
+$page->add_js(JS_DATATABLE);
 $page->add_css_from_src('//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css');
 $page->add_js_from_src('js/view.js');
 

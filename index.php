@@ -9,8 +9,8 @@ $db = new RegistrationDB();
 $user = FlipSession::get_user();
 if($user)
 {
-    $camps = $db->getAllThemeCampsForUser($user->uid[0]);
-    $arts  = $db->getAllArtProjectsForUser($user->uid[0]);
+    $camps = $db->getAllThemeCampsForUser($user->getUid());
+    $arts  = $db->getAllArtProjectsForUser($user->getUid());
 }
 else
 {
