@@ -66,36 +66,53 @@ function render_event_name(data, type, row, meta)
 function init_tables()
 {
     $('#tcTable').dataTable({
-        'ajax': 'api/v1/camps?fmt=data-table',
+        'sAjaxSource': 'api/v1/camps',
+        'iODataVersion': 4,
         'columns': [
-            {'data': 'logo', 'render': render_camp_logo, 'width': '100px'},
+            {'data': 'logo', 'render': render_camp_logo, 'width': '100px', 'orderable': false},
             {'data': 'name', 'render': render_camp_name},
             {'data': 'teaser'}
-        ]
+        ],
+        'order': [[1, 'asc']],
+        'fnServerData': fnServerOData,
+        'bServerSide': true
     });
     $('#artTable').dataTable({
-        'ajax': 'api/v1/art?fmt=data-table',
+        'sAjaxSource': 'api/v1/art',
+        'iODataVersion': 4,
         'columns': [
-            {'data': 'logo', 'render': render_art_logo, 'width': '100px'},
+            {'data': 'logo', 'render': render_art_logo, 'width': '100px', 'orderable': false},
             {'data': 'name', 'render': render_art_name},
             {'data': 'teaser'}
-        ]
+        ],
+        'order': [[1, 'asc']],
+        'fnServerData': fnServerOData,
+        'bServerSide': true
     });
     $('#dmvTable').dataTable({
-        'ajax': 'api/v1/dmv?fmt=data-table',
+        'sAjaxSource': 'api/v1/dmv',
+        'iODataVersion': 4,
         'columns': [
-            {'data': 'logo', 'render': render_dmv_logo, 'width': '100px'},
+            {'data': 'logo', 'render': render_dmv_logo, 'width': '100px', 'orderable': false},
             {'data': 'name', 'render': render_dmv_name},
             {'data': 'teaser'}
-        ]
+        ],
+        'order': [[1, 'asc']],
+        'fnServerData': fnServerOData,
+        'bServerSide': true
     });
     $('#eventTable').dataTable({
-        'ajax': 'api/v1/event?fmt=data-table',
+        'sAjaxSource': 'api/v1/event',
+        'iODataVersion': 4,
+        'ajax': 'api/v1/event?fmt=data-table&select=logo,name,teaser',
         'columns': [
-            {'data': 'logo', 'render': render_event_logo, 'width': '100px'},
+            {'data': 'logo', 'render': render_event_logo, 'width': '100px', 'orderable': false},
             {'data': 'name', 'render': render_event_name},
             {'data': 'teaser'}
-        ]
+        ],
+        'order': [[1, 'asc']],
+        'fnServerData': fnServerOData,
+        'bServerSide': true
     });
 }
 
