@@ -2,7 +2,6 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
-require_once('class.RegistrationDB.php');
 $page = new RegisterAdminPage('Burning Flipside - Tickets');
 
 $page->add_js_from_src('js/index.js');
