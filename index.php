@@ -2,32 +2,41 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.RegisterPage.php');
-require_once('class.RegistrationDB.php');
 $page = new RegisterPage('Burning Flipside - Registration');
 
-$db = new RegistrationDB();
-$user = FlipSession::get_user();
-if($user)
-{
-    $camps = $db->getAllThemeCampsForUser($user->getUid());
-    $arts  = $db->getAllArtProjectsForUser($user->getUid());
-}
-else
-{
-    $camps = array();
-    $arts  = array();
-}
+$manage_add = '<li><a href="add.php">Add a new registration</a></li>';
 
-$manage_add = '';
-if(count($camps) > 0 || count($arts) > 0)
+if($page->user)
 {
-    $manage_add = '
-        <li><a href="add.php">Manage Your Registrations</a></li>
-    ';
-}
-else
-{
-    $manage_add = '<li><a href="add.php">Add a new registration</a></li>';
+    $data_set = DataSetFactory::get_data_set('registration');
+    $vars_data_table = $data_set['vars'];
+    $camps_data_table = $data_set['camps'];
+    $art_data_table = $data_set['art'];
+    $dmv_data_table = $data_set['dmv'];
+    $event_data_table = $data_set['event'];
+
+    $vars = $vars_data_table->read(new \Data\Filter('name eq year'));
+    $year = $vars[0]['value'];
+    
+    $filter = array('year'=>$year, 'registrars'=>$page->user->getUid());
+
+    $count = $camps_data_table->count($filter);
+    if($count === 0)
+    {
+        $count = $art_data_table->count($filter);
+        if($count === 0)
+        {
+            $count = $dmv_data_table->count($filter);
+            if($count === 0)
+            {
+                $count = $event_data_table->count($filter);
+            }
+        }
+    }
+    if($count !== 0)
+    {
+        $manage_add = '<li><a href="add.php">Manage Your Registrations</a></li>';
+    }
 }
 
 $page->body .= '
