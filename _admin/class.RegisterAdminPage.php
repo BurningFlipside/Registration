@@ -3,7 +3,6 @@ require_once('class.SecurePage.php');
 require_once('class.FlipSession.php');
 class RegisterAdminPage extends FlipPage
 {
-    private $user;
     public  $is_admin;
     public  $is_tc_admin;
     public  $is_art_admin;
