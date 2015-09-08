@@ -39,7 +39,7 @@ function validate_user_is_admin($user, $collection)
 {
    if($user->isInGroupNamed('RegistrationAdmins'))
    {
-       return TRUE;
+       return true;
    }
    $admins = array(
        'art'   => 'ArtAdmins',
@@ -49,20 +49,20 @@ function validate_user_is_admin($user, $collection)
    );
    if(isset($admins[$collection]) && $user->isInGroupNamed($admins[$collection]))
    {
-       return TRUE;
+       return true;
    }
-   return FALSE;
+   return false;
 }
 
 function validate_user_has_access($user, $obj, $collection)
 {
    if($user->isInGroupNamed('RegistrationAdmins'))
    {
-       return TRUE;
+       return true;
    }
    else if(in_array($user->uid[0], $obj['registrars']))
    {
-       return TRUE;
+       return true;
    }
    $admins = array(
        'art'   => 'ArtAdmins',
@@ -72,9 +72,9 @@ function validate_user_has_access($user, $obj, $collection)
    );
    if(isset($admins[$collection]) && $user->isInGroupNamed($admins[$collection]))
    {
-       return TRUE;
+       return true;
    }
-   return FALSE;
+   return false;
 }
 
 function list_obj()
@@ -135,8 +135,9 @@ function obj_list_with_filter($field)
     {
         throw new Exception('User not admin', ACCESS_DENIED);
     }
-    $db = new RegistrationDB();
-    $objs = $db->getAllFromCollection($collection);
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
+    $objs = $data_table->read(false);
     $res = array();
     $count = count($objs);
     for($i = 0; $i < $count; $i++)
