@@ -15,7 +15,7 @@ class RegisterAdminPage extends FlipAdminPage
         $this->is_art_admin   = false;
         $this->is_dmv_admin   = false;
         $this->is_event_admin = false;
-        $this->user = FlipSession::get_user(true);
+        $this->user = FlipSession::getUser();
         if($this->user !== false)
         {
             if($this->user->isInGroupNamed('RegistrationAdmins'))

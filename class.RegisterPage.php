@@ -10,7 +10,6 @@ class RegisterPage extends SecurePage
         $root = $_SERVER['DOCUMENT_ROOT'];
         $script_dir = dirname(__FILE__);
         $this->register_root = substr($script_dir, strlen($root));
-        $user = FlipSession::get_user(true);
         if($user->isInGroupNamed('RegistrationAdmins') ||
            $user->isInGroupNamed('ArtAdmins')          ||
            $user->isInGroupNamed('CampAdmins')         ||

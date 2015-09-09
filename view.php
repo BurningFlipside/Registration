@@ -9,7 +9,7 @@ $page->add_js(JS_DATATABLE, false);
 $page->add_css(CSS_DATATABLE);
 $page->add_js_from_src('js/view.js');
 
-if(!FlipSession::is_logged_in())
+if(!FlipSession::isLoggedIn())
 {
 $page->body .= '
     <div id="content">

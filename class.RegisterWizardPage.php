@@ -402,7 +402,7 @@ class RegisterWizardPage extends SecurePage
 
     function print_page($header=true)
     {
-        if(!FlipSession::is_logged_in())
+        if(!FlipSession::isLoggedIn())
         {
         $this->body .= '
     <div id="content">

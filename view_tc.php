@@ -6,7 +6,7 @@ $page = new SecurePage('Burning Flipside - Registration');
 
 $page->add_js_from_src('js/view_obj.js');
 
-if(!FlipSession::is_logged_in())
+if(!FlipSession::isLoggedIn())
 {
 $page->body .= '
     <div id="content">
