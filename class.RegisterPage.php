@@ -10,11 +10,12 @@ class RegisterPage extends SecurePage
         $root = $_SERVER['DOCUMENT_ROOT'];
         $script_dir = dirname(__FILE__);
         $this->register_root = substr($script_dir, strlen($root));
-        if($user->isInGroupNamed('RegistrationAdmins') ||
-           $user->isInGroupNamed('ArtAdmins')          ||
-           $user->isInGroupNamed('CampAdmins')         ||
-           $user->isInGroupNamed('DMVAdmins')          ||
-           $user->isInGroupNamed('EventAdmins'))
+        if($this->user !== null && (
+           $this->user->isInGroupNamed('RegistrationAdmins') ||
+           $this->user->isInGroupNamed('ArtAdmins')          ||
+           $this->user->isInGroupNamed('CampAdmins')         ||
+           $this->user->isInGroupNamed('DMVAdmins')          ||
+           $this->user->isInGroupNamed('EventAdmins')))
         {
            $this->add_link('Admin', $this->register_root.'/_admin/');
         }
