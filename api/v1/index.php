@@ -1,6 +1,6 @@
 <?php
+require_once('Autoload.php');
 require_once('class.FlipREST.php');
-require_once('class.RegistrationDB.php');
 
 if($_SERVER['REQUEST_URI'][0] == '/' && $_SERVER['REQUEST_URI'][1] == '/')
 {
@@ -39,7 +39,7 @@ function validate_user_is_admin($user, $collection)
 {
    if($user->isInGroupNamed('RegistrationAdmins'))
    {
-       return TRUE;
+       return true;
    }
    $admins = array(
        'art'   => 'ArtAdmins',
@@ -49,20 +49,20 @@ function validate_user_is_admin($user, $collection)
    );
    if(isset($admins[$collection]) && $user->isInGroupNamed($admins[$collection]))
    {
-       return TRUE;
+       return true;
    }
-   return FALSE;
+   return false;
 }
 
 function validate_user_has_access($user, $obj, $collection)
 {
    if($user->isInGroupNamed('RegistrationAdmins'))
    {
-       return TRUE;
+       return true;
    }
    else if(in_array($user->uid[0], $obj['registrars']))
    {
-       return TRUE;
+       return true;
    }
    $admins = array(
        'art'   => 'ArtAdmins',
@@ -72,9 +72,9 @@ function validate_user_has_access($user, $obj, $collection)
    );
    if(isset($admins[$collection]) && $user->isInGroupNamed($admins[$collection]))
    {
-       return TRUE;
+       return true;
    }
-   return FALSE;
+   return false;
 }
 
 function list_obj()
@@ -85,39 +85,42 @@ function list_obj()
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $params = $app->request->params();
-    if(isset($params['fmt']))
-    {
-       unset($params['fmt']);
-    }
-    if(isset($params['_']))
-    {
-       unset($params['_']);
-    }
+    $filter = false;
     $collection = get_collection_name();
-    $db = new RegistrationDB();
-    $fields = false;
+    if(validate_user_is_admin($app->user, $collection) && isset($params['filter']))
+    {
+        $filter = new \Data\Filter($params['filter']);
+    }
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
+    $ret = array();
+    if($app->odata->count)
+    {
+        $ret['@odata.count'] = $data_table->count($filter);
+    }
+    $mongo_params = array();
     if(isset($params['no_logo']))
     {
-        $fields = array('logo' => false);
-        unset($params['no_logo']);
+        $mongo_params['fields'] = array('logo' => false);
     }
-    if(count($params))
+    $data = $data_table->read($filter, $app->odata->select, $app->odata->top, $app->odata->skip, $app->odata->orderby, $mongo_params);
+    if(!validate_user_is_admin($app->user, $collection))
     {
-        $objs = $db->searchFromCollection($collection, $params, $fields);
+        $count = count($data);
+        for($i = 0; $i < $count; $i++)
+        {
+            trim_obj($data[$i]);
+        }
+    }
+    if(isset($ret['@odata.count']))
+    {
+        $ret['value'] = $data;
+        echo json_encode($ret);
     }
     else
     {
-        $objs = $db->getAllFromCollection($collection, false, false, $fields);
+        echo json_encode($data);
     }
-    if(!validate_user_is_admin($app->user, $collection))
-    {
-        $count = count($objs);
-        for($i = 0; $i < $count; $i++)
-        {
-            trim_obj(&$objs[$i]);
-        }
-    }
-    echo json_encode($objs);
 }
 
 function obj_list_with_filter($field)
@@ -132,8 +135,9 @@ function obj_list_with_filter($field)
     {
         throw new Exception('User not admin', ACCESS_DENIED);
     }
-    $db = new RegistrationDB();
-    $objs = $db->getAllFromCollection($collection);
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
+    $objs = $data_table->read(false);
     $res = array();
     $count = count($objs);
     for($i = 0; $i < $count; $i++)
@@ -153,20 +157,28 @@ function obj_view($id, $field = FALSE)
     {
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
-    $collection = get_collection_name();
-    $db = new RegistrationDB();
     if($id === '*')
     {
         obj_list_with_filter($field);
         return;
     }
-    $obj = $db->getObjectFromCollectionByID($collection, $id);
-    if($obj === FALSE)
+    $collection = get_collection_name();
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
+    $mongo_params = array();
+    if(isset($params['no_logo']))
+    {
+        $mongo_params['fields'] = array('logo' => false);
+    }
+    $filter = new \Data\Filter('_id eq '.new MongoId($id));
+    $data = $data_table->read($filter, $app->odata->select, false, false, false, $mongo_params);
+    if($data === false || !isset($data[0]))
     {
         throw new Exception('Unable to obtain object!', INTERNAL_ERROR);
     }
     else
     {
+        $obj = $data[0];
         if($app->request->params('full') === null)
         {
             if(!validate_user_is_admin($app->user, $collection))

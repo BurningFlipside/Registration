@@ -210,7 +210,7 @@ $page->add_raw_html($index, '
 
 if(isset($_GET['is_admin']))
 {
-    $user = FlipSession::get_user(TRUE);
+    $user = $page->user;
     if($user->isInGroupNamed('RegistrationAdmins') || $user->isInGroupNamed('CampAdmins'))
     {
         $index = $page->add_wizard_step('Admin Data');

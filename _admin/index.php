@@ -2,12 +2,26 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
-require_once('class.RegistrationDB.php');
 $page = new RegisterAdminPage('Burning Flipside - Tickets');
 
 $page->add_js_from_src('js/index.js');
 
-$db = new RegistrationDB();
+$data_set = DataSetFactory::get_data_set('registration');
+$vars_data_table = $data_set['vars'];
+$camps_data_table = $data_set['camps'];
+$art_data_table = $data_set['art'];
+$dmv_data_table = $data_set['dmv'];
+$event_data_table = $data_set['event'];
+
+$vars = $vars_data_table->read(new \Data\Filter('name eq year'));
+$year = $vars[0]['value'];
+
+$filter = array('year'=>$year);
+
+$camp_count = $camps_data_table->count($filter);
+$art_count = $art_data_table->count($filter);
+$dmv_count = $dmv_data_table->count($filter);
+$event_count = $event_data_table->count($filter);
 
 $tc  = '';
 $art = '';
@@ -23,7 +37,7 @@ if($page->is_tc_admin)
                                 <span class="glyphicon glyphicon-tent" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.count($db->getAllThemeCamps()).'</div>
+                                <div style="font-size: 40px;">'.$camp_count.'</div>
                                 <div>Theme Camps</div>
                             </div>
                         </div>
@@ -48,7 +62,7 @@ if($page->is_art_admin)
                                 <span class="glyphicon glyphicon-blackboard" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.count($db->getAllArtProjects()).'</div>
+                                <div style="font-size: 40px;">'.$art_count.'</div>
                                 <div>Art Projects</div>
                             </div>
                         </div>
@@ -73,7 +87,7 @@ if($page->is_dmv_admin)
                                 <span class="glyphicon glyphicon-road" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.count($db->getAllArtCars()).'</div>
+                                <div style="font-size: 40px;">'.$dmv_count.'</div>
                                 <div>Art Cars</div>
                             </div>
                         </div>
@@ -98,7 +112,7 @@ if($page->is_event_admin)
                                 <span class="glyphicon glyphicon-glass" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.count($db->getAllEvents()).'</div>
+                                <div style="font-size: 40px;">'.$event_count.'</div>
                                 <div>Events</div>
                             </div>
                         </div>

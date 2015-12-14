@@ -2,12 +2,11 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.SecurePage.php');
-require_once('class.RegistrationDB.php');
 $page = new SecurePage('Burning Flipside - Registration');
 
 $page->add_js_from_src('js/view_obj.js');
 
-if(!FlipSession::is_logged_in())
+if(!FlipSession::isLoggedIn())
 {
 $page->body .= '
     <div id="content">

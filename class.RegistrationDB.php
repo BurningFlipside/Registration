@@ -3,23 +3,51 @@ require_once("/var/www/secure_settings/class.FlipsideSettings.php");
 class RegistrationDB
 {
     private $client;
+    private $manager;
     private $db;
     
     function __construct()
     {
-        $this->client = new MongoClient("mongodb://db.burningflipside.com/registrations", 
+        if(class_exists('MongoClient'))
+        {
+            $this->client = new MongoClient("mongodb://db.burningflipside.com/registrations", 
                                         array('username'=>FlipsideSettings::$mongo['registrations']['user'], 'password'=>FlipsideSettings::$mongo['registrations']['pwd']));
-        $this->db     = $this->client->registrations;
+            $this->db     = $this->client->registrations;
+            $this->manager = null;
+        }
+        else if(class_exists('\MongoDB\Driver\Manager'))
+        {
+            $this->client = null;
+            $username = 'registration_rw';
+            $password = '8Vcf6LNA';
+            $this->manager = new \MongoDB\Driver\Manager("mongodb://$username:$password@db.burningflipside.com/registrations");
+            $this->db = 'registrations';
+        }
+        else
+        {
+            throw new \Exception('No supported backends detected!');
+        }
     }
 
     function getCurrentYear()
     {
-        $cursor = $this->db->vars->find(array('name'=>'year'));
+        $cursor = false;
+        if($this->manager !== null)
+        {
+            $query  = new \MongoDB\Driver\Query(array('name'=>'year'));
+            $cursor = $this->manager->executeQuery($this->db.'.vars', $query);
+        }
+        else
+        {
+            $cursor = $this->db->vars->find(array('name'=>'year'));
+            $cursor = $cursor->toArray();
+        }
+        var_dump($cursor); die();
         foreach($cursor as $doc)
         {
             return $doc['value'];
         }
-        return FALSE;
+        return false;
     }
 
     function getAllFromCollection($collection, $year = FALSE, $uid = false, $fields = false)
