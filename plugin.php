@@ -6,8 +6,8 @@ class RegistrationPlugin extends SecurePlugin
         $ret = array('View Registrations'=>$page->secure_root.'register/view.php',
                      'Theme Camp Registration'=>$page->secure_root.'register/tc_reg.php',
                      'Art Project Registration'=>$page->secure_root.'register/art_reg.php',
-                     'Art Car Registration'=>$page->secure_root.'/register/artCar_reg.php',
-                     'Event Registration'=>$page->secure_root.'/register/event_reg.php');
+                     'Art Car Registration'=>$page->secure_root.'register/artCar_reg.php',
+                     'Event Registration'=>$page->secure_root.'register/event_reg.php');
         //TODO check if user is admin
         //TODO check if user has existing registartions and change link names
         return $ret;
