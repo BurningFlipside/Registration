@@ -8,8 +8,11 @@ class RegistrationPlugin extends SecurePlugin
                      'Art Project Registration'=>$page->secure_root.'register/art_reg.php',
                      'Art Car Registration'=>$page->secure_root.'register/artCar_reg.php',
                      'Event Registration'=>$page->secure_root.'register/event_reg.php');
-        //TODO check if user is admin
-        //TODO check if user has existing registartions and change link names
+        if($user !== null && 
+           ($user->isInGroupNamed('RegistrationAdmins') || $user->isInGroupNamed('ArtAdmins') || $user->isInGroupNamed('CampAdmins') || $user->isInGroupNamed('DMVAdmins') || $user->isInGroupNamed('EventAdmins')))
+        {
+            $ret['Registration Admin'] = $page->secure_root.'register/_admin/index.php';
+        }
         return $ret;
     }
 
