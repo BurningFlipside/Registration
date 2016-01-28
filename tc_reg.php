@@ -9,10 +9,6 @@ $page->add_js_from_src('js/tc_reg.js');
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'This camp has been previously registered at Flipside', 'camp_reg_prev', 'checkbox', 'This camp has been registered at Burning Flipside in a previous year.', array('class'=>'ignore', 'data-tabcontrol'=>'prev_camp'));
 $page->add_spacer($index);
-$page->add_form_group($index, 'This camp is part of a village', 'village', 'checkbox', 'This camp is already a part of a village.', array('class'=>'ignore', 'data-tabcontrol'=>'village_step'));
-$page->add_spacer($index);
-$page->add_form_group($index, 'This camp is not part of a village, but is interested', 'village_interest', 'checkbox', 'This camp is not part of a village, but is interested in talking to other camps about being in a village together.');
-$page->add_spacer($index);
 $page->add_form_group($index, 'This camp has amplified sound', 'has_sound', 'checkbox', 'This camp has any form of amplified sound.', array('class'=>'ignore', 'data-tabcontrol'=>'sound_step', 'data-groupcontrol'=>'soundLead'));
 $page->add_spacer($index);
 
@@ -20,12 +16,6 @@ $index = $page->add_wizard_step('Previous Camp Information','prev_camp');
 $page->add_form_group($index, 'Previous Camp Name(s):', 'prevInfo_name', 'text', 'A list of names your camp has used previously.');
 $page->add_spacer($index);
 $page->add_form_group($index, 'Previous Number of Campers:', 'prevInfo_campers', 'text', 'The number of campers your camp had in the most recent year it was registered at Flipside.');
-$page->add_spacer($index);
-
-$index = $page->add_wizard_step('Village Information','village_step');
-$page->add_form_group($index, 'Village Name:', 'villageInfo_name', 'text', 'The name of the village this camp is affiliated with.');
-$page->add_spacer($index);
-$page->add_form_group($index, 'Please describe the character of your village', 'villageInfo_desc', 'textarea', 'A description of what your camp would like your village to be like.');
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Camp Contacts');
@@ -156,7 +146,8 @@ $options = array(
     array('value'=>'centralLessLoud', 'text'=>'Central - Less Loud'),
     array('value'=>'badlandsLoud', 'text'=>'Badlands - Loud'),
     array('value'=>'badlandsLessLoud', 'text'=>'Badlands - Less Loud'),
-    array('value'=>'corralLessLoud', 'text'=>'Corral - Less Loud')
+    array('value'=>'corralLessLoud', 'text'=>'Corral - Less Loud'),
+    array('value'=>'rvPark', 'text'=>'RV Park')
 );
 $page->add_form_group($index, 'Preference 1:', 'placement_pref1', 'select', 'Your first choice for a general type of placement.', array('options'=>$options));
 $page->add_spacer($index);
