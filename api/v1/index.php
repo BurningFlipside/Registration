@@ -87,11 +87,16 @@ function list_obj()
     $params = $app->request->params();
     $filter = false;
     $collection = get_collection_name();
+    $register_data_set = DataSetFactory::get_data_set('registration');
     if(validate_user_is_admin($app->user, $collection) && isset($params['filter']))
     {
         $filter = new \Data\Filter($params['filter']);
     }
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    else
+    {
+        $arr = $register_data_set['vars']->read(new \Data\Filter("name eq 'year'"));
+        $filter = new \Data\Filter('year eq '.$arr[0]['value']);
+    }
     $data_table = $register_data_set[$collection];
     $ret = array();
     if($app->odata->count)
