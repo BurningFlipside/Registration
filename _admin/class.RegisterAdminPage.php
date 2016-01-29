@@ -72,6 +72,10 @@ class RegisterAdminPage extends FlipAdminPage
         {
             $this->add_link('<span class="glyphicon glyphicon-glass"></span> Events', 'dmv.php');
         }
+        if($this->is_admin)
+        {
+            $this->add_link('<span class="fa fa-cog"></span> Variables', 'vars.php');
+        }
     }
 
     function print_page($header=true)

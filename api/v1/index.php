@@ -12,6 +12,7 @@ $app->group('/art', 'art');
 $app->group('/camps', 'camps');
 $app->group('/dmv', 'dmv');
 $app->group('/event', 'event');
+$app->group('/vars', 'vars');
 
 function get_collection_name()
 {
@@ -30,6 +31,7 @@ function trim_obj(&$obj)
         }
         else if(is_object($value) || is_array($value))
         {
+            if($key === 'value') continue;
             unset($obj[$key]);
         }
     }
@@ -400,6 +402,59 @@ function obj_contact($id, $lead = FALSE)
     }
 }
 
+function list_vars()
+{
+    global $app;
+    if(!$app->user)
+    {
+        throw new Exception('Must be logged in', ACCESS_DENIED);
+    }
+    else if(!$app->user->isInGroupNamed('RegistrationAdmins'))
+    {
+        throw new Exception('Must be RegistrationAdmins', ACCESS_DENIED);
+    }
+    $params = $app->request->params();
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $dataTable = $register_data_set['vars'];
+    $data = $dataTable->read();
+    $count = count($data);
+    for($i = 0; $i < $count; $i++)
+    {
+        trim_obj($data[$i]);
+    }
+    echo json_encode($data);
+}
+
+function create_var()
+{
+    global $app;
+    if(!$app->user)
+    {
+        throw new Exception('Must be logged in', ACCESS_DENIED);
+    }
+    else if(!$app->user->isInGroupNamed('RegistrationAdmins'))
+    {
+        throw new Exception('Must be RegistrationAdmins', ACCESS_DENIED);
+    }
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $dataTable = $register_data_set['vars'];
+    $obj = $app->getJsonBody();
+    $dataTable->create($obj);
+}
+
+function get_var($name)
+{
+    global $app;
+    if(!$app->user)
+    {
+        throw new Exception('Must be logged in', ACCESS_DENIED);
+    }
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $dataTable = $register_data_set['vars'];
+    $data = $dataTable->read(new \Data\Filter("name eq '$name'"));
+    echo json_encode($data[0]['value']);
+}
+
 function art()
 {
     global $app;
@@ -444,6 +499,14 @@ function event()
     $app->post('/:id', 'obj_edit');
     $app->put('/:id', 'obj_edit');
     $app->delete('/:id', 'obj_delete');
+}
+
+function vars()
+{
+    global $app;
+    $app->get('', 'list_vars');
+    $app->post('', 'create_var');
+    $app->get('/:name', 'get_var');
 }
 
 $app->run();
