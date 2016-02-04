@@ -132,10 +132,10 @@ $index = $page->add_wizard_step('Placement Information');
 $page->add_form_group($index, 'Number of Campers:', 'placement_campers', 'text', 'The number of campers your camp plans to have this year.');
 $page->add_spacer($index);
 $page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3">
-  <object class="embed-responsive-item" type="application/pdf" data="img/guide_map15a.pdf">
+  <object class="embed-responsive-item" type="application/pdf" data="img/guide_map16a.pdf">
       <p>
-          <img src="img/guide_map15a.png" class="img-responsive"/>
-          Sorry, your browser is unable to display the full res map in line. Click <a href="img/guide_map15a.pdf">here</a> to download it
+          <img src="img/guide_map16a.png" class="img-responsive"/>
+          Sorry, your browser is unable to display the full res map in line. Click <a href="img/guide_map16a.pdf">here</a> to download it
       </p>
   </object>
 </div>');
