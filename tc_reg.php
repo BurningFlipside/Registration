@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Theme Camp', 'Camp');
 
+$page->addJS(JS_BOOTBOX, false);
 $page->add_js_from_src('js/reg.js');
 $page->add_js_from_src('js/tc_reg.js');
 

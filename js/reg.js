@@ -278,6 +278,22 @@ function do_final_post(cont)
     }
 }
 
+function really_do_final(result)
+{
+    if(result)
+    {
+        do_final_post(true);
+    }
+}
+
+function do_final_dialog(cont)
+{
+    if(cont)
+    {
+        bootbox.confirm("Are you sure you want to save? After clicking OK on this dialog you will not be able to edit the registration furhter.", really_do_final);
+    }
+}
+
 function do_next_tab(cont)
 {
     if(cont)
@@ -290,7 +306,7 @@ function do_next_tab(cont)
 function final_post(e)
 {
     e.preventDefault();
-    validate_current(do_final_post);
+    validate_current(do_final_dialog);
     return false;
 }
 

@@ -57,6 +57,7 @@ class RegisterWizardPage extends SecurePage
             )
         );
         $this->reg_type_long = $reg_type_long;
+        $this->add_script();
     }
 
     function add_script()
@@ -64,7 +65,6 @@ class RegisterWizardPage extends SecurePage
         $this->add_js_from_src('/js/jquery.validate.js');
         $this->add_js_from_src('/js/bootstrap-formhelpers.min.js');
         $this->add_js_from_src('/js/bootstrap-switch.min.js');
-        $this->add_js_from_src('/js/login.js');
         $this->add_js_from_src('js/reg.js');
     }
 

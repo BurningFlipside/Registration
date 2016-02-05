@@ -4,6 +4,8 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Art Project');
 
+$page->addJS(JS_BOOTBOX, false);
+$page->add_js_from_src('js/reg.js');
 $page->add_js_from_src('js/art_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
