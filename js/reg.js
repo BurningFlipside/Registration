@@ -235,7 +235,10 @@ function get_post_url()
 
 function post_error(data)
 {
-    console.log(data);
+    if(data.responseJSON !== undefined)
+    {
+        data = data.responseJSON;
+    }
     if(data.message !== undefined)
     {
         alert("Unable to save data because: "+data.message);
@@ -248,14 +251,14 @@ function post_error(data)
 
 function post_data()
 {
-    console.trace();
     var data = form_data_to_obj();
     data['_id'] = _id;
     $.ajax({
         url: get_post_url(),
         type: 'post',
         dataType: 'json',
-        data: data,
+        data: JSON.stringify(data),
+        processData: false,
         success: post_done,
         error: post_error
     });
@@ -267,11 +270,13 @@ function do_final_post(cont)
     {
         var data = form_data_to_obj();
         data['_id'] = _id;
+        data['final'] = true;
         $.ajax({
             url: get_post_url(),
             type: 'post',
             dataType: 'json',
-            data: data,
+            data: JSON.stringify(data),
+            processData: false,
             success: final_post_done,
             error: post_error
         });

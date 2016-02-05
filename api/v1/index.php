@@ -234,7 +234,8 @@ function obj_add()
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $collection = get_collection_name();
-    $db = new RegistrationDB();
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
     $obj = $app->request->params();
     if($obj === null || count($obj) === 0)
     {
@@ -252,7 +253,10 @@ function obj_add()
     {
         $obj['registrars'] = array();
     }
-    array_push($obj['registrars'], $app->user->uid[0]);
+    if(!in_array($app->user->getUid(), $obj['registrars']))
+    {
+        array_push($obj['registrars'], $app->user->getUid());
+    }
     if(isset($obj['_id']) && strlen($obj['_id']) > 0)
     {
         $app->redirect($collection.'/'.$obj['_id'], 307);
@@ -260,7 +264,7 @@ function obj_add()
     }
     else
     {
-        $res = $db->addObjectToCollection($collection, $obj);
+        $res = $data_table->create($obj);
     }
     if($res === FALSE)
     {
