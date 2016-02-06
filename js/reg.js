@@ -429,6 +429,36 @@ function add_val_to_field(obj, fieldname, val)
     }
 }
 
+function resize_img(img, element, imageType)
+{
+    if(img.height <= 640 && img.width <= 640)
+    {
+        element.attr('src', img.src);
+    }
+    else
+    {
+        var canvas = document.createElement('canvas');
+        var max = 640;
+        var width = img.width;
+        var height = img.height;
+
+        if(width > height)
+        {
+            height *= max/width;
+            width   = max;
+        }
+        else
+        {
+            width *= max/height;
+            height = max;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        element.attr('src', canvas.toDataURL(imageType));
+    }
+}
+
 function handle_files()
 {
     var files = $(this)[0].files;
@@ -442,13 +472,14 @@ function handle_files()
             console.log(file);
             continue;
         }
+        var image = new Image();
         var img = $(this).next('.obj');
         if(img.length == 0)
         {
             img = $('<img>', {'class': 'obj', 'style':'max-width: 200px; max-height: 200px;'});
         }
         var reader = new FileReader();
-        reader.onloadend = function() {img.attr('src',reader.result);}
+        reader.onloadend = function() {image.src=reader.result; resize_img(image, img, imageType);}
         $(this).after(img);
         reader.readAsDataURL(file);
     }
