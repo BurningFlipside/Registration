@@ -201,7 +201,7 @@ function obj_view($id, $field = FALSE)
                 if(!is_array($obj[$field]) && strncmp($obj[$field], 'data:', 5) === 0)
                 {
                     $app->fmt = 'passthru';
-                    $str = substr($ap[$field], 5);
+                    $str = substr($obj[$field], 5);
                     $type = strtok($str, ';');
                     strtok(',');
                     $str = strtok("\0");
