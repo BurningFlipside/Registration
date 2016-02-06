@@ -1,4 +1,5 @@
 var _id = null;
+var final_done = false;
 
 function show_tab(e)
 {
@@ -23,7 +24,14 @@ function tab_changed(e)
     var last_index = $(e.target).parent().siblings().last().index();
     if(tab_index >= last_index)
     {
-        $('.next').html('<a onclick="final_post(event)" style="cursor: pointer;">Submit</a>');
+        if(final_done)
+        {
+            $('.next').html('<a onclick="window.location=\'add.php\'" style="cursor: pointer;">Exit</a>');
+        }
+        else
+        {
+            $('.next').html('<a onclick="final_post(event)" style="cursor: pointer;">Submit</a>');
+        }
     }
     else
     {
@@ -252,7 +260,10 @@ function post_error(data)
 function post_data()
 {
     var data = form_data_to_obj();
-    data['_id'] = _id;
+    if(_id !== null)
+    {
+        data['_id'] = _id;
+    }
     $.ajax({
         url: get_post_url(),
         type: 'post',
@@ -304,7 +315,10 @@ function do_next_tab(cont)
     if(cont)
     {
         $('li.active').nextAll(":not('.disabled')").first().contents().tab('show');
-        post_data();
+        if(!final_done)
+        {
+            post_data();
+        }
     }
 }
 
@@ -317,7 +331,14 @@ function final_post(e)
 
 function next_tab(e)
 {
-    validate_current(do_next_tab)
+    if(final_done)
+    {
+        do_next_tab(1);
+    }
+    else
+    {
+        validate_current(do_next_tab);
+    }
 }
 
 function tabcontrol_change()
@@ -545,6 +566,7 @@ function prior_ajax_done(data, prefix)
             }
         }
     }
+    console.log(data);
 }
 
 function prior_ajax_error(data)

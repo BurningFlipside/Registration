@@ -62,10 +62,7 @@ class RegisterWizardPage extends SecurePage
 
     function add_script()
     {
-        $this->add_js_from_src('/js/jquery.validate.js');
-        $this->add_js_from_src('/js/bootstrap-formhelpers.min.js');
-        $this->add_js_from_src('/js/bootstrap-switch.min.js');
-        $this->add_js_from_src('js/reg.js');
+        $this->add_js_from_src('js/reg.js', false);
     }
 
     function add_wizard_step($name, $id = FALSE)

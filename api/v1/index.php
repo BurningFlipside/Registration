@@ -236,19 +236,14 @@ function obj_add()
     $collection = get_collection_name();
     $register_data_set = DataSetFactory::get_data_set('registration');
     $data_table = $register_data_set[$collection];
-    $obj = $app->request->params();
-    if($obj === null || count($obj) === 0)
-    {
-        $body = $app->request->getBody();
-        $obj  = json_decode($body);
-        $obj  = get_object_vars($obj);
-    }
+    $obj = $app->getJsonBody(true);
     //Ensure minimum fields are set...
     if(!isset($obj['name']) || !isset($obj['teaser']) || !isset($obj['description']))
     {
         throw new Exception('Missing one or more required parameters!', INTERNAL_ERROR);
     }
-    $obj['year'] = $db->getCurrentYear();
+    $arr = $register_data_set['vars']->read(new \Data\Filter("name eq 'year'"));
+    $obj['year'] = $arr[0]['value'];
     if(!isset($obj['registrars']))
     {
         $obj['registrars'] = array();
@@ -284,25 +279,23 @@ function obj_edit($id)
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $collection = get_collection_name();
-    $db = new RegistrationDB();
-    $old_obj = $db->getObjectFromCollectionByID($collection, $id);
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
+    $filter  = new \Data\Filter("_id eq $id");
+    $old_obj = $data_table->read($filter);
+    $old_obj = $old_obj[0];
     if(validate_user_has_access($app->user, $old_obj, $collection) === FALSE)
     {
         throw new Exception('Cannot edit object that is not yours', ACCESS_DENIED);
     }
-    $obj = $app->request->params();
-    if($obj === null || count($obj) === 0)
-    {
-        $body = $app->request->getBody();
-        $obj  = json_decode($body);
-        $obj  = get_object_vars($obj);
-    }
+    $obj = $app->getJsonBody(true);
     //Ensure minimum fields are set...
     if(!isset($obj['name']) || !isset($obj['teaser']) || !isset($obj['description']))
     {
         throw new Exception('Missing one or more required parameters!', INTERNAL_ERROR);
     }
-    $obj['year'] = $db->getCurrentYear();
+    $arr = $register_data_set['vars']->read(new \Data\Filter("name eq 'year'"));
+    $obj['year'] = $arr[0]['value'];
     if(!isset($obj['registrars']))
     {
         $obj['registrars'] = array();
@@ -316,7 +309,7 @@ function obj_edit($id)
     {
         $obj['_id'] = $id;
     }
-    $res = $db->updateObjectInCollection($collection, $obj);
+    $res = $data_table->update($filter, $obj);
     if($res === FALSE)
     {
         throw new Exception('Unable to update object!', INTERNAL_ERROR);

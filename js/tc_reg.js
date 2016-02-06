@@ -69,6 +69,11 @@ function tc_ajax_done(data, prefix)
             //console.log(data[key]);
         }
     }
+    if(data.final === true)
+    {
+        $(':input').prop('disabled', true);
+        final_done = true;
+    }
 }
 
 function tc_ajax_error(data)
