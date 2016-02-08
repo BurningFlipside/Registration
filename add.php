@@ -13,29 +13,30 @@ $artDates = array();
 $dmvDates = array();
 $evtDates = array();
 
+$data_set = DataSetFactory::get_data_set('registration');
+$vars_data_table = $data_set['vars'];
+
+$vars = $vars_data_table->read(new \Data\Filter('name eq year'));
+$year = $vars[0]['value'];
+
+$vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
+$tcDates = $vars[0]['value'];
+
+$vars = $vars_data_table->read(new \Data\Filter('name eq artRegDates'));
+$artDates = $vars[0]['value'];
+
+$vars = $vars_data_table->read(new \Data\Filter('name eq dmvRegDates'));
+$dmvDates = $vars[0]['value'];
+
+$vars = $vars_data_table->read(new \Data\Filter('name eq eventRegDates'));
+$evtDates = $vars[0]['value'];
+
 if($page->user)
 {
-    $data_set = DataSetFactory::get_data_set('registration');
-    $vars_data_table = $data_set['vars'];
     $camps_data_table = $data_set['camps'];
     $art_data_table = $data_set['art'];
     $dmv_data_table = $data_set['dmv'];
     $event_data_table = $data_set['event'];
-
-    $vars = $vars_data_table->read(new \Data\Filter('name eq year'));
-    $year = $vars[0]['value'];
-
-    $vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
-    $tcDates = $vars[0]['value'];
-
-    $vars = $vars_data_table->read(new \Data\Filter('name eq artRegDates'));
-    $artDates = $vars[0]['value'];
-
-    $vars = $vars_data_table->read(new \Data\Filter('name eq dmvRegDates'));
-    $dmvDates = $vars[0]['value'];
-
-    $vars = $vars_data_table->read(new \Data\Filter('name eq eventRegDates'));
-    $evtDates = $vars[0]['value'];
 
     $filter = array('year'=>$year, 'registrars'=>$page->user->getUid());
 
