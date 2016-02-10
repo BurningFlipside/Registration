@@ -157,6 +157,38 @@ function obj_list_with_filter($field)
     echo json_encode($res);
 }
 
+function obj_search()
+{
+    global $app;
+    if(!$app->user)
+    {
+        throw new Exception('Must be logged in', ACCESS_DENIED);
+    }
+    $collection = get_collection_name();
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $params = $app->request->params();
+    foreach($params as $key=>$value)
+    {
+        $value = str_replace('"','',$value);
+        if($value[0] === '/')
+        {
+            $params[$key] = array('$regex'=>new MongoRegex("$value"));
+        }
+    }
+    if(!isset($params['year']))
+    {
+        $arr = $register_data_set['vars']->read(new \Data\Filter("name eq 'year'"));
+        $params['year'] = $arr[0]['value'];
+    }
+    else if($params['year'] === '*')
+    {
+        unset($params['year']);
+    }
+    $data_table = $register_data_set[$collection];
+    $objs = $data_table->read($params);
+    echo json_encode($objs);
+}
+
 function obj_view($id, $field = FALSE)
 {
     global $app;
@@ -328,13 +360,16 @@ function obj_delete($id)
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $collection = get_collection_name();
-    $db = new RegistrationDB();
-    $old_obj = $db->getObjectFromCollectionByID($collection, $id);
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
+    $filter  = new \Data\Filter("_id eq $id");
+    $old_obj = $data_table->read($filter);
+    $old_obj = $old_obj[0];
     if(validate_user_has_access($app->user, $old_obj, $collection) === FALSE)
     {
         throw new Exception('Cannot delete object that is not yours', ACCESS_DENIED);
     }
-    $res = $db->deleteObjectFromCollection($collection, $old_obj);
+    $res = $data_table->delete($filter);
     if($res === FALSE)
     {
         throw new Exception('Unable to delete object!', INTERNAL_ERROR);
@@ -456,6 +491,7 @@ function art()
 {
     global $app;
     $app->get('', 'list_obj');
+    $app->get('/Actions/Search', 'obj_search');
     $app->get('/:id(/:field)', 'obj_view');
     $app->post('', 'obj_add');
     $app->post('/:id', 'obj_edit');
@@ -468,6 +504,7 @@ function camps()
 {
     global $app;
     $app->get('', 'list_obj');
+    $app->get('/Actions/Search', 'obj_search');
     $app->get('/:id(/:field)', 'obj_view');
     $app->post('', 'obj_add');
     $app->post('/:id', 'obj_edit');
@@ -480,6 +517,7 @@ function dmv()
 {
     global $app;
     $app->get('', 'list_obj');
+    $app->get('/Actions/Search', 'obj_search');
     $app->get('/:id(/:field)', 'obj_view');
     $app->post('', 'obj_add');
     $app->post('/:id', 'obj_edit');
@@ -491,6 +529,7 @@ function event()
 {
     global $app;
     $app->get('', 'list_obj');
+    $app->get('/Actions/Search', 'obj_search');
     $app->get('/:id(/:field)', 'obj_view');
     $app->post('', 'obj_add');
     $app->post('/:id', 'obj_edit');
