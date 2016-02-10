@@ -74,6 +74,19 @@ function preg_quote(str, delimiter)
     return String(str).replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
 }
 
+function name_check_done(data)
+{
+    if(data.responseJSON !== undefined && data.responseJSON.length > 0)
+    {
+        $('#name').parents('.form-group').prop('class', 'form-group has-error'); 
+        this.callback(false);
+    }
+    else
+    {
+        this.callback(this.ret);
+    }
+}
+
 function validate_current(callback)
 {
     var ret = true;
@@ -116,12 +129,16 @@ function validate_current(callback)
     {
         var name = $('#name').val();
         name = preg_quote(name);
+        var obj = {};
+        obj.callback = callback;
+        obj.ret = ret;
         $.ajax({
-            url: get_list_all_url(),
+            url: get_list_all_url()+'/Actions/Search',
             data: 'name=/^'+encodeURIComponent(name)+'/i',
             type: 'get',
             dataType: 'json',
-            success: function(data){if(data.length > 0){ret = false; $('#name').parents('.form-group').prop('class', 'form-group has-error'); callback(false);}else{callback(ret);}}
+            context: obj,
+            complete: name_check_done
         });
     }
     else
@@ -333,7 +350,7 @@ function next_tab(e)
 {
     if(final_done)
     {
-        do_next_tab(1);
+        do_next_tab(true);
     }
     else
     {
