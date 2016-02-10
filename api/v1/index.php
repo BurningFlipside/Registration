@@ -62,7 +62,7 @@ function validate_user_has_access($user, $obj, $collection)
    {
        return true;
    }
-   else if(in_array($user->uid[0], $obj['registrars']))
+   else if(in_array($user->getUid(), $obj['registrars']))
    {
        return true;
    }
