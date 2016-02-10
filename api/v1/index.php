@@ -8,11 +8,25 @@ if($_SERVER['REQUEST_URI'][0] == '/' && $_SERVER['REQUEST_URI'][1] == '/')
 }
 
 $app = new FlipREST();
+$app->get('(/)', 'getRoot');
 $app->group('/art', 'art');
 $app->group('/camps', 'camps');
 $app->group('/dmv', 'dmv');
 $app->group('/event', 'event');
 $app->group('/vars', 'vars');
+
+function getRoot()
+{
+    global $app;
+    $ret = array();
+    $root = $app->request->getRootUri();
+    $ret['art'] = $root.'/art';
+    $ret['camps'] = $root.'/camps';
+    $ret['dmv'] = $root.'/dmv';
+    $ret['event'] = $root.'/event';
+    $ret['vars'] = $root.'/vars';
+    echo json_encode($ret);
+}
 
 function get_collection_name()
 {
