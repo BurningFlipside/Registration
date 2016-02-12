@@ -12,11 +12,11 @@ $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Day and Time');
 $days = array(
-    array('id'=>'Thursday', 'name'=>'Thursday May 26, 2015'),
-    array('id'=>'Friday', 'name'=>'Friday May 27, 2015'),
-    array('id'=>'Saturday', 'name'=>'Saturday May 28, 2015'),
-    array('id'=>'Sunday', 'name'=>'Sunday May 29, 2015'),
-    array('id'=>'Monday', 'name'=>'Monday May 30, 2015')
+    array('id'=>'Thursday', 'name'=>'Thursday May 26, 2016'),
+    array('id'=>'Friday', 'name'=>'Friday May 27, 2016'),
+    array('id'=>'Saturday', 'name'=>'Saturday May 28, 2016'),
+    array('id'=>'Sunday', 'name'=>'Sunday May 29, 2016'),
+    array('id'=>'Monday', 'name'=>'Monday May 30, 2016')
 );
 $day_count = count($days);
 for($i = 0; $i < $day_count; $i++)
