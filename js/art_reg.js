@@ -17,7 +17,7 @@ function pop_data()
         if(browser_supports_cors())
         {
             $.ajax({
-                url: 'https://profiles.burningflipside.com/ajax/user.php',
+                url: 'https://profiles.burningflipside.com/api/v1/users/me',
                 type: 'get',
                 dataType: 'json',
                 xhrFields: {withCredentials: true},
