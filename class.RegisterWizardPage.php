@@ -62,6 +62,7 @@ class RegisterWizardPage extends SecurePage
 
     function add_script()
     {
+        $this->addJS(JS_BOOTBOX, false);
         $this->add_js_from_src('js/reg.js', false);
     }
 
