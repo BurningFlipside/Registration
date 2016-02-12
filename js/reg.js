@@ -575,9 +575,9 @@ function prior_ajax_done(data, prefix)
         {
             prior_ajax_done(data[key], prefix+key+'_');
         }
-        else if($('#'+prefix+key).length > 0)
+        else if($("[id='"+prefix+key+"']").length > 0)
         {
-            var control = $('#'+prefix+key);
+            var control = $("[id='"+prefix+key+"']");
             if(control.filter('select').length > 0)
             {
                 if(control.val() === data[key])
@@ -596,7 +596,7 @@ function prior_ajax_done(data, prefix)
             }
             else if(control.filter('[type=checkbox]').length > 0)
             {
-                if(data[key] === 'true')
+                if(data[key] === 'true' || data[key] === true)
                 {
                     control.click();
                     control.attr('checked', 'true');
@@ -612,6 +612,10 @@ function prior_ajax_done(data, prefix)
                 var id = $('a[href=#'+panelID+']').parent().attr('id');
                 $('[data-tabcontrol='+id+']').prop('checked', 'true').change();
             }
+        }
+        else
+        {
+            console.log("[id='"+prefix+key+"']");
         }
     }
     console.log(data);
