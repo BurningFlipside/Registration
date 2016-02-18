@@ -15,7 +15,7 @@ class RegisterAdminPage extends FlipAdminPage
         $this->is_art_admin   = false;
         $this->is_dmv_admin   = false;
         $this->is_event_admin = false;
-        $this->user = FlipSession::getUser();
+        parent::__construct($title, 'RegistrationAdmins');
         if($this->user !== false)
         {
             if($this->user->isInGroupNamed('RegistrationAdmins'))
@@ -30,18 +30,22 @@ class RegisterAdminPage extends FlipAdminPage
             {
                 if($this->user->isInGroupNamed('ArtAdmins'))
                 {
+                    $this->is_admin       = true;
                     $this->is_art_admin   = true;
                 }
                 if($this->user->isInGroupNamed('CampAdmins'))
                 {
+                    $this->is_admin       = true;
                     $this->is_tc_admin    = true;
                 }
                 if($this->user->isInGroupNamed('DMVAdmins'))
                 {
+                    $this->is_admin       = true;
                     $this->is_dmv_admin   = true;
                 }
                 if($this->user->isInGroupNamed('EventAdmins'))
                 {
+                    $this->is_admin       = true;
                     $this->is_event_admin = true;
                 }
                 if(!$this->is_art_admin && !$this->is_tc_admin && !$this->is_dmv_admin && !$this->is_event_admin)
@@ -50,7 +54,6 @@ class RegisterAdminPage extends FlipAdminPage
                 }
             }
         }
-        parent::__construct($title, 'RegistrationAdmins');
     }
 
     function add_links()
