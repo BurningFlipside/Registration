@@ -349,7 +349,7 @@ function obj_edit($id)
     $obj['registrars'] = array_merge($obj['registrars'], $old_obj['registrars']);
     if(validate_user_is_admin($app->user, $collection) === FALSE)
     {
-        array_push($obj['registrars'], $app->user->uid[0]);
+        array_push($obj['registrars'], $app->user->getUid());
     }
     if(!isset($obj['_id']))
     {
