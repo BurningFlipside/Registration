@@ -436,7 +436,7 @@ class RegisterWizardPage extends SecurePage
                 <nav>
                     <ul class="pager">
                         <li class="previous"><a href="#" onclick="prev_tab(event)"><span aria-hidden="true">&larr;</span> Previous</a></li>
-                        <li class="next"><a href="#" onclick="next_tab(event)">Next <span aria-hidden="true">&rarr;</span></a></li>
+                        <li class="next"><a href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a></li>
                     </ul>
                 </nav>
             </div>

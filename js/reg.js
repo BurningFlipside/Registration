@@ -30,12 +30,12 @@ function tab_changed(e)
         }
         else
         {
-            $('.next').html('<a onclick="final_post(event)" style="cursor: pointer;">Submit</a>');
+            $('.next').html('<a onclick="final_post(event)" style="cursor: pointer;">Save and Finish</a>');
         }
     }
     else
     {
-        $('.next').html('<a href="#" onclick="next_tab(event)">Next <span aria-hidden="true">&rarr;</span></a>');
+        $('.next').html('<a href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a>');
     }
 }
 
