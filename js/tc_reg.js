@@ -69,7 +69,8 @@ function tc_ajax_done(data, prefix)
             //console.log(data[key]);
         }
     }
-    if(data.final === true)
+    var admin = getParameterByName('is_admin');
+    if(data.final === true && admin !== 'true')
     {
         $(':input').prop('disabled', true);
         final_done = true;
