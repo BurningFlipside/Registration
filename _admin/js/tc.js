@@ -51,12 +51,30 @@ function del_obj()
     bootbox.confirm("Are you sure you want to delete this camp?", really_del);
 }
 
+function unlockDone(data)
+{
+    if(data === true)
+    {
+        alert('Unlocked');
+    }
+    else
+    {
+        alert('Error!');
+    }
+}
+
+function unlockObject()
+{
+     _id = get_id_for_event(this);
+     $.post('../api/v1/camps/'+_id+'/Actions/Unlock', '', unlockDone);
+}
+
 function data_obtained(data)
 {
     if(data.length === 0) return;
     var columns = [{
         'data': null,
-        'defaultContent': '<button name="edit"><span class="glyphicon glyphicon-pencil"></span></button> <button name="del"><span class="glyphicon glyphicon-remove"></span></button>'
+        'defaultContent': '<button name="edit"><span class="fa fa-pencil"></span></button> <button name="del"><span class="fa fa-remove"></span></button> <button name="unlock"><span class="fa fa-unlock"></span></button>'
     }];
     for(var_name in data[0])
     {
@@ -90,6 +108,7 @@ function tc_page_loaded()
     });
     $('#tc tbody').on('click', 'button[name="edit"]', edit_obj);
     $('#tc tbody').on('click', 'button[name="del"]', del_obj);
+    $('#tc tbody').on('click', 'button[name="unlock"]', unlockObject);
 }
 
 $(tc_page_loaded);

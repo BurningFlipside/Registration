@@ -448,6 +448,25 @@ function obj_contact($id, $lead = FALSE)
     }
 }
 
+function objUnlock($id)
+{
+    global $app;
+    if(!$app->user)
+    {
+        throw new Exception('Must be logged in', ACCESS_DENIED);
+    }
+    $collection = get_collection_name();
+    if(validate_user_is_admin($app->user, $collection) === false)
+    {
+        throw new \Exception('Only admin users can unlock a registration');
+    }
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $data_table = $register_data_set[$collection];
+    $filter  = new \Data\Filter("_id eq $id");
+    $res = $data_table->update($filter, array('$unset'=>array('final'=>true)));
+    echo json_encode($res);
+}
+
 function list_vars()
 {
     global $app;
@@ -512,6 +531,7 @@ function art()
     $app->put('/:id', 'obj_edit');
     $app->delete('/:id', 'obj_delete');
     $app->post('/:id/contact(/:lead)', 'obj_contact');
+    $app->post('/:id/Actions/Unlock', 'objUnlock');
 }
 
 function camps()
@@ -525,6 +545,7 @@ function camps()
     $app->put('/:id', 'obj_edit');
     $app->delete('/:id', 'obj_delete');
     $app->post('/:id/contact(/:lead)', 'obj_contact');
+    $app->post('/:id/Actions/Unlock', 'objUnlock');
 }
 
 function dmv()
@@ -537,6 +558,7 @@ function dmv()
     $app->post('/:id', 'obj_edit');
     $app->put('/:id', 'obj_edit');
     $app->delete('/:id', 'obj_delete');
+    $app->post('/:id/Actions/Unlock', 'objUnlock');
 }
 
 function event()
@@ -549,6 +571,7 @@ function event()
     $app->post('/:id', 'obj_edit');
     $app->put('/:id', 'obj_edit');
     $app->delete('/:id', 'obj_delete');
+    $app->post('/:id/Actions/Unlock', 'objUnlock');
 }
 
 function vars()
