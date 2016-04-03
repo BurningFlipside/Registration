@@ -520,6 +520,26 @@ function get_var($name)
     echo json_encode($data[0]['value']);
 }
 
+function updateVar($name)
+{
+    global $app;
+    if(!$app->user)
+    {
+        throw new Exception('Must be logged in', ACCESS_DENIED);
+    }
+    else if(!$app->user->isInGroupNamed('RegistrationAdmins'))
+    {
+        throw new Exception('Must be RegistrationAdmins', ACCESS_DENIED);
+    }
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    $dataTable = $register_data_set['vars'];
+    $filter = new \Data\Filter("name eq '$name'");
+    $obj = $app->getJsonBody(true);
+    print_r($obj); die();
+    $res = $dataTable->update($filter, $obj);
+    echo json_encode($res);
+}
+
 function art()
 {
     global $app;
@@ -580,6 +600,7 @@ function vars()
     $app->get('', 'list_vars');
     $app->post('', 'create_var');
     $app->get('/:name', 'get_var');
+    $app->patch('/:name', 'updateVar');
 }
 
 $app->run();
