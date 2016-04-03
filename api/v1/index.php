@@ -104,9 +104,9 @@ function list_obj()
     $filter = false;
     $collection = get_collection_name();
     $register_data_set = DataSetFactory::get_data_set('registration');
-    if(validate_user_is_admin($app->user, $collection) && isset($params['filter']))
+    if(validate_user_is_admin($app->user, $collection) && $app->odata->filter !== false)
     {
-        $filter = new \Data\Filter($params['filter']);
+        $filter = $app->odata->filter;
     }
     else
     {
