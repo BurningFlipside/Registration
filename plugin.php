@@ -5,7 +5,13 @@ class RegistrationPlugin extends SecurePlugin
     {
         $ret = array('View Registrations'=>$page->secure_root.'register/view.php');
 
+        $data_set = false;
+        
+        try{
         $data_set = DataSetFactory::get_data_set('registration');
+        } catch(Exception $e) {
+            return;
+        }
         $vars_data_table = $data_set['vars'];
 
         $vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
