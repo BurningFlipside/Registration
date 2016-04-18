@@ -16,7 +16,7 @@ class RegisterAdminPage extends FlipAdminPage
         $this->is_dmv_admin   = false;
         $this->is_event_admin = false;
         parent::__construct($title, 'RegistrationAdmins');
-        if($this->user !== false)
+        if($this->user !== false && $this->user !== null)
         {
             if($this->user->isInGroupNamed('RegistrationAdmins'))
             {
