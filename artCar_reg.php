@@ -38,6 +38,9 @@ $index = $page->add_wizard_step('Flame Effects', 'fe');
 $page->add_form_group($index, 'Flame Effects Description', 'fire_flameEffects', 'textarea', 'Describe any flame effects such as propane or other flame effects.');
 $page->add_spacer($index);
 
+$index = $page->add_wizard_step('Final');
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert">Thank you for submitting your art car registration. To finalize your registration (you will not be able to edit it after this) please click "Save and Finish".</div>');
+$page->add_spacer($index);
 
 $page->print_page();
 ?>
