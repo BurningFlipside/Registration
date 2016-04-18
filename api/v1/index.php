@@ -9,6 +9,7 @@ if($_SERVER['REQUEST_URI'][0] == '/' && $_SERVER['REQUEST_URI'][1] == '/')
 
 $app = new FlipREST();
 $app->get('(/)', 'getRoot');
+$app->get('/\$all', 'getAll');
 $app->group('/art', 'art');
 $app->group('/camps', 'camps');
 $app->group('/dmv', 'dmv');
@@ -93,6 +94,46 @@ function validate_user_has_access($user, $obj, $collection)
    return false;
 }
 
+function getAll()
+{
+    global $app;
+    if(!$app->user)
+    {
+        throw new Exception('Must be logged in', ACCESS_DENIED);
+    }
+    $collections = array();
+    if(validate_user_is_admin($app->user, 'art'))
+    {
+        $collections[] = 'art';
+    }
+    if(validate_user_is_admin($app->user, 'camps'))
+    {
+        $collections[] = 'camps';
+    }
+    if(validate_user_is_admin($app->user, 'dmv'))
+    {
+        $collections[] = 'dmv';
+    }
+    if(validate_user_is_admin($app->user, 'event'))
+    {
+        $collections[] = 'event';
+    }
+    $count = count($collections);
+    if($count === 0)
+    {
+        echo 'false';
+    }
+    $res = array();
+    $register_data_set = DataSetFactory::get_data_set('registration');
+    for($i = 0; $i < $count; $i++)
+    {
+        $data_table = $register_data_set[$collections[$i]];
+        $data = $data_table->read($app->odata->filter, $app->odata->select, $app->odata->top, $app->odata->skip, $app->odata->orderby);
+        $res = array_merge($res, $data);
+    }
+    echo json_encode($res);
+}
+
 function list_obj()
 {
     global $app;
@@ -158,7 +199,7 @@ function obj_list_with_filter($field)
     }
     $register_data_set = DataSetFactory::get_data_set('registration');
     $data_table = $register_data_set[$collection];
-    $objs = $data_table->read(false);
+    $objs = $data_table->read($app->odata->filter);
     $res = array();
     $count = count($objs);
     for($i = 0; $i < $count; $i++)
