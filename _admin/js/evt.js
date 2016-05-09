@@ -8,8 +8,10 @@ var renderers = [
 ];
 
 var hidden = [
-    '_id'
+    '_id',
+    'final'
 ];
+
 
 function get_id_for_event(trigger)
 {
@@ -76,6 +78,13 @@ function data_obtained(data)
         }
         columns.push(col);
     }
+    for(i = 0; i < data.length; i++)
+    {
+        if(data[i]['final'] === undefined)
+        {
+            data[i]['final'] = false;
+        }
+    }
     $('#evt').dataTable({
         'data': data,
         'columns': columns
@@ -85,7 +94,7 @@ function data_obtained(data)
 function art_page_loaded()
 {
     $.ajax({
-        url: '/register/api/v1/event?no_logo=1',
+        url: '/register/api/v1/event?$filter=year eq 2016&no_logo=1',
         success: data_obtained
     });
     $('#evt tbody').on('click', 'button[name="edit"]', edit_obj);

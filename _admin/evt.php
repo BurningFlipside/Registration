@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
 $page = new RegisterAdminPage('Burning Flipside - Events');
 
-$page->add_js_from_src('//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js');
-$page->add_css_from_src('//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css');
+$page->addWellKnownJS(JS_DATATABLE, false);
+$page->addWellKnownCSS(CSS_DATATABLE, false);
 $page->add_js_from_src('js/bootbox.min.js');
 $page->add_js_from_src('js/evt.js');
 

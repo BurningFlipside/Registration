@@ -94,6 +94,13 @@ function data_obtained(data)
         }
         columns.push(col);
     }
+    for(i = 0; i < data.length; i++)
+    {
+        if(data[i]['final'] === undefined)
+        {
+            data[i]['final'] = false;
+        }
+    }
     $('#tc').dataTable({
         'data': data,
         'columns': columns

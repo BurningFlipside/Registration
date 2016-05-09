@@ -576,8 +576,7 @@ function updateVar($name)
     $dataTable = $register_data_set['vars'];
     $filter = new \Data\Filter("name eq '$name'");
     $obj = $app->getJsonBody(true);
-    print_r($obj); die();
-    $res = $dataTable->update($filter, $obj);
+    $res = $dataTable->update($filter, array('value'=>$obj));
     echo json_encode($res);
 }
 
