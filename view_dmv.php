@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 require_once('class.SecurePage.php');
 $page = new SecurePage('Burning Flipside - Registration');
 
-$page->add_js_from_src('js/view_obj.js');
+$page->addJSByURI('js/view_obj.js');
 
 if(!FlipSession::isLoggedIn())
 {
@@ -12,7 +12,7 @@ $page->body .= '
     <div id="content">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">You must <a href="https://profiles.burningflipside.com/login.php?return='.$page->current_url().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Registration system!</h1>
+                <h1 class="page-header">You must <a href="https://profiles.burningflipside.com/login.php?return='.$page->currentURL().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Registration system!</h1>
             </div>
         </div>
     </div>
@@ -58,5 +58,4 @@ $page->body .= '
 ';
 }
 
-$page->print_page();
-?>
+$page->printPage();

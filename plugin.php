@@ -8,7 +8,7 @@ class RegistrationPlugin extends SecurePlugin
         $data_set = false;
         
         try{
-        $data_set = DataSetFactory::get_data_set('registration');
+        $data_set = DataSetFactory::getDataSetByName('registration');
         } catch(Exception $e) {
             return;
         }
@@ -69,4 +69,3 @@ class RegistrationPlugin extends SecurePlugin
         return array('name'=>'Theme Camp, Art Project, Art Car, and Event Registration', 'link'=>'register/index.php');
     }
 }
-?>

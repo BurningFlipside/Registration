@@ -58,26 +58,26 @@ class RegisterAdminPage extends FlipAdminPage
 
     function add_links()
     {
-        $this->add_link('<span class="glyphicon glyphicon-dashboard"></span> Dashboard', 'index.php');
+        $this->addLink('<span class="glyphicon glyphicon-dashboard"></span> Dashboard', 'index.php');
         if($this->is_tc_admin)
         {
-            $this->add_link('<span class="glyphicon glyphicon-tent"></span> Theme Camps', 'tc.php');
+            $this->addLink('<span class="glyphicon glyphicon-tent"></span> Theme Camps', 'tc.php');
         }
         if($this->is_art_admin)
         {
-            $this->add_link('<span class="glyphicon glyphicon-blackboard"></span> Art Projects', 'art.php');
+            $this->addLink('<span class="glyphicon glyphicon-blackboard"></span> Art Projects', 'art.php');
         }
         if($this->is_dmv_admin)
         {
-            $this->add_link('<span class="glyphicon glyphicon-road"></span> Art Cars', 'dmv.php');
+            $this->addLink('<span class="glyphicon glyphicon-road"></span> Art Cars', 'dmv.php');
         }
         if($this->is_event_admin)
         {
-            $this->add_link('<span class="glyphicon glyphicon-glass"></span> Events', 'dmv.php');
+            $this->addLink('<span class="glyphicon glyphicon-glass"></span> Events', 'dmv.php');
         }
         if($this->is_admin)
         {
-            $this->add_link('<span class="fa fa-cog"></span> Variables', 'vars.php');
+            $this->addLink('<span class="fa fa-cog"></span> Variables', 'vars.php');
         }
     }
 
@@ -88,12 +88,11 @@ class RegisterAdminPage extends FlipAdminPage
             $this->body = '
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">You must <a href="https://profiles.burningflipside.com/login.php?return='.$this->current_url().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Ticket system!</h1>
+                <h1 class="page-header">You must <a href="https://profiles.burningflipside.com/login.php?return='.$this->currentURL().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Ticket system!</h1>
             </div>
         </div>';
         }
-        parent::print_page($header);
+        parent::printPage($header);
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */
-?>

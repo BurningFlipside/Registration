@@ -4,9 +4,9 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Art Project');
 
-$page->addJS(JS_BOOTBOX, false);
-$page->add_js_from_src('js/reg.js');
-$page->add_js_from_src('js/art_reg.js');
+$page->addWellKnownJS(JS_BOOTBOX, false);
+$page->addJSByURI('js/reg.js');
+$page->addJSByURI('js/art_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'This project needs logistical help', 'need_logistics', 'checkbox', 'This project has logisical needs such as needing help transporting to the site, heavy equipment needs, outside volunteers etc.', array('class'=>'ignore', 'data-tabcontrol'=>'logistics'));
@@ -212,4 +212,3 @@ function camelize($value)
 {
     return lcfirst(strtr(ucwords(strtr($value, array('_' => ' ', '.' => '_ ', '\\' => '_ '))), array(' ' => '')));
 }
-?>

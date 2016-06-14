@@ -13,7 +13,7 @@ $artDates = array();
 $dmvDates = array();
 $evtDates = array();
 
-$data_set = DataSetFactory::get_data_set('registration');
+$data_set = DataSetFactory::getDataSetByName('registration');
 $vars_data_table = $data_set['vars'];
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq year'));
@@ -162,5 +162,4 @@ $page->body .= '
     </ul>
 </div>';
 
-$page->print_page();
-?>
+$page->printPage();

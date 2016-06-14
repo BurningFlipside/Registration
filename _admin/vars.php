@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
 $page = new RegisterAdminPage('Burning Flipside - Registration Variables');
 
-$page->add_js_from_src('js/bootbox.min.js');
-$page->add_js_from_src('js/vars.js');
+$page->addWellKnownJS(JS_BOOTBOX);
+$page->addJSByURI('js/vars.js');
 
 if(!$page->is_admin)
 {
@@ -30,5 +30,4 @@ else
 
 $page->print_page();
 // vim: set tabstop=4 shiftwidth=4 expandtab:
-?>
 

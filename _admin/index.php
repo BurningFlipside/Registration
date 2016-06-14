@@ -4,9 +4,9 @@ error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
 $page = new RegisterAdminPage('Burning Flipside - Tickets');
 
-$page->add_js_from_src('js/index.js');
+$page->addJSByURI('js/index.js');
 
-$data_set = DataSetFactory::get_data_set('registration');
+$data_set = DataSetFactory::getDataSetByName('registration');
 $vars_data_table = $data_set['vars'];
 $camps_data_table = $data_set['camps'];
 $art_data_table = $data_set['art'];
@@ -142,5 +142,4 @@ $page->body .= '
 
 $page->print_page();
 // vim: set tabstop=4 shiftwidth=4 expandtab:
-?>
 
