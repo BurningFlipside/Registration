@@ -23,12 +23,12 @@ else
             </div>
         </div>
         <div class="row">
-            <a href="https://secure.burningflipside.com/register/api/v1/camps?fmt=xml&filter=year eq 2016">Data Dump Of Doom (.xml)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/campLead?fmt=csv&filter=year eq 2016">Camp Leads (.csv)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/soundLead?fmt=csv&filter=year eq 2016">Sound Leads (.csv)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/safetyLead?fmt=csv&filter=year eq 2016">Safety Leads (.csv)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/volunteering?fmt=csv&filter=year eq 2016">Volunteering Leads (.csv)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/cleanupLead?fmt=csv&filter=year eq 2016">Cleanup Leads (.csv)</a>
+            <a href="https://secure.burningflipside.com/register/api/v1/camps?fmt=xml&filter=year eq 2017">Data Dump Of Doom (.xml)</a> |
+            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/campLead?fmt=csv&filter=year eq 2017">Camp Leads (.csv)</a> |
+            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/soundLead?fmt=csv&filter=year eq 2017">Sound Leads (.csv)</a> |
+            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/safetyLead?fmt=csv&filter=year eq 2017">Safety Leads (.csv)</a> |
+            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/volunteering?fmt=csv&filter=year eq 2017">Volunteering Leads (.csv)</a> |
+            <a href="https://secure.burningflipside.com/register/api/v1/camps/*/cleanupLead?fmt=csv&filter=year eq 2017">Cleanup Leads (.csv)</a>
         </div>
         <div class="row">
             <table id="tc" class="table">
@@ -42,4 +42,3 @@ else
 $page->print_page();
 // vim: set tabstop=4 shiftwidth=4 expandtab:
 ?>
-

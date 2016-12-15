@@ -94,7 +94,7 @@ function data_obtained(data)
 function art_page_loaded()
 {
     $.ajax({
-        url: '/register/api/v1/event?$filter=year eq 2016&no_logo=1',
+        url: '/register/api/v1/event?$filter=year eq 2017&no_logo=1',
         success: data_obtained
     });
     $('#evt tbody').on('click', 'button[name="edit"]', edit_obj);
