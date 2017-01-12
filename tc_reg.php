@@ -13,6 +13,14 @@ $page->add_spacer($index);
 $page->add_form_group($index, 'This camp has amplified sound', 'has_sound', 'checkbox', 'This camp has any form of amplified sound.', array('class'=>'ignore', 'data-tabcontrol'=>'sound_step', 'data-groupcontrol'=>'soundLead'));
 $page->add_spacer($index);
 
+$index = $page->add_wizard_step('Images');
+$page->add_form_group($index, 'Image #1', 'image_1', 'file', 'A picture or drawing of your camp.');
+$page->add_spacer($index);
+$page->add_form_group($index, 'Image #2', 'image_2', 'file', 'A picture or drawing of your camp.');
+$page->add_spacer($index);
+$page->add_form_group($index, 'Image #3', 'image_3', 'file', 'A picture or drawing of your camp.');
+$page->add_spacer($index);
+
 $index = $page->add_wizard_step('Previous Camp Information','prev_camp');
 $page->add_form_group($index, 'Previous Camp Name(s):', 'prevInfo_name', 'text', 'A list of names your camp has used previously.');
 $page->add_spacer($index);

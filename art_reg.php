@@ -18,6 +18,14 @@ $page->add_spacer($index);
 $page->add_form_group($index, 'I would like to burn this project', 'will_burn', 'checkbox', 'This project has flame effects or I would like to burn this piece.', array('class'=>'ignore', 'data-tabcontrol'=>'fire', 'data-questcontrol'=>'fire_burnPlan'));
 $page->add_spacer($index);
 
+$index = $page->add_wizard_step('Images');
+$page->add_form_group($index, 'Image #1', 'image_1', 'file', 'A picture or drawing of your art.');
+$page->add_spacer($index);
+$page->add_form_group($index, 'Image #2', 'image_2', 'file', 'A picture or drawing of your art.');
+$page->add_spacer($index);
+$page->add_form_group($index, 'Image #3', 'image_3', 'file', 'A picture or drawing of your art.');
+$page->add_spacer($index);
+
 $index = $page->add_wizard_step('Art Team Contacts');
 $page->add_form_group($index, 'The lead is the only art project contact', 'just_me', 'checkbox', 'The lead will be contact for all issues about the project including safety, fire, cleanup, and sound.', array('class'=>'ignore'));
 $page->add_spacer($index);
