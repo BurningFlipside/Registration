@@ -62,8 +62,8 @@ class RegisterWizardPage extends SecurePage
 
     function add_script()
     {
-        $this->addJS(JS_BOOTBOX, false);
-        $this->add_js_from_src('js/reg.js', false);
+        $this->addWellKnownJS(JS_BOOTBOX, false);
+        $this->addJSByURI('js/reg.js', false);
     }
 
     function add_wizard_step($name, $id = FALSE)
@@ -406,7 +406,7 @@ class RegisterWizardPage extends SecurePage
     <div id="content">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">You must <a href="https://profiles.burningflipside.com/login.php?return='.$this->current_url().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Registration system!</h1>
+                <h1 class="page-header">You must <a href="https://profiles.burningflipside.com/login.php?return='.$this->currentURL().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Registration system!</h1>
             </div>
         </div>
     </div>
@@ -442,7 +442,7 @@ class RegisterWizardPage extends SecurePage
             </div>
         </div>';
         }
-        parent::print_page($header);
+        parent::printPage($header);
     }
 
     static function camelize($value)
@@ -450,4 +450,3 @@ class RegisterWizardPage extends SecurePage
         return lcfirst(strtr(ucwords(strtr($value, array('_' => ' ', '.' => '_ ', '\\' => '_ '))), array(' ' => '')));
     }
 }
-?>

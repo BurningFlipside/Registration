@@ -144,7 +144,7 @@ function list_obj()
     $params = $app->request->params();
     $filter = false;
     $collection = get_collection_name();
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     if(validate_user_is_admin($app->user, $collection) && $app->odata->filter !== false)
     {
         $filter = $app->odata->filter;
@@ -197,7 +197,7 @@ function obj_list_with_filter($field)
     {
         throw new Exception('User not admin', ACCESS_DENIED);
     }
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
     $objs = $data_table->read($app->odata->filter);
     $res = array();
@@ -220,7 +220,7 @@ function obj_search()
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $collection = get_collection_name();
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $params = $app->request->params();
     foreach($params as $key=>$value)
     {
@@ -257,7 +257,7 @@ function obj_view($id, $field = FALSE)
         return;
     }
     $collection = get_collection_name();
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
     $mongo_params = array();
     if(isset($params['no_logo']))
@@ -321,7 +321,7 @@ function obj_add()
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $collection = get_collection_name();
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
     $obj = $app->getJsonBody(true);
     //Ensure minimum fields are set...
@@ -366,7 +366,7 @@ function obj_edit($id)
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $collection = get_collection_name();
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
     $filter  = new \Data\Filter("_id eq $id");
     $old_obj = $data_table->read($filter);
@@ -415,7 +415,7 @@ function obj_delete($id)
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
     $collection = get_collection_name();
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
     $filter  = new \Data\Filter("_id eq $id");
     $old_obj = $data_table->read($filter);
@@ -501,7 +501,7 @@ function objUnlock($id)
     {
         throw new \Exception('Only admin users can unlock a registration');
     }
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
     $filter  = new \Data\Filter("_id eq $id");
     $res = $data_table->update($filter, array('$unset'=>array('final'=>true)));
@@ -520,7 +520,7 @@ function list_vars()
         throw new Exception('Must be RegistrationAdmins', ACCESS_DENIED);
     }
     $params = $app->request->params();
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $dataTable = $register_data_set['vars'];
     $data = $dataTable->read();
     $count = count($data);
@@ -542,7 +542,7 @@ function create_var()
     {
         throw new Exception('Must be RegistrationAdmins', ACCESS_DENIED);
     }
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $dataTable = $register_data_set['vars'];
     $obj = $app->getJsonBody();
     $dataTable->create($obj);
@@ -555,7 +555,7 @@ function get_var($name)
     {
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $dataTable = $register_data_set['vars'];
     $data = $dataTable->read(new \Data\Filter("name eq '$name'"));
     echo json_encode($data[0]['value']);
@@ -572,7 +572,7 @@ function updateVar($name)
     {
         throw new Exception('Must be RegistrationAdmins', ACCESS_DENIED);
     }
-    $register_data_set = DataSetFactory::get_data_set('registration');
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
     $dataTable = $register_data_set['vars'];
     $filter = new \Data\Filter("name eq '$name'");
     $obj = $app->getJsonBody(true);

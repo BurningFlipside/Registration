@@ -5,7 +5,13 @@ class RegistrationPlugin extends SecurePlugin
     {
         $ret = array('View Registrations'=>$page->secure_root.'register/view.php');
 
-        $data_set = DataSetFactory::get_data_set('registration');
+        $data_set = false;
+        
+        try{
+        $data_set = DataSetFactory::getDataSetByName('registration');
+        } catch(Exception $e) {
+            return;
+        }
         $vars_data_table = $data_set['vars'];
 
         $vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
@@ -63,4 +69,3 @@ class RegistrationPlugin extends SecurePlugin
         return array('name'=>'Theme Camp, Art Project, Art Car, and Event Registration', 'link'=>'register/index.php');
     }
 }
-?>

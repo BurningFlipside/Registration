@@ -4,10 +4,10 @@ error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
 $page = new RegisterAdminPage('Burning Flipside - Tickets');
 
-$page->add_js_from_src('//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js');
-$page->add_css_from_src('//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css');
-$page->add_js_from_src('js/bootbox.min.js');
-$page->add_js_from_src('js/dmv.js');
+$page->addWellKnownJS(JS_DATATABLE);
+$page->addWellKnownCSS(CSS_DATATABLE);
+$page->addWellKnownJS(JS_BOOTBOX);
+$page->addJSByURI('js/dmv.js');
 
 if(!$page->is_dmv_admin)
 {
@@ -35,5 +35,4 @@ else
 
 $page->print_page();
 // vim: set tabstop=4 shiftwidth=4 expandtab:
-?>
 

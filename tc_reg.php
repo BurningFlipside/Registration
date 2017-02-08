@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Theme Camp', 'Camp');
 
-$page->add_js_from_src('js/reg.js');
-$page->add_js_from_src('js/tc_reg.js');
+$page->addJSByURI('js/reg.js');
+$page->addJSByURI('js/tc_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'This camp has been previously registered at Flipside', 'camp_reg_prev', 'checkbox', 'This camp has been registered at Burning Flipside in a previous year.', array('class'=>'ignore', 'data-tabcontrol'=>'prev_camp'));
@@ -227,4 +227,3 @@ function camelize($value)
 {
     return lcfirst(strtr(ucwords(strtr($value, array('_' => ' ', '.' => '_ ', '\\' => '_ '))), array(' ' => '')));
 }
-?>

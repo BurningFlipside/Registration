@@ -17,8 +17,7 @@ class RegisterPage extends SecurePage
            $this->user->isInGroupNamed('DMVAdmins')          ||
            $this->user->isInGroupNamed('EventAdmins')))
         {
-           $this->add_link('Admin', $this->register_root.'/_admin/');
+           $this->addLink('Admin', $this->register_root.'/_admin/');
         }
     }
 }
-?>

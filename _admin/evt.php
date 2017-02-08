@@ -6,8 +6,8 @@ $page = new RegisterAdminPage('Burning Flipside - Events');
 
 $page->addWellKnownJS(JS_DATATABLE, false);
 $page->addWellKnownCSS(CSS_DATATABLE, false);
-$page->add_js_from_src('js/bootbox.min.js');
-$page->add_js_from_src('js/evt.js');
+$page->addWellKnownJS(JS_BOOTBOX);
+$page->addJSByURI('js/evt.js');
 
 if(!$page->is_event_admin)
 {
@@ -36,5 +36,4 @@ else
 
 $page->print_page();
 // vim: set tabstop=4 shiftwidth=4 expandtab:
-?>
 

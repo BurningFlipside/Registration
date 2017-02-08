@@ -8,7 +8,7 @@ $manage_add = '<li><a href="add.php">Add a new registration</a></li>';
 
 if($page->user)
 {
-    $data_set = DataSetFactory::get_data_set('registration');
+    $data_set = DataSetFactory::getDataSetByName('registration');
     $vars_data_table = $data_set['vars'];
     $camps_data_table = $data_set['camps'];
     $art_data_table = $data_set['art'];
@@ -50,5 +50,4 @@ $page->body .= '
     </ul>
 </div>';
 
-$page->print_page();
-?>
+$page->printPage();
