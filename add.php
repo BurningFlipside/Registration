@@ -38,7 +38,7 @@ if($page->user)
     $dmv_data_table = $data_set['dmv'];
     $event_data_table = $data_set['event'];
 
-    $filter = array('year'=>$year, 'registrars'=>$page->user->getUid());
+    $filter = array('year'=>$year, 'registrars'=>$page->user->uid);
 
     $camps  = $camps_data_table->read($filter);
     $arts   = $art_data_table->read($filter);

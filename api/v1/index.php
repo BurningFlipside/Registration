@@ -77,7 +77,7 @@ function validate_user_has_access($user, $obj, $collection)
    {
        return true;
    }
-   else if(in_array($user->getUid(), $obj['registrars']))
+   else if(in_array($user->uid, $obj['registrars']))
    {
        return true;
    }
@@ -335,9 +335,9 @@ function obj_add()
     {
         $obj['registrars'] = array();
     }
-    if(!in_array($app->user->getUid(), $obj['registrars']))
+    if(!in_array($app->user->uid, $obj['registrars']))
     {
-        array_push($obj['registrars'], $app->user->getUid());
+        array_push($obj['registrars'], $app->user->uid);
     }
     if(isset($obj['_id']) && strlen($obj['_id']) > 0)
     {
@@ -390,7 +390,7 @@ function obj_edit($id)
     $obj['registrars'] = array_merge($obj['registrars'], $old_obj['registrars']);
     if(validate_user_is_admin($app->user, $collection) === FALSE)
     {
-        array_push($obj['registrars'], $app->user->getUid());
+        array_push($obj['registrars'], $app->user->uid);
     }
     if(!isset($obj['_id']))
     {
