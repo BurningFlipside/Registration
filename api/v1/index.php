@@ -163,7 +163,7 @@ function list_obj()
     $mongo_params = array();
     if(isset($params['no_logo']))
     {
-        $mongo_params['fields'] = array('logo' => false);
+        $mongo_params['fields'] = array('logo' => false, 'image' => false);
     }
     $data = $data_table->read($filter, $app->odata->select, $app->odata->top, $app->odata->skip, $app->odata->orderby, $mongo_params);
     if(!validate_user_is_admin($app->user, $collection))
