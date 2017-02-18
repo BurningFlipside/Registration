@@ -87,7 +87,7 @@ function tc_ajax_error(data)
     else
     {
         alert("Unable to load data for unknown reason!");
-    } 
+    }
 }
 
 function add_new_struct_to_table(type, width, length, height, desc)
@@ -169,10 +169,10 @@ function pop_data()
         if(browser_supports_cors())
         {
             $.ajax({
-                url: 'https://profiles.burningflipside.com/api/v1/users/me',
+                url: window.profilesUrl+'/api/v1/users/me',
                 type: 'get',
                 dataType: 'json',
-                xhrFields: {withCredentials: true},
+                xhrFields: { withCredentials: true },
                 success: user_ajax_done});
         }
         else
