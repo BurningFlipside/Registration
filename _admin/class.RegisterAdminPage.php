@@ -1,5 +1,4 @@
 <?php
-require_once('class.SecurePage.php');
 require_once('class.FlipSession.php');
 class RegisterAdminPage extends FlipAdminPage
 {

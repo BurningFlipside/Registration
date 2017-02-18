@@ -1,5 +1,5 @@
 <?php
-require_once('class.SecurePage.php');
+require_once('../class.SecurePage.php');
 class RegisterPage extends SecurePage
 {
     public $register_root;

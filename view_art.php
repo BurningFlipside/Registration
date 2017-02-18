@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once('class.SecurePage.php');
+require_once('class.RegisterPage.php');
 $page = new SecurePage('Burning Flipside - Registration');
 
 $page->addJSByURI('js/view_obj.js');

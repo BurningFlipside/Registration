@@ -1,5 +1,5 @@
 <?php
-require_once('class.SecurePage.php');
+require_once('../class.SecurePage.php');
 class RegisterWizardPage extends SecurePage
 {
     private $reg_type_long;
@@ -18,10 +18,10 @@ class RegisterWizardPage extends SecurePage
             $this->reg_type_short = $reg_type_short;
         }
         $this->steps = array(
-            array('name'=>'Public Information', 
+            array('name'=>'Public Information',
                   'content'=>array(
-                      array('type'=>'form-group', 
-                            'label'=>$this->reg_type_short.' Name', 
+                      array('type'=>'form-group',
+                            'label'=>$this->reg_type_short.' Name',
                             'name'=>'name',
                             'required'=>'true',
                             'control'=>array('type'=>'text')

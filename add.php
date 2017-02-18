@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once('class.SecurePage.php');
+require_once('class.RegisterPage.php');
 $page = new SecurePage('Burning Flipside - Registration');
 
 $camps    = array();
@@ -68,7 +68,7 @@ if($camps_count > 0)
             $manage_camp.= '<li><a href="tc_reg.php?_id='.$camps[$i]['_id'].'">View your theme camp: '.$camps[$i]['name'].'</a></li>';
         }
         else
-        { 
+        {
             $manage_camp.= '<li><a href="tc_reg.php?_id='.$camps[$i]['_id'].'">Manage your theme camp: '.$camps[$i]['name'].'</a></li>';
         }
     }
@@ -143,10 +143,10 @@ if($events_count > 0)
         }
         else
         {
-            $manage_event.= '<li><a href="event_reg.php?_id='.$events[$i]['_id'].'">Manage your event: '.$events[$i]['name'].'</a></li>'; 
+            $manage_event.= '<li><a href="event_reg.php?_id='.$events[$i]['_id'].'">Manage your event: '.$events[$i]['name'].'</a></li>';
         }
     }
-    $manage_event.= '</ul>'; 
+    $manage_event.= '</ul>';
 }
 
 $page->body .= '
