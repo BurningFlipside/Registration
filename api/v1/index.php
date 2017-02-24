@@ -442,10 +442,13 @@ function obj_contact($id, $lead = FALSE)
     {
         throw new Exception('Must be logged in', ACCESS_DENIED);
     }
-    require_once('class.FlipsideMail.php');
     $collection = get_collection_name();
-    $db = new RegistrationDB();
-    $obj = $db->getObjectFromCollectionByID($collection, $id);
+
+    $register_data_set = DataSetFactory::getDataSetByName('registration');
+    $data_table = $register_data_set[$collection];
+    $filter  = new \Data\Filter("_id eq $id");
+    $obj = $data_table->read($filter);
+
     if($lead === FALSE)
     {
         $defaults = array(
@@ -468,20 +471,19 @@ function obj_contact($id, $lead = FALSE)
         $params = json_decode($body);
         $params = get_object_vars($params);
     }
-    $lead = $obj[$lead];
-    $mail = new FlipsideMail();
-    $email = array(
-        'reply_to'  => $app->user->mail[0],
-        'from_name' => 'Burning Flipside Contact Form',
-        'to'        => $lead['email'],
-        'subject'   => $params['subject'],
-        'body'      => $params['email_text'],
-        'alt_body'  => $params['email_text']
-    );
-    $ret = $mail->send_HTML($email);
-    if($ret === FALSE)
+    $lead = $obj[0][$lead];
+    $email_msg = new \Email\Email();
+    $email_msg->setFromAddress('webmaster@burningflipside.com','Burning Flipside Contact Form');
+    $email_msg->setReplyTo($app->user->mail);
+    $email_msg->addToAddress($lead['email']);
+    $email_msg->setTextBody($params['email_text']);
+    $email_msg->setHTMLBody($params['email_text']);
+    $email_msg->setSubject($params['subject']);
+    $email_provider = \EmailProvider::getInstance();
+
+    if($email_provider->sendEmail($email_msg) === false)
     {
-         throw new Exception('Unable to send mail! '.$mail->ErrorInfo, INTERNAL_ERROR);
+        throw new Exception('Unable to send mail! '.$mail->ErrorInfo, INTERNAL_ERROR);
     }
     else
     {
