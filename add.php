@@ -13,6 +13,8 @@ $artDates = array();
 $dmvDates = array();
 $evtDates = array();
 
+$now = time();
+
 $data_set = DataSetFactory::getDataSetByName('registration');
 $vars_data_table = $data_set['vars'];
 
@@ -21,15 +23,27 @@ $year = $vars[0]['value'];
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
 $tcDates = $vars[0]['value'];
+$tcStart = strtotime($tcDates['start']);
+$tcEnd   = strtotime($tcDates['end']);
+$tcRegClosed = $now < $tcStart || $now > $tcEnd;
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq artRegDates'));
 $artDates = $vars[0]['value'];
+$artStart = strtotime($artDates['start']);
+$artEnd   = strtotime($artDates['end']);
+$artRegClosed = $now < $artStart || $now > $artEnd;
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq dmvRegDates'));
 $dmvDates = $vars[0]['value'];
+$dmvStart = strtotime($dmvDates['start']);
+$dmvEnd   = strtotime($dmvDates['end']);
+$dmvRegClosed = $now < $dmvStart || $now > $dmvEnd;
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq eventRegDates'));
 $evtDates = $vars[0]['value'];
+$evtStart = strtotime($evtDates['start']);
+$evtEnd   = strtotime($evtDates['end']);
+$evtRegClosed = $now < $evtStart || $now > $evtEnd;
 
 if($page->user)
 {
@@ -50,20 +64,19 @@ $arts_count   = count($arts);
 $cars_count   = count($cars);
 $events_count = count($events);
 
-$now = time();
-$tcStart = strtotime($tcDates['start']);
-$tcEnd   = strtotime($tcDates['end']);
 
-$manage_camp = '<li><a href="tc_reg.php">Register a new theme camp</a></li>';
-if($now < $tcStart || $now > $tcEnd)
+
+$manage_camp = '<li><a href="tc_reg.php">Register a Theme Camp</a></li>';
+if($tcRegClosed)
 {
     $manage_camp = '<li>Theme Camp Registration is Closed</li>';
 }
 if($camps_count > 0)
 {
+    $manage_camp.= '<ul>';
     for($i = 0; $i < $camps_count; $i++)
     {
-        if($now < $tcStart || $now > $tcEnd)
+        if($tcRegClosed)
         {
             $manage_camp.= '<li><a href="tc_reg.php?_id='.$camps[$i]['_id'].'">View your theme camp: '.$camps[$i]['name'].'</a></li>';
         }
@@ -72,13 +85,12 @@ if($camps_count > 0)
             $manage_camp.= '<li><a href="tc_reg.php?_id='.$camps[$i]['_id'].'">Manage your theme camp: '.$camps[$i]['name'].'</a></li>';
         }
     }
+    $manage_camp.= '</ul>';
 }
 
-$artStart = strtotime($artDates['start']);
-$artEnd   = strtotime($artDates['end']);
 
-$manage_art = '<li><a href="art_reg.php">Register a new art project</a></li>';
-if($now < $artStart || $now > $artEnd)
+$manage_art = '<li><a href="art_reg.php">Register an Art Project</a></li>';
+if($artRegClosed)
 {
     $manage_art = '<li>Art Registration is Closed</li>';
 }
@@ -87,7 +99,7 @@ if($arts_count > 0)
     $manage_art.= '<ul>';
     for($i = 0; $i < $arts_count; $i++)
     {
-       if($now < $artStart || $now > $artEnd)
+       if($artRegClosed)
        {
            $manage_art.= '<li><a href="art_reg.php?_id='.$arts[$i]['_id'].'">View your art project: '.$arts[$i]['name'].'</a></li>';
        }
@@ -99,11 +111,9 @@ if($arts_count > 0)
     $manage_art.= '</ul>';
 }
 
-$dmvStart = strtotime($dmvDates['start']);
-$dmvEnd   = strtotime($dmvDates['end']);
 
-$manage_car = '<li><a href="artCar_reg.php">Register a new art car</a></li>';
-if($now < $dmvStart || $now > $dmvEnd)
+$manage_car = '<li><a href="artCar_reg.php">Register an Art Car</a></li>';
+if($dmvRegClosed)
 {
     $manage_car = '<li>Art Car Registration is Closed</li>';
 }
@@ -112,23 +122,21 @@ if($cars_count > 0)
     $manage_car.= '<ul>';
     for($i = 0; $i < $events_count; $i++)
     {
-        if($now < $dmvStart || $now > $dmvEnd)
+        if($dmvRegClosed)
         {
-            $manage_car = '<li><a href="artCar_reg.php?_id='.$cars[$i]['_id'].'">View your art car: '.$cars[$i]['name'].'</a></li>';
+            $manage_car.= '<li><a href="artCar_reg.php?_id='.$cars[$i]['_id'].'">View your art car: '.$cars[$i]['name'].'</a></li>';
         }
         else
         {
-            $manage_car = '<li><a href="artCar_reg.php?_id='.$cars[$i]['_id'].'">Manage your art car: '.$cars[$i]['name'].'</a></li>';
+            $manage_car.= '<li><a href="artCar_reg.php?_id='.$cars[$i]['_id'].'">Manage your art car: '.$cars[$i]['name'].'</a></li>';
         }
     }
     $manage_car.= '</ul>';
 }
 
-$evtStart = strtotime($evtDates['start']);
-$evtEnd   = strtotime($evtDates['end']);
 
-$manage_event = '<li><a href="event_reg.php">Register a new event</a></li>';
-if($now < $evtStart || $now > $evtEnd)
+$manage_event = '<li><a href="event_reg.php">Register an Event</a></li>';
+if($evtRegClosed)
 {
     $manage_event = '<li>Event Registration is Closed</li>';
 }
@@ -137,7 +145,7 @@ if($events_count > 0)
     $manage_event.= '<ul>';
     for($i = 0; $i < $events_count; $i++)
     {
-        if($now < $evtStart || $now > $evtEnd)
+        if($evtRegClosed)
         {
             $manage_event.= '<li><a href="event_reg.php?_id='.$events[$i]['_id'].'">View your event: '.$events[$i]['name'].'</a></li>';
         }
