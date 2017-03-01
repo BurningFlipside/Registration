@@ -80,18 +80,9 @@ class RegisterAdminPage extends FlipAdminPage
         }
     }
 
-    function print_page($header=true)
+    public function isAdmin()
     {
-        if($this->user == FALSE)
-        {
-            $this->body = '
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">You must <a href="'.$this->profilesUrl.'/login.php?return='.$this->currentURL().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Ticket system!</h1>
-            </div>
-        </div>';
-        }
-        parent::printPage($header);
+        return ($this->is_admin === true || $this->is_tc_admin === true || $this->is_art_admin === true || $this->is_dmv_admin === true || $this->is_event_admin === true);
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */
