@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.RegisterPage.php');
-$page = new RegisterPage('Burning Flipside - Registration');
+$page = new SecurePage('Burning Flipside - Registration');
 
 $manage_add = '<li><a href="add.php">Add a new registration</a></li>';
 
