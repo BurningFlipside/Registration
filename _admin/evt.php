@@ -22,8 +22,8 @@ else
             </div>
         </div>
         <div class="row">
-            <a href="https://secure.burningflipside.com/register/api/v1/event?fmt=xml">Data Dump Of Doom (.xml)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/event?fmt=csv">Spreadsheet (.csv)</a>
+            <a href="../api/v1/event?fmt=xml">Data Dump Of Doom (.xml)</a> |
+            <a href="../api/v1/event?fmt=csv">Spreadsheet (.csv)</a>
         </div>
         <div class="row">
             <table id="evt" class="table">
