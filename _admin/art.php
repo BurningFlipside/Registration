@@ -22,11 +22,11 @@ else
             </div>
         </div>
         <div class="row">
-            <a href="https://secure.burningflipside.com/register/api/v1/art?fmt=xml">Data Dump Of Doom (.xml)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/art/*/artLead?fmt=csv">Art Leads (.csv)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/art/*/soundLead?fmt=csv">Sound Leads (.csv)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/art/*/safetyLead?fmt=csv">Safety Leads (.csv)</a> |
-            <a href="https://secure.burningflipside.com/register/api/v1/art/*/cleanupLead?fmt=csv">Cleanup Leads (.csv)</a>
+            <a href="../api/v1/art?fmt=xml">Data Dump Of Doom (.xml)</a> |
+            <a href="../api/v1/art/*/artLead?fmt=csv">Art Leads (.csv)</a> |
+            <a href="../api/v1/art/*/soundLead?fmt=csv">Sound Leads (.csv)</a> |
+            <a href="../api/v1/art/*/safetyLead?fmt=csv">Safety Leads (.csv)</a> |
+            <a href="../api/v1/art/*/cleanupLead?fmt=csv">Cleanup Leads (.csv)</a>
         </div>
         <div class="row">
             <table id="art" class="table">

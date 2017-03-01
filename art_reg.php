@@ -99,7 +99,7 @@ for($i = 0; $i < $panel_count; $i++)
 
 
 $index = $page->add_wizard_step('Placement Information');
-$page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-bed" aria-hidden="true"></span> If this piece is to be placed with your theme camp, be sure it\'s footprint is included on the theme camp registration form at <a href="https://secure.burningflipside.com/register/add.php" class="alert-link">https://secure.burningflipside.com/register/add.php</a>.</div>');
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-bed" aria-hidden="true"></span> If this piece is to be placed with your theme camp, be sure it\'s footprint is included on the theme camp registration form <a href="add.php" class="alert-link">here</a>.</div>');
 $page->add_form_group($index, 'Size:', 'placement_size', 'text', 'The number of campers your camp plans to have this year.');
 $page->add_spacer($index);
 $options = array(

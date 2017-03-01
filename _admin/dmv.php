@@ -22,7 +22,7 @@ else
             </div>
         </div>
         <div class="row">
-            <a href="https://secure.burningflipside.com/register/api/v1/dmv?fmt=xml">Data Dump Of Doom (.xml)</a>
+            <a href="../api/v1/dmv?fmt=xml">Data Dump Of Doom (.xml)</a>
         </div>
         <div class="row">
             <table id="dmv" class="table">
