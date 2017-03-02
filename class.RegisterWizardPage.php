@@ -1,6 +1,6 @@
 <?php
-require_once('../class.SecurePage.php');
-class RegisterWizardPage extends SecurePage
+require_once('../class.SecureLoginRequiredPage.php');
+class RegisterWizardPage extends SecureLoginRequiredPage
 {
     private $reg_type_long;
     private $reg_type_short;
@@ -400,20 +400,6 @@ class RegisterWizardPage extends SecurePage
 
     function print_page($header=true)
     {
-        if(!FlipSession::isLoggedIn())
-        {
-        $this->body .= '
-    <div id="content">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">You must <a href="'.$this->profilesUrl.'/login.php?return='.$this->currentURL().'">log in <span class="glyphicon glyphicon-log-in"></span></a> to access the Burning Flipside Registration system!</h1>
-            </div>
-        </div>
-    </div>
-';
-        }
-        else
-        {
         $this->body = '
         <div id="content">
             <div id="rootwizard">
@@ -441,7 +427,6 @@ class RegisterWizardPage extends SecurePage
                 </nav>
             </div>
         </div>';
-        }
         parent::printPage($header);
     }
 
