@@ -34,7 +34,7 @@ if($page->is_tc_admin)
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-3">
-                                <span class="glyphicon glyphicon-tent" style="font-size: 5em;"></span>
+                                <span class="fa fa-bed" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
                                 <div style="font-size: 40px;">'.$camp_count.'</div>
@@ -45,7 +45,7 @@ if($page->is_tc_admin)
                     <a href="tc.php">
                         <div class="panel-footer">
                             <span class="pull-left">View Details</span>
-                            <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                            <span class="pull-right fa fa-arrow-circle-right"></span>
                             <div class="clearfix"></div>
                         </div>
                     </a>
@@ -59,7 +59,7 @@ if($page->is_art_admin)
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-3">
-                                <span class="glyphicon glyphicon-blackboard" style="font-size: 5em;"></span>
+                                <span class="fa fa-picture-o" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
                                 <div style="font-size: 40px;">'.$art_count.'</div>
@@ -70,7 +70,7 @@ if($page->is_art_admin)
                     <a href="art.php">
                         <div class="panel-footer">
                             <span class="pull-left">View Details</span>
-                            <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                            <span class="pull-right fa fa-arrow-circle-right"></span>
                             <div class="clearfix"></div>
                         </div>
                     </a>
@@ -84,7 +84,7 @@ if($page->is_dmv_admin)
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-3">
-                                <span class="glyphicon glyphicon-road" style="font-size: 5em;"></span>
+                                <span class="fa fa-car" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
                                 <div style="font-size: 40px;">'.$dmv_count.'</div>
@@ -95,7 +95,7 @@ if($page->is_dmv_admin)
                     <a href="dmv.php">
                         <div class="panel-footer">
                             <span class="pull-left">View Details</span>
-                            <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                            <span class="pull-right fa fa-arrow-circle-right"></span>
                             <div class="clearfix"></div>
                         </div>
                     </a>
@@ -109,7 +109,7 @@ if($page->is_event_admin)
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-3">
-                                <span class="glyphicon glyphicon-glass" style="font-size: 5em;"></span>
+                                <span class="fa fa-calendar" style="font-size: 5em;"></span>
                             </div>
                             <div class="col-xs-9 text-right">
                                 <div style="font-size: 40px;">'.$event_count.'</div>
@@ -120,7 +120,7 @@ if($page->is_event_admin)
                     <a href="evt.php">
                         <div class="panel-footer">
                             <span class="pull-left">View Details</span>
-                            <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                            <span class="pull-right fa fa-arrow-circle-right"></span>
                             <div class="clearfix"></div>
                         </div>
                     </a>
