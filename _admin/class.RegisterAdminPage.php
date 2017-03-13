@@ -57,22 +57,22 @@ class RegisterAdminPage extends FlipAdminPage
 
     function add_links()
     {
-        $this->addLink('<span class="glyphicon glyphicon-dashboard"></span> Dashboard', 'index.php');
+        $this->addLink('<span class="fa fa-tachometer"></span> Dashboard', 'index.php');
         if($this->is_tc_admin)
         {
-            $this->addLink('<span class="glyphicon glyphicon-tent"></span> Theme Camps', 'tc.php');
+            $this->addLink('<span class="fa fa-bed"></span> Theme Camps', 'tc.php');
         }
         if($this->is_art_admin)
         {
-            $this->addLink('<span class="glyphicon glyphicon-blackboard"></span> Art Projects', 'art.php');
+            $this->addLink('<span class="fa fa-picture-o"></span> Art Projects', 'art.php');
         }
         if($this->is_dmv_admin)
         {
-            $this->addLink('<span class="glyphicon glyphicon-road"></span> Art Cars', 'dmv.php');
+            $this->addLink('<span class="fa fa-car"></span> Art Cars', 'dmv.php');
         }
         if($this->is_event_admin)
         {
-            $this->addLink('<span class="glyphicon glyphicon-glass"></span> Events', 'dmv.php');
+            $this->addLink('<span class="fa fa-calendar"></span> Events', 'dmv.php');
         }
         if($this->is_admin)
         {

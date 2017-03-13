@@ -56,7 +56,7 @@ function data_obtained(data)
     if(data.length === 0) return;
     var columns = [{
         'data': null,
-        'defaultContent': '<button name="edit"><span class="glyphicon glyphicon-pencil"></span></button> <button name="del"><span class="glyphicon glyphicon-remove"></span></button>'
+        'defaultContent': '<button name="edit"><span class="fa fa-pencil"></span></button> <button name="del"><span class="fa fa-remove"></span></button>'
     }];
     for(var_name in data[0])
     {
