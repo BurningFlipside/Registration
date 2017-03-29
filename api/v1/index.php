@@ -505,8 +505,8 @@ function objUnlock($id)
     }
     $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
-    $filter  = new \Data\Filter("_id eq $id");
-    $res = $data_table->update($filter, array('$unset'=>array('final'=>true)));
+    $filter  = new \Data\Filter("_id eq '$id'");
+    $res = $data_table->update($filter, array('final'=>false));
     echo json_encode($res);
 }
 
