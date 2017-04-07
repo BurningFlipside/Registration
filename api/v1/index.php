@@ -163,7 +163,7 @@ function list_obj()
     $mongo_params = array();
     if(isset($params['no_logo']))
     {
-        $mongo_params['fields'] = array('logo' => false, 'image' => false);
+        $mongo_params['fields'] = array('logo' => false, 'image_1' => false, 'image_2' => false, 'image_3' => false, 'image' => false);
     }
     $data = $data_table->read($filter, $app->odata->select, $app->odata->top, $app->odata->skip, $app->odata->orderby, $mongo_params);
     if(!validate_user_is_admin($app->user, $collection))
@@ -505,8 +505,8 @@ function objUnlock($id)
     }
     $register_data_set = DataSetFactory::getDataSetByName('registration');
     $data_table = $register_data_set[$collection];
-    $filter  = new \Data\Filter("_id eq $id");
-    $res = $data_table->update($filter, array('$unset'=>array('final'=>true)));
+    $filter  = new \Data\Filter("_id eq '$id'");
+    $res = $data_table->update($filter, array('final'=>false));
     echo json_encode($res);
 }
 
@@ -582,6 +582,20 @@ function updateVar($name)
     echo json_encode($res);
 }
 
+function getClosed($name)
+{
+    $dataSet = DataSetFactory::getDataSetByName('registration');
+    $varsDataTable = $dataSet['vars'];
+
+    $vars = $varsDataTable->read(new \Data\Filter('name eq '.$name.'RegDates'));
+    $dates = $vars[0]['value'];
+    $start = strtotime($dates['start']);
+    $end   = strtotime($dates['end']);
+    $now   = time();
+    $closed = $now < $start || $now > $end;
+    echo json_encode($closed);
+}
+
 function art()
 {
     global $app;
@@ -643,6 +657,7 @@ function vars()
     $app->post('', 'create_var');
     $app->get('/:name', 'get_var');
     $app->patch('/:name', 'updateVar');
+    $app->get('/isClosed/:name', 'getClosed');
 }
 
 $app->run();
