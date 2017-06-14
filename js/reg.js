@@ -672,6 +672,15 @@ function wizard_init()
     {
         populate_prior_data();
     }
+    var onepage = getParameterByName('onepage');
+    if(onepage === 'true')
+    {
+        $('.tab-pane').addClass('active');
+        $('#rootwizard .navbar').hide();
+        $('.alert').hide();
+        $('.panel-collapse').addClass('in');
+        $('.embed-responsive').hide();
+    }
 }
 
 $(wizard_init);
