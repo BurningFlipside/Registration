@@ -1,6 +1,6 @@
 function get_id_from_row(row)
 {
-    if(row._id.$id !== undefined)
+    if(row._id !== undefined && row._id.$id !== undefined)
     {
         return row._id.$id;
     }

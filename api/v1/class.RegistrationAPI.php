@@ -19,6 +19,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
 
     protected function processEntry($obj, $request)
     {
+        $strip = (!$this->user->isInGroupNamed('RegistrationAdmins') && !$this->user->isInGroupNamed($this->adminType));
         foreach($obj as $key=>$value)
         {
             if($key == '_id')
@@ -28,7 +29,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             else if(is_object($value) || is_array($value))
             {
                 if($key === 'value') continue;
-                if(!$this->user->isInGroupNamed('RegistrationAdmins') && !$this->user->isInGroupNamed($this->adminType))
+                if($strip)
                 {
                     unset($obj[$key]);
                 }
@@ -85,7 +86,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
         if(isset($queryParams['no_logo']))
         {
-            return array('fields'=>array('logo' => false, 'image' => false));
+            return array('fields'=>array('logo' => false, 'image_1' => false, 'image_2' => false, 'image_3' => false, 'image' => false));
         }
         return false;
     }
