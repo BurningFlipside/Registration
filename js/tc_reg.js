@@ -117,8 +117,7 @@ function add_new_struct_to_table(type, width, length, height, desc)
     $('<option/>', {value: 'dome', text: 'Dome'}).appendTo(dropdown);
     $('<option/>', {value: 'stage', text: 'Stage'}).appendTo(dropdown);
     $('<option/>', {value: 'art', text: 'Art Installation'}).appendTo(dropdown);
-    $('<option/>', {value: 'dmv', text: 'Art Car/Mutant Vehicle'}).appendTo(dropdown);
-    $('<option/>', {value: 'car', text: 'Car/Truck Camping'}).appendTo(dropdown);
+    $('<option/>', {value: 'dmv', text: 'Art Car'}).appendTo(dropdown);
     dropdown.appendTo(cell);
     dropdown.val(type);
     cell.appendTo(row);
