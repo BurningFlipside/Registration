@@ -8,6 +8,9 @@ $page->addJSByURI('js/reg.js');
 $page->addJSByURI('js/tc_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
+$page->add_form_group($index, 'Number of campers', 'num_campers', 'text', '', array('required'=>true));
+$page->add_spacer($index);
+
 $page->add_form_group($index, 'This camp has been previously registered at Flipside', 'camp_reg_prev', 'checkbox', 'This camp has been registered at Burning Flipside in a previous year.', array('class'=>'ignore', 'data-tabcontrol'=>'prev_camp'));
 $page->add_spacer($index);
 $page->add_form_group($index, 'This camp has amplified sound', 'has_sound', 'checkbox', 'This camp has any form of amplified sound.', array('class'=>'ignore', 'data-tabcontrol'=>'sound_step', 'data-groupcontrol'=>'soundLead'));
@@ -29,18 +32,18 @@ $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Camp Contacts');
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert">The email provided for the theme camp lead will be automatically added to the theme camp lead’s newsletter. This newsletter is designed to provide theme camp leads with valuable event and community information. The email addresses will be purged just before theme camp registration opens next year.</div>');
-$page->add_form_group($index, 'The camp lead is the only camp contact', 'just_me', 'checkbox', 'The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound.', array('class'=>'ignore'));
 $page->add_spacer($index);
 $accordion_ref = $page->add_accordion($index);
 $panels = array('Camp Lead', 'Safety Lead', 'Cleanup Lead', 'Volunteering', 'Sound Lead');
 $all_panels = array(
-                  array('label'=>'Name:', 'name'=>'name', 'type'=>'text', 'tooltip'=>'This is the name of the %s', 'required'=>TRUE),
-                  array('label'=>'Burner Name:', 'name'=>'burnerName', 'type'=>'text', 'tooltip'=>'This is the burner name/nickname of the %s'),
-                  array('label'=>'Email:', 'name'=>'email', 'type'=>'text', 'tooltip'=>'This is the email address of the %s', 'required'=>TRUE),
-                  array('label'=>'Phone:', 'name'=>'phone', 'type'=>'text', 'tooltip'=>'This is the phone number of the %s'),
-                  array('label'=>'This number can receive SMS messages:', 'name'=>'sms', 'type'=>'checkbox', 'tooltip'=>'This phone number can be used to recieve text messages'),
-              );
+    array('label'=>'Full Name:', 'name'=>'name', 'type'=>'text', 'tooltip'=>'This is the name of the %s', 'required'=>TRUE),
+    array('label'=>'Burner Name:', 'name'=>'burnerName', 'type'=>'text', 'tooltip'=>'This is the burner name/nickname of the %s'),
+    array('label'=>'Email Address:', 'name'=>'email', 'type'=>'text', 'tooltip'=>'This is the email address of the %s', 'required'=>TRUE),
+    array('label'=>'Phone Number:', 'name'=>'phone', 'type'=>'text', 'tooltip'=>'This is the phone number of the %s', 'required'=>TRUE),
+    array('label'=>'This number can receive SMS messages:', 'name'=>'sms', 'type'=>'checkbox', 'tooltip'=>'This phone number can be used to recieve text messages'),
+);
 $other = array(
+    'Camp Lead' => array('label'=>'The camp lead is the only contact', 'id'=>'just_me', 'name'=>'just_me', 'type'=>'checkbox', 'tooltip'=>'The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound.'),
     'Safety Lead' => array('label'=>'How will your camp handle Safety/Fire/Injury issues?', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'How will your camp handle Safety/Fire/Injury issues?', 'required'=>TRUE),
     'Cleanup Lead' => array('label'=>'How will your camp ensure you leave no trace?', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'How will your camp ensure you leave no trace?', 'required'=>TRUE),
     'Volunteering'=> array('label'=>'Volunteer skills for the event:', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'What skills would your camp like to share with the event?', 'required'=>TRUE),
@@ -70,7 +73,7 @@ for($i = 0; $i < $panel_count; $i++)
                 $extra = array();
             }
             $extra['data-copyfrom'] = camelize($panels[0]).'_'.$all_panels[$j]['name'];
-            $extra['data-copytrigger'] = '#just_me';
+            $extra['data-copytrigger'] = '#campLead_just_me';
         }
         else
         {
@@ -138,8 +141,6 @@ $page->add_form_group($index, 'Sound Hours - To:', 'sound_to', 'select', 'When w
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Placement Information');
-$page->add_form_group($index, 'Number of Campers:', 'placement_campers', 'text', 'The number of campers your camp plans to have this year.');
-$page->add_spacer($index);
 $page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3">
   <object class="embed-responsive-item" type="application/pdf" data="img/guide_map16a.pdf">
       <p>
@@ -156,7 +157,7 @@ $options = array(
     array('value'=>'badlandsLoud', 'text'=>'Badlands - Loud'),
     array('value'=>'badlandsLessLoud', 'text'=>'Badlands - Less Loud'),
     array('value'=>'corralLessLoud', 'text'=>'Corral - Less Loud'),
-    array('value'=>'rvPark', 'text'=>'RV Park')
+    array('value'=>'Park', 'text'=>'RV Park')
 );
 $page->add_form_group($index, 'Preference 1:', 'placement_pref1', 'select', 'Your first choice for a general type of placement.', array('options'=>$options));
 $page->add_spacer($index);
@@ -179,34 +180,34 @@ $page->add_form_group($index, 'Please describe the special circumstances which y
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Camp Infrastructure');
-$page->add_form_group($index, 'Number of Standard (4 Person or fewer) Tents:', 'placement_tents', 'text', 'Number of Tents less than 10 feet x 10 feet in size');
+$page->add_form_group($index, 'Number of Standard Size (10x10) Tents:', 'placement_tents', 'text', 'Number of Standard Size (10x10) Tents');
 $page->add_spacer($index);
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert">Please note that the only vehicles permitted to be left in theme camp spaces are artified cars/trucks used for car camping and registered RVs. To ensure your vehicle meets our guidelines, please visit <a href="http://www.burningflipside.com/sg" class="alert-link">http://www.burningflipside.com/sg</a> for more information. Vehicles that do not meet our criteria will need to be moved to Parking.</div>');
 $page->add_raw_html($index, '<div class="alert alert-danger" role="alert"><span class="fa fa-fire" aria-hidden="true"></span> Pyro art must be registered separately on the art registration form <a href="art_reg.php" class="alert-link">here</a>. Please do note on that form that this piece is part of a theme camp.</div>');
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="fa fa-map" aria-hidden="true"></span> Any art pieces to be included on the map and art cars attending Flipside must also be registered on the art registration form or DMV form <a href="add.php" class="alert-link">here</a>.</div>');
 $page->add_raw_html($index, '
-                <table id="structs_table" class="table table-responsive">
-                    <thead>
-                        <tr>
-                            <th class="col-xs-1"></th>
-                            <th class="col-xs-2">Type</th>
-                            <th class="col-xs-1">Width (in feet)</th>
-                            <th class="col-xs-1">Length (in feet)</th>
-                            <th class="col-xs-1">Height (in feet)</th>
-                            <th class="col-xs-4">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="6">
-                                <div>
-                                    <button type="button" class="btn btn-primary" id="add_new_struct" onclick="add_new_struct_to_table()">Add New Structure</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>');
+    <table id="structs_table" class="table table-responsive">
+        <thead>
+            <tr>
+                <th class="col-xs-1"></th>
+                <th class="col-xs-2">Type</th>
+                <th class="col-xs-1">Width (in feet)</th>
+                <th class="col-xs-1">Length (in feet)</th>
+                <th class="col-xs-1">Height (in feet)</th>
+                <th class="col-xs-4">Description</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6">
+                    <div>
+                        <button type="button" class="btn btn-primary" id="add_new_struct" onclick="add_new_struct_to_table()">Add New Structure</button>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>');
 
 if(isset($_GET['is_admin']))
 {

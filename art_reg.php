@@ -27,18 +27,18 @@ $page->add_form_group($index, 'Image #3', 'image_3', 'file', 'A picture or drawi
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Art Team Contacts');
-$page->add_form_group($index, 'The lead is the only art project contact', 'just_me', 'checkbox', 'The lead will be contact for all issues about the project including safety, fire, cleanup, and sound.', array('class'=>'ignore'));
-$page->add_spacer($index);
 $accordion_ref = $page->add_accordion($index);
 $panels = array('Art Lead', 'Safety Lead', 'Cleanup Lead', 'Fire Lead', 'Sound Lead');
 $all_panels = array(
-                  array('label'=>'Name:', 'name'=>'name', 'type'=>'text', 'tooltip'=>'This is the name of the %s', 'required'=>TRUE),
-                  array('label'=>'Burner Name:', 'name'=>'burnerName', 'type'=>'text', 'tooltip'=>'This is the burner name/nickname of the %s'),
-                  array('label'=>'Email:', 'name'=>'email', 'type'=>'text', 'tooltip'=>'This is the email address of the %s', 'required'=>TRUE),
-                  array('label'=>'Phone:', 'name'=>'phone', 'type'=>'text', 'tooltip'=>'This is the phone number of the %s'),
-                  array('label'=>'This number can receive SMS messages:', 'name'=>'sms', 'type'=>'checkbox', 'tooltip'=>'This phone number can be used to recieve text messages'),
-              );
+    array('label'=>'Name:', 'name'=>'name', 'type'=>'text', 'tooltip'=>'This is the name of the %s', 'required'=>TRUE),
+    array('label'=>'Burner Name:', 'name'=>'burnerName', 'type'=>'text', 'tooltip'=>'This is the burner name/nickname of the %s'),
+    array('label'=>'Email:', 'name'=>'email', 'type'=>'text', 'tooltip'=>'This is the email address of the %s', 'required'=>TRUE),
+    array('label'=>'Phone:', 'name'=>'phone', 'type'=>'text', 'tooltip'=>'This is the phone number of the %s', 'required'=>TRUE),
+    array('label'=>'This number can receive SMS messages:', 'name'=>'sms', 'type'=>'checkbox', 'tooltip'=>'This phone number can be used to recieve text messages'),
+    array('label'=>'Theme Camp Affiliation:', 'name'=>'camp', 'type'=>'text', 'tooltip'=>'The Theme Camp where %s will camp.', 'required'=>TRUE),
+);
 $other = array(
+    'Art Lead' => array('label'=>'The camp lead is the only contact', 'id'=>'just_me', 'name'=>'just_me', 'type'=>'checkbox', 'tooltip'=>'The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound.'),
 );
 $panel_count = count($panels);
 $content_count = count($all_panels);
@@ -65,7 +65,7 @@ for($i = 0; $i < $panel_count; $i++)
                 $extra = array();
             }
             $extra['data-copyfrom'] = camelize($panels[0]).'_'.$all_panels[$j]['name'];
-            $extra['data-copytrigger'] = '#just_me';
+            $extra['data-copytrigger'] = '#artLead_just_me';
         }
         else
         {
@@ -100,7 +100,14 @@ for($i = 0; $i < $panel_count; $i++)
 
 $index = $page->add_wizard_step('Placement Information');
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="fa fa-bed" aria-hidden="true"></span> If this piece is to be placed with your theme camp, be sure it\'s footprint is included on the theme camp registration form <a href="add.php" class="alert-link">here</a>.</div>');
-$page->add_form_group($index, 'Size:', 'placement_size', 'text', 'The number of campers your camp plans to have this year.');
+
+$page->add_form_group($index, 'Show on map:', 'placement_on_map', 'checkbox', 'Check this box if you want your art installation to be shown on city planning map.');
+$page->add_spacer($index);
+
+$page->add_form_group($index, 'In Theme Camp:', 'placement_in_camp', 'text', 'If you art will be placed within the borders of a theme camp enter the camp name here.');
+$page->add_spacer($index);
+
+$page->add_form_group($index, 'Dimensions (in feet):', 'placement_size', 'text', 'Approximate project dimensions, in feet* [width / length / height]');
 $page->add_spacer($index);
 $options = array(
     array('value'=>'any', 'text'=>'Any', 'selected'=>TRUE),
@@ -141,7 +148,8 @@ $index = $page->add_wizard_step('Sound', 'sound');
 $page->add_form_group($index, 'Sound System Description', 'sound_desc', 'textarea', 'Describe your sound equipment and how you plan to adhere to the Event Sound Policy');
 $page->add_spacer($index);
 $options = array(
-    array('value'=>'all', 'text'=>'All Day', 'selected'=>TRUE),
+    array('value'=>'', 'text'=>'', 'selected'=>TRUE),
+    array('value'=>'all', 'text'=>'All Day'),
     array('value'=>'0100', 'text'=>'1 AM'),
     array('value'=>'0200', 'text'=>'2 AM'),
     array('value'=>'0300', 'text'=>'3 AM'),
@@ -173,9 +181,24 @@ $page->add_form_group($index, 'Sound Hours - To:', 'sound_to', 'select', 'When w
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Fire', 'fire');
+
+$page->add_form_group($index, 'This project has fire effects', 'fire_hasFlameEffects', 'checkbox', '', array('data-questcontrol'=>'fire_flameEffects'));
+$page->add_spacer($index);
 $page->add_form_group($index, 'Flame Effects Description', 'fire_flameEffects', 'textarea', 'Describe any flame effects such as propane or other flame effects that do not consume your artwork.');
 $page->add_spacer($index);
-$page->add_form_group($index, 'Burn Plan', 'fire_burnPlan', 'textarea', 'Describe how you anticipate burning your art proejct. Describe what fuel you would use, any pyrotechic effects, when you would enact perimeter, and any other special considerations the fire team would need to know about.');
+
+$options = array(
+    array('value'=>'', 'text'=>'', 'selected'=>TRUE),
+    array('value'=>'thrusday', 'text'=>'Thursday'),
+    array('value'=>'friday', 'text'=>'Friday'),
+    array('value'=>'saturday', 'text'=>'Saturday'),
+    array('value'=>'sunday', 'text'=>'Sunday')
+);
+$page->add_form_group($index, 'When do you want to burn?', 'fire_burnDay', 'select', 'When do you plan to burn your project.', array('options'=>$options, 'required'=>TRUE));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Burn Plan', 'fire_burnPlan', 'textarea', 'Describe how you anticipate burning your art proejct. Describe what fuel you would use, any pyrotechic effects, when you would enact perimeter, and any other special considerations the fire team would need to know about.', array('required'=>TRUE));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Cleanup Plan', 'fire_cleanupPlan', 'textarea', 'Describe how you anticipate cleaning your art project after burning.', array('required'=>TRUE));
 $page->add_spacer($index);
 
 $index = $page->add_wizard_step('Installation Information');
@@ -196,6 +219,12 @@ $page->add_form_group($index, 'This project requires a generator', 'information_
 $page->add_spacer($index);
 $page->add_form_group($index, 'Power Requirements/Generator Information', 'information_powerStats', 'textarea', 'Please describe your power needs. And if you are bringing a generator and are interested in power sharing describe how much available power you will have.');
 $page->add_spacer($index);
+
+$page->add_form_group($index, 'This project includes lasers', 'information_laser', 'checkbox', 'This project will use lasers.', array('data-questcontrol'=>'information_laserStats'));
+$page->add_spacer($index);
+$page->add_form_group($index, 'Laser installation details', 'information_laserStats', 'textarea', 'Tell us about your lasers. What kind? How high will they be mounted?');
+$page->add_spacer($index);
+
 $page->add_form_group($index, 'Other Information', 'information_other', 'textarea', 'Please tell us ANYTHING that we may have missed');
 $page->add_spacer($index);
 
