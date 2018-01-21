@@ -4,8 +4,8 @@ info:
   title: Burning Flipside Registration System API
   description: "This is the api to access theme camp, art project, art car, and event registration for Burning Flipside"
   contact:
-    name: "Problem"
-    email: "problem@burningflipside.com"
+    name: "Technology Team"
+    email: "technology@burningflipside.com"
 host: secure.burningflipside.com
 basePath: /register/api/v1
 schemes: 
@@ -195,6 +195,70 @@ paths:
       security: [
           flipside_auth: ["write:registration"]
         ]
+  /art/Actions/Search:
+    get:
+      tags: 
+        - Art
+      summary: Gets `ArtProject` objects.
+      description: Gets `ArtProject` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfArtProjects
+            type: array
+            items:
+              $ref: "#/definitions/ArtProject"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+        - flipside_auth: 
+          - read:registration
+  /art/{artId}/Actions/Unlock:
+    post:
+      tags: ["Art"]
+      summary: Modifies the specified `ArtProject` object.
+      description: Modifies the `ArtProject` object with the specified ID if the user has the rights to do so.
+      consumes: [
+        "application/json",
+        "application/x-www-form-urlencoded"
+        ]
+      parameters: [
+          {
+            name: artId,
+            in: path,
+            description: ID of the `ArtProject` object,
+            required: true,
+            type: string
+          },
+          {
+            name: body,
+            in: body,
+            description: Updated `ArtProject` object,
+            required: true,
+            schema: {
+              $ref: "#/definitions/ArtProject"
+            }
+          }
+        ]
+      responses:
+        # Response code
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security: [
+          flipside_auth: ["write:registration"]
+        ]
+
   /camps:
     get:
       tags: ["Theme Camps"]
@@ -360,6 +424,62 @@ paths:
       security:
           - flipside_auth:
             - write:registration
+  /camps/Actions/Search: 
+    get:
+      tags: ["Theme Camps"]
+      summary: Gets `ThemeCamp` objects.
+      description: Gets `ThemeCamp` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfThemeCamps
+            type: array
+            items:
+              $ref: "#/definitions/ThemeCamp"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security: [
+          flipside_auth: ["read:registration"]
+        ]
+  /camps/{campId}/Actions/Unlock:
+    post:
+      tags: 
+        - Theme Camps
+      summary: Modifies the specified `ThemeCamp` object.
+      description: Modifies the `ThemeCamp` object with the specified ID if the user has the rights to do so.
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      parameters:
+          - in: path
+            name: campId
+            description: ID of the `ThemeCamp` object
+            required: true
+            type: string
+          - in: body
+            name: body
+            description: Updated `ThemeCamp` object
+            required: true
+            schema:
+              $ref: "#/definitions/ThemeCamp"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+
   /dmv:
     get:
       tags:
@@ -494,6 +614,63 @@ paths:
       security:
           - flipside_auth:
             - write:registration
+  /dmv/Actions/Search:
+    get:
+      tags:
+        - DMV
+      summary: Gets `ArtCar` objects.
+      description: Gets `ArtCar` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfArtCars
+            type: array
+            items:
+              $ref: "#/definitions/ArtCar"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - read:registration
+  /dmv/{carId}/Actions/Unlock:
+    post:
+      tags: 
+        - DMV
+      summary: Modifies the specified `ArtCar` object.
+      description: Modifies the `ArtCar` object with the specified ID if the user has the rights to do so.
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      parameters:
+          - in: path
+            name: carId
+            description: ID of the `ArtCar` object
+            required: true
+            type: string
+          - in: body
+            name: body
+            description: Updated `ArtCar` object
+            required: true
+            schema:
+              $ref: "#/definitions/ArtCar"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+
   /event:
     get:
       tags:
@@ -628,6 +805,173 @@ paths:
       security:
           - flipside_auth:
             - write:registration
+  /event/Actions/Search:
+    get:
+      tags:
+        - Events
+      summary: Gets `Event` objects.
+      description: Gets `Event` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfEvents
+            type: array
+            items:
+              $ref: "#/definitions/Event"
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - read:registration
+  /event/{eventId}/Actiond/Unlock:
+    post:
+      tags: 
+        - Events
+      summary: Modifies the specified `Event` object.
+      description: Modifies the `Event` object with the specified ID if the user has the rights to do so.
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+      parameters:
+          - in: path
+            name: eventId
+            description: ID of the `Event` object
+            required: true
+            type: string
+          - in: body
+            name: body
+            description: Updated `Event` object
+            required: true
+            schema:
+              $ref: "#/definitions/Event"
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorReturn"
+      security:
+          - flipside_auth:
+            - write:registration
+
+  /vars:
+    get:
+      tags:
+        - Vars
+      summary: Gets `Vars` objects.
+      description: Gets `Vars` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfVars
+            type: array
+            items:
+              $ref: "#/definitions/Var"
+        500:
+          description: Error
+      security:
+          - flipside_auth:
+            - read:registration
+    post:
+      tags: 
+        - Vars
+      summary: Create a new `Vars` object.
+      description: Creates a new `Vars` object owned by the calling user and for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+      parameters:
+          - in: body
+            name: event
+            description: Event Object
+            required: true
+            schema:
+              $ref: "#/definitions/Var"
+      security:
+          - flipside_auth:
+            - write:registration
+  /vars/{name}:
+    get:
+      tags:
+        - Vars
+      summary: Gets `Vars` objects.
+      description: Gets `Vars` objects for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      parameters:
+          - in: path
+            name: name
+            description: Name of the `Var` object
+            required: true
+            type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfVars
+            type: array
+            items:
+              $ref: "#/definitions/Var"
+        500:
+          description: Error
+      security:
+          - flipside_auth:
+            - read:registration
+    put:
+      tags: 
+        - Vars
+      summary: Create a new `Vars` object.
+      description: Creates a new `Vars` object owned by the calling user and for the current year.
+      produces: 
+        - application/json
+        - text/csv
+        - application/xml
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Successful response
+        500:
+          description: Error
+      parameters:
+          - in: path
+            name: name
+            description: Name of the `Var` object
+            required: true
+            type: string
+          - in: body
+            name: var
+            description: var Object
+            required: true
+            schema:
+              $ref: "#/definitions/Var"
+      security:
+          - flipside_auth:
+            - write:registration
+  
 securityDefinitions:
   "flipside_auth":
     type: "oauth2"
@@ -698,5 +1042,14 @@ definitions:
         "description": "A base64 encoded version of the provided image."
       "site":
         type: string
+  Var:
+    properties:
+      "_id":
+        type: string
+      name:
+        type: string
+      value:
+        type: object
+
 
                   

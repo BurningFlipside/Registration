@@ -103,7 +103,7 @@ function add_new_struct_to_table(type, width, length, height, desc)
     if(height === undefined) height = '';
     if(desc === undefined) desc = '';
 
-    $('<span/>', {class: 'glyphicon glyphicon-remove'}).appendTo(button);
+    $('<span/>', {class: 'fa fa-remove'}).appendTo(button);
     button.appendTo(cell);
     cell.appendTo(row);
     cell = $('<td/>');
