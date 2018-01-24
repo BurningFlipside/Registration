@@ -153,6 +153,14 @@ function post_done(data)
     {
         _id = data._id; 
     }
+    else if(data['$id'] !== undefined)
+    {
+        _id = data['$id'];
+    }
+    else
+    {
+        console.log(data);
+    }
 }
 
 function final_post_done(data)
@@ -285,6 +293,7 @@ function post_data()
         url: get_post_url(),
         type: 'post',
         dataType: 'json',
+        contentType: 'application/json',
         data: JSON.stringify(data),
         processData: false,
         success: post_done,
@@ -303,6 +312,7 @@ function do_final_post(cont)
             url: get_post_url(),
             type: 'post',
             dataType: 'json',
+            contentType: 'application/json',
             data: JSON.stringify(data),
             processData: false,
             success: final_post_done,
