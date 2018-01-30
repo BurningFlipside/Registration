@@ -323,7 +323,7 @@ function do_final_dialog(cont)
 {
     if(cont)
     {
-        bootbox.confirm("Are you sure you want to save? After clicking OK on this dialog you will not be able to edit the registration furhter.", really_do_final);
+        bootbox.confirm("Are you sure you want to save? After clicking OK on this dialog you will not be able to edit the registration further.", really_do_final);
     }
 }
 
