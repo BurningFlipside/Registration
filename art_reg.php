@@ -9,11 +9,11 @@ $page->addJSByURI('js/reg.js');
 $page->addJSByURI('js/art_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
-$page->add_form_group($index, 'This project needs logistical help', 'need_logistics', 'checkbox', 'This project has logisical needs such as needing help transporting to the site, heavy equipment needs, outside volunteers etc.', array('class'=>'ignore', 'data-tabcontrol'=>'logistics'));
+$page->add_form_group($index, 'This project needs logistical help', 'need_logistics', 'checkbox', 'This project has logistical needs such as needing help transporting to the site, heavy equipment needs, outside volunteers etc.', array('class'=>'ignore', 'data-tabcontrol'=>'logistics'));
 $page->add_spacer($index);
 $page->add_form_group($index, 'This project has sound', 'has_sound', 'checkbox', 'This project will utilize amplified sound in some form.', array('class'=>'ignore', 'data-tabcontrol'=>'sound'));
 $page->add_spacer($index);
-$page->add_form_group($index, 'This project has flame effects', 'has_fe', 'checkbox', 'This project has flame effects (propane or other combustable non-consuming effets).', array('class'=>'ignore', 'data-tabcontrol'=>'fire', 'data-questcontrol'=>'fire_flameEffects'));
+$page->add_form_group($index, 'This project has flame effects', 'has_fe', 'checkbox', 'This project has flame effects (propane or other combustable non-consuming effects).', array('class'=>'ignore', 'data-tabcontrol'=>'fire', 'data-questcontrol'=>'fire_flameEffects'));
 $page->add_spacer($index);
 $page->add_form_group($index, 'I would like to burn this project', 'will_burn', 'checkbox', 'This project has flame effects or I would like to burn this piece.', array('class'=>'ignore', 'data-tabcontrol'=>'fire', 'data-questcontrol'=>'fire_burnPlan'));
 $page->add_spacer($index);
@@ -99,12 +99,12 @@ for($i = 0; $i < $panel_count; $i++)
 
 
 $index = $page->add_wizard_step('Placement Information');
-$page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="fa fa-bed" aria-hidden="true"></span> If this piece is to be placed with your theme camp, be sure it\'s footprint is included on the theme camp registration form <a href="add.php" class="alert-link">here</a>.</div>');
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="fa fa-bed" aria-hidden="true"></span> If this piece is to be placed with your theme camp, be sure it\'s footprint is included on the theme camp registration form <a href="add.php" class="alert-link" target="_blank">here</a>.</div>');
 
 $page->add_form_group($index, 'Show on map:', 'placement_on_map', 'checkbox', 'Check this box if you want your art installation to be shown on city planning map.');
 $page->add_spacer($index);
 
-$page->add_form_group($index, 'In Theme Camp:', 'placement_in_camp', 'text', 'If you art will be placed within the borders of a theme camp enter the camp name here.');
+$page->add_form_group($index, 'In Theme Camp:', 'placement_in_camp', 'text', 'If your art will be placed within the borders of a theme camp enter the camp name here.');
 $page->add_spacer($index);
 
 $page->add_form_group($index, 'Dimensions (in feet):', 'placement_size', 'text', 'Approximate project dimensions, in feet* [width / length / height]');
@@ -135,7 +135,7 @@ $page->add_form_group($index, 'I need help transporting this project to Flipside
 $page->add_spacer($index);
 $page->add_form_group($index, 'What are the packed dimensions and the weight of the project', 'logistics_transpoSize', 'textarea');
 $page->add_spacer($index);
-$page->add_form_group($index, 'I will need help from the heavy equipment on site', 'logistics_needsHE', 'checkbox', 'I will need use of the Variable Reach forklift, Trencher, Cherry Picker, or other Heavy Equipment on site.', array('data-questcontrol'=>'logistics_descHE'));
+$page->add_form_group($index, 'I will need help from the heavy equipment on site', 'logistics_needsHE', 'checkbox', 'I will need use of the Variable Reach forklift, Trencher, Cherry Picker, or other Heavy Equipment on site if available.', array('data-questcontrol'=>'logistics_descHE'));
 $page->add_spacer($index);
 $page->add_form_group($index, 'Please describe what Heavy Equipment you will need, what it needs to do, and how long you think you will need it for', 'logistics_descHE', 'textarea');
 $page->add_spacer($index);
@@ -196,7 +196,7 @@ $options = array(
 );
 $page->add_form_group($index, 'When do you want to burn?', 'fire_burnDay', 'select', 'When do you plan to burn your project.', array('options'=>$options, 'required'=>TRUE));
 $page->add_spacer($index);
-$page->add_form_group($index, 'Burn Plan', 'fire_burnPlan', 'textarea', 'Describe how you anticipate burning your art proejct. Describe what fuel you would use, any pyrotechic effects, when you would enact perimeter, and any other special considerations the fire team would need to know about.', array('required'=>TRUE));
+$page->add_form_group($index, 'Burn Plan', 'fire_burnPlan', 'textarea', 'Describe how you anticipate burning your art project. Describe what fuel you would use, any pyrotechic effects, when you would enact perimeter, and any other special considerations the fire team would need to know about.', array('required'=>TRUE));
 $page->add_spacer($index);
 $page->add_form_group($index, 'Cleanup Plan', 'fire_cleanupPlan', 'textarea', 'Describe how you anticipate cleaning your art project after burning.', array('required'=>TRUE));
 $page->add_spacer($index);
