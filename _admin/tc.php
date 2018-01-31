@@ -4,11 +4,11 @@ error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
 $page = new RegisterAdminPage('Burning Flipside - Tickets');
 
-$page->addWellKnownJS(JS_DATATABLE_ODATA);
-$page->addWellKnownJS(JS_DATATABLE);
+$page->addWellKnownJS(JS_DATATABLE_ODATA, false);
+$page->addWellKnownJS(JS_DATATABLE, false);
 $page->addWellKnownCSS(CSS_DATATABLE);
 $page->addWellKnownJS(JS_BOOTBOX);
-$page->addJSByURI('js/tc.js');
+$page->addJSByURI('js/tc.js', false);
 
 if(!$page->is_tc_admin)
 {
