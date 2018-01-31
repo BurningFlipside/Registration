@@ -9,12 +9,14 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         $this->adminType = $adminType;
     }
 
-    public function set($app)
+    public function setup($app)
     {
         parent::setup($app);
+        $app->get('/Actions/Search', array($this, 'searchData'));
         $app->get('/{name}/{field}[/]', array($this, 'readEntryField'));
-        $app->post('/{name}/contact[/{lead}]', 'contactLead');
-        $app->post('/{name}/Actions/Unlock', 'unlockEntry');
+        $app->post('/{name}[/]', array($this, 'updateEntry'));
+        $app->post('/{name}/contact[/{lead}]', array($this, 'contactLead'));
+        $app->post('/{name}/Actions/Unlock', array($this, 'unlockEntry'));
     }
 
     protected function processEntry($obj, $request)
@@ -66,7 +68,16 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
 
     protected function getFilterForPrimaryKey($value)
     {
-        return new \Data\Filter($this->primaryKeyName.' eq '.new MongoId($value));
+        //Ensure the polyfill is loaded if needed
+        $this->getDataTable();
+        if(class_exists('MongoId'))
+        {
+            return new \Data\Filter($this->primaryKeyName.' eq '.new \MongoId($value));
+        }
+        else
+        {
+            return new \Data\Filter($this->primaryKeyName.' eq '.new \MongoDB\BSON\ObjectId($value));
+        }
     }
 
     protected function getCurrentYear()
@@ -102,33 +113,37 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         {
             $obj['registrars'] = array();
         }
-        if(!in_array($app->user->uid, $obj['registrars']))
+        if(!in_array($this->user->uid, $obj['registrars']))
         {
-            array_push($obj['registrars'], $app->user->uid);
+            array_push($obj['registrars'], $this->user->uid);
         }
         return true;
     }
 
     protected function validateUpdate(&$newObj, $request, $oldObj)
     {
-        if(!isset($obj['name']) || !isset($obj['teaser']) || !isset($obj['description']))
+        if(!isset($newObj['name']) || !isset($newObj['teaser']) || !isset($newObj['description']))
         {
             throw new Exception('Missing one or more required parameters!', \Http\Rest\INTERNAL_ERROR);
         }
-        $obj['year'] = $this->getCurrentYear();
-        if(!isset($obj['registrars']))
+        $newObj['year'] = $this->getCurrentYear();
+        if(!isset($newObj['registrars']))
         {
-            $obj['registrars'] = array();
+            $newObj['registrars'] = array();
         }
-        $obj['registrars'] = array_merge($obj['registrars'], $oldObj['registrars']);
+        if(!isset($oldObj['registrars']))
+        {
+            $oldObj['registrars'] = array();
+        }
+        $newObj['registrars'] = array_merge($newObj['registrars'], $oldObj['registrars']);
         if($this->user->isInGroupNamed('RegistrationAdmins') || $this->user->isInGroupNamed($this->adminType))
         {
-            array_push($obj['registrars'], $this->user->uid);
+            array_push($newObj['registrars'], $this->user->uid);
         }
-        $obj['registrars'] = array_unique($obj['registrars']);
-        if(!isset($obj['_id']))
+        $newObj['registrars'] = array_unique($newObj['registrars']);
+        if(!isset($newObj['_id']))
         {
-             $obj['_id'] = (string)$oldObj['_id'];
+             $newObj['_id'] = (string)$oldObj['_id'];
         }
     }
 
@@ -215,6 +230,30 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             }
         }
         return $response->withJson($res);
+    }
+
+    public function searchData($request, $response, $args)
+    {
+        $params = $request->getParams();
+        $dataTable = $this->getDataTable();
+        foreach($params as $key=>$value)
+        {
+            $value = str_replace('"','',$value);
+            if($value[0] === '/')
+            {
+                $params[$key] = array('$regex'=>new MongoRegex("$value"));
+            }
+        }
+        if(!isset($params['year']))
+        {
+            $params['year'] = $this->getCurrentYear();
+        }
+        else if($params['year'] === '*')
+        {
+            unset($params['year']);
+        }
+        $data = $dataTable->read($params);
+        return $response->withJson($data);
     }
 
     public function contactLead($request, $response, $args)

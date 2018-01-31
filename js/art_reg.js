@@ -16,6 +16,10 @@ function pop_data()
     {
         if(browser_supports_cors())
         {
+            if(window.profilesUrl.endsWith('/'))
+            {
+                window.profilesUrl = window.profilesUrl.slice(0, -1);
+            }
             $.ajax({
                 url: window.profilesUrl+'/api/v1/users/me',
                 type: 'get',
