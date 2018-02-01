@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 require_once('class.RegisterPage.php');
 $page = new RegisterPage('Burning Flipside - Registration');
 
-$page->addWellKnownJS(JS_DATATABLE_ODATA, false);
 $page->addWellKnownJS(JS_DATATABLE, false);
+$page->addWellKnownJS(JS_DATATABLE_ODATA, false);
 $page->addWellKnownCSS(CSS_DATATABLE);
 $page->addJSByURI('js/view.js');
 

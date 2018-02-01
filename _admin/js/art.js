@@ -17,7 +17,11 @@ function get_id_for_event(trigger)
     var table = tr.closest('table');
     var api = table.DataTable();
     var row = api.row(tr).data();
-    return row._id.$id;
+    if(row._id.$id !== undefined)
+    {
+        return row._id.$id;
+    }
+    return row._id;
 }
 
 function edit_obj()
