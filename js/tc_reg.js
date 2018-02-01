@@ -14,7 +14,7 @@ function tc_ajax_done(data, prefix)
     }
     for(var key in data)
     {
-        if(key === '_id')
+        if(key === '_id' || key === '')
         {
         }
         else if(key === 'structs')
@@ -59,7 +59,7 @@ function tc_ajax_done(data, prefix)
             if(data[key].length > 0)
             {
                 var panelID = control.parents('.tab-pane').attr('id');
-                var id = $('a[href=#'+panelID+']').parent().attr('id');
+                var id = $("a[href='#"+panelID+"']").parent().attr('id');
                 $('[data-tabcontrol='+id+']').prop('checked', 'true').change();
             }
         }

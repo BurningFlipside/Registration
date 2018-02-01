@@ -165,7 +165,7 @@ function post_done(data)
 
 function final_post_done(data)
 {
-    if(data.update == true)
+    if(data === true)
     {
         location.href = '/register/add.php';
     }

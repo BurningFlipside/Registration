@@ -16,7 +16,8 @@ $event_data_table = $data_set['event'];
 $vars = $vars_data_table->read(new \Data\Filter('name eq year'));
 $year = $vars[0]['value'];
 
-$filter = array('year'=>$year);
+//$filter = array('year'=>$year);
+$filter = new \Data\Filter('year eq '.$year);
 
 $camp_count = $camps_data_table->count($filter);
 $art_count = $art_data_table->count($filter);
