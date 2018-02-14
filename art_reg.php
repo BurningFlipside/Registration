@@ -38,7 +38,7 @@ $all_panels = array(
     array('label'=>'Theme Camp Affiliation:', 'name'=>'camp', 'type'=>'text', 'tooltip'=>'The Theme Camp where %s will camp.', 'required'=>TRUE),
 );
 $other = array(
-    'Art Lead' => array('label'=>'The camp lead is the only contact', 'id'=>'just_me', 'name'=>'just_me', 'type'=>'checkbox', 'tooltip'=>'The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound.'),
+    'Art Lead' => array('label'=>'The project lead is the only contact', 'id'=>'just_me', 'name'=>'just_me', 'type'=>'checkbox', 'tooltip'=>'The project lead will be contact for all issues about the project including safety, cleanup, volunteering, and sound.'),
 );
 $panel_count = count($panels);
 $content_count = count($all_panels);
