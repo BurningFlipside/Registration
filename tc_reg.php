@@ -151,14 +151,12 @@ $page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3"
 </div>');
 $options = array(
     array('value'=>'any', 'text'=>'Any', 'selected'=>TRUE),
-    array('value'=>'effigyLoopLoud', 'text'=>'Effigy Loop - Loud'),
-    array('value'=>'centralLoud', 'text'=>'Central - Loud'),
-    array('value'=>'centralLessLoud', 'text'=>'Central - Less Loud'),
-    array('value'=>'badlandsLoud', 'text'=>'Badlands - Loud'),
-    array('value'=>'badlandsLessLoud', 'text'=>'Badlands - Less Loud'),
-    array('value'=>'corralLessLoud', 'text'=>'Corral - Less Loud'),
-    array('value'=>'Park', 'text'=>'RV Park')
+    array('value'=>'corral', 'text'=>'Corral'),
+    array('value'=>'effigyloop', 'text'=>'Effigy Loop'),
+    array('value'=>'midcity', 'text'=>'Mid-City'),
+    array('value'=>'borderlands', 'text'=>'Borderlands')
 );
+
 $page->add_form_group($index, 'Preference 1:', 'placement_pref1', 'select', 'Your first choice for a general type of placement.', array('options'=>$options));
 $page->add_spacer($index);
 $page->add_form_group($index, 'Preference 2:', 'placement_pref2', 'select', 'Your second choice for a general type of placement.', array('options'=>$options));
