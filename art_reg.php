@@ -101,6 +101,15 @@ for($i = 0; $i < $panel_count; $i++)
 $index = $page->add_wizard_step('Placement Information');
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="fa fa-bed" aria-hidden="true"></span> If this piece is to be placed with your theme camp, be sure it\'s footprint is included on the theme camp registration form <a href="add.php" class="alert-link" target="_blank">here</a>.</div>');
 
+$page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3">
+  <object class="embed-responsive-item" type="application/pdf" data="img/guide_map16a.pdf">
+      <p>
+          <img src="img/guide_map16a.png" class="img-responsive"/>
+          Sorry, your browser is unable to display the full res map in line. Click <a href="img/guide_map16a.pdf">here</a> to download it
+      </p>
+  </object>
+</div>');
+
 $page->add_form_group($index, 'Show on map:', 'placement_on_map', 'checkbox', 'Check this box if you want your art installation to be shown on city planning map.');
 $page->add_spacer($index);
 
@@ -111,13 +120,12 @@ $page->add_form_group($index, 'Dimensions (in feet):', 'placement_size', 'text',
 $page->add_spacer($index);
 $options = array(
     array('value'=>'any', 'text'=>'Any', 'selected'=>TRUE),
-    array('value'=>'gnode', 'text'=>'Art gNode'),
-    array('value'=>'commons', 'text'=>'Commons'),
-    array('value'=>'mainField', 'text'=>'Main Field'),
-    array('value'=>'backField', 'text'=>'Back Field'),
+    array('value'=>'corral', 'text'=>'Corral'),
+    array('value'=>'crossroads', 'text'=>'Cross roads'),
+    array('value'=>'effigy', 'text'=>'Effigy Field'),
+    array('value'=>'island', 'text'=>'Island'),
     array('value'=>'onRoad', 'text'=>'Along a Roadway'),
-    array('value'=>'onRiver', 'text'=>'Along the Riverwalk'),
-    array('value'=>'wooded', 'text'=>'In a Wooded Area'),
+    array('value'=>'riverwalk', 'text'=>'Riverwalk'),
     array('value'=>'ownCamp', 'text'=>'Own Themecamp'),
     array('value'=>'otherCamp', 'text'=>'Other Themecamp')
 );
