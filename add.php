@@ -19,7 +19,7 @@ $data_set = DataSetFactory::getDataSetByName('registration');
 $vars_data_table = $data_set['vars'];
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq year'));
-$year = $vars[0]['value'];
+$year = intval($vars[0]['value']);
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
 $tcDates = $vars[0]['value'];
