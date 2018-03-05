@@ -62,11 +62,11 @@ function data_obtained(data)
         'data': null,
         'defaultContent': '<button name="edit"><span class="fa fa-pencil"></span></button> <button name="del"><span class="fa fa-remove"></span></button>'
     }];
+    var toggles = $('#coltoggle');
     for(var_name in data[0])
     {
         var col = {};
         col.title = var_name;
-        col.data = var_name;
         for(i = 0; i < renderers.length; i++)
         {
             if(renderers[i][var_name] !== undefined)
@@ -78,18 +78,48 @@ function data_obtained(data)
         {
             col.visible=false;
         }
-        columns.push(col);
+        var len = columns.push(col);
+        len = len-1;
+        toggles.append('<a class="toggle-vis" data-column="'+len+'">'+var_name+'</a> | ');
     }
     $('#art').dataTable({
-        'data': data,
+        'data': [],
         'columns': columns
     });
+    var table = $('#art').DataTable();
+    for(i = 0; i < data.length; i++)
+    {
+        var obj = data[i];
+        var arr = [];
+        for(j = 0; j < columns.length; j++)
+        {
+            if(obj[columns[j].title] !== undefined)
+            {
+                arr.push(obj[columns[j].title]);
+            }
+            else
+            {
+                arr.push(null);
+            }
+        }
+        table.row.add(arr);
+    }
+    table.draw(false);
+    $('a.toggle-vis').on('click', function (e){
+        e.preventDefault();
+ 
+        // Get the column API object
+        var column = table.column( $(this).attr('data-column') );
+                  
+        // Toggle the visibility
+        column.visible( ! column.visible() );
+    } );
 }
 
 function art_page_loaded()
 {
     $.ajax({
-        url: '/register/api/v1/art?no_logo=1',
+        url: '/register/api/v1/art?no_logo=1&fmt=json-ss',
         success: data_obtained
     });
     $('#art tbody').on('click', 'button[name="edit"]', edit_obj);
