@@ -53,6 +53,10 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         {
             return true;
         }
+        if(!isset($entity['registrars']) || $entity['registrars'] == null)
+        {
+            return false;
+        }
         return in_array($this->user->uid, $entity['registrars']);
     }
 

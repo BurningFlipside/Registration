@@ -91,6 +91,8 @@ function obj_done(data)
                     $('#site').html('None Provided');
                 }
                 break;
+            case '':
+		break;
         }
     }
 }

@@ -22,13 +22,17 @@ else
             </div>
         </div>
         <div class="row">
-            <a href="../api/v1/art?fmt=xml">Data Dump Of Doom (.xml)</a> |
+            <a href="../api/v1/art?fmt=csv&filter=year eq 2018&no_logo">Big Spreadsheet of Everything (.csv)</a> |
             <a href="../api/v1/art/*/artLead?fmt=csv">Art Leads (.csv)</a> |
             <a href="../api/v1/art/*/soundLead?fmt=csv">Sound Leads (.csv)</a> |
             <a href="../api/v1/art/*/safetyLead?fmt=csv">Safety Leads (.csv)</a> |
             <a href="../api/v1/art/*/cleanupLead?fmt=csv">Cleanup Leads (.csv)</a>
         </div>
         <div class="row">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#coltoggle" aria-expanded="false" aria-controls="coltoggle">
+                Toggle Columns
+            </button>
+            <div class="collapse" id="coltoggle"></div>
             <table id="art" class="table">
                 <thead></thead>
                 <tbody></tbody>

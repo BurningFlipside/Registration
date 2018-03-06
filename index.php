@@ -18,8 +18,8 @@ if($page->user)
     $vars = $vars_data_table->read(new \Data\Filter('name eq year'));
     $year = $vars[0]['value'];
     
-    $filter = array('year'=>$year, 'registrars'=>$page->user->uid);
-
+    $filter = array('year'=>intval($year), 'registrars'=>$page->user->uid);
+    
     $count = $camps_data_table->count($filter);
     if($count === 0)
     {
