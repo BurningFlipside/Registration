@@ -72,6 +72,7 @@ function tc_ajax_done(data, prefix)
     var admin = getParameterByName('is_admin');
     if(data.final === true && admin !== 'true')
     {
+        add_notification($('#content'), 'Your registration has been marked as final. To edit this registration further please contact the City Planning Team.');
         $(':input').prop('disabled', true);
         final_done = true;
     }
