@@ -11,6 +11,14 @@ var hidden = [
     '_id'
 ];
 
+function changeDLType()
+{
+    var format = $('#dlFormat').val();
+    var links = $('.dl_link').each(function(){
+        this.href = this.href.replace(/(fmt=)[^\&]+/, '$1'+format);
+    });
+}
+
 function get_id_for_event(trigger)
 {
     var tr = $(trigger).closest('tr');
@@ -118,8 +126,14 @@ function data_obtained(data)
 
 function art_page_loaded()
 {
+    var finished = getParameterByName('finished');
+    var filter = '';
+    if(finished !== null)
+    {
+        filter = '&$filter=final eq true and year eq current';
+    }
     $.ajax({
-        url: '/register/api/v1/art?no_logo=1&fmt=json-ss',
+        url: '/register/api/v1/art?no_logo=1&fmt=json-ss'+filter,
         success: data_obtained
     });
     $('#art tbody').on('click', 'button[name="edit"]', edit_obj);

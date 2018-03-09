@@ -22,11 +22,16 @@ else
             </div>
         </div>
         <div class="row">
-            <a href="../api/v1/art?fmt=csv&filter=year eq 2018&no_logo">Big Spreadsheet of Everything (.csv)</a> |
-            <a href="../api/v1/art/*/artLead?fmt=csv">Art Leads (.csv)</a> |
-            <a href="../api/v1/art/*/soundLead?fmt=csv">Sound Leads (.csv)</a> |
-            <a href="../api/v1/art/*/safetyLead?fmt=csv">Safety Leads (.csv)</a> |
-            <a href="../api/v1/art/*/cleanupLead?fmt=csv">Cleanup Leads (.csv)</a>
+            <a class="dl_link" href="../api/v1/art?fmt=csv&filter=year eq 2018&no_logo">Big Spreadsheet of Everything</a> |
+            <a class="dl_link" href="../api/v1/art/*/artLead?fmt=csv">Art Leads</a> |
+            <a class="dl_link" href="../api/v1/art/*/soundLead?fmt=csv">Sound Leads</a> |
+            <a class="dl_link" href="../api/v1/art/*/safetyLead?fmt=csv">Safety Leads</a> |
+            <a class="dl_link" href="../api/v1/art/*/cleanupLead?fmt=csv">Cleanup Leads</a>
+            Format Preference: <select id="dlFormat" onChange="changeDLType()">
+                <option value="csv" selected="selected">Comma Sepearated Value (.csv)</option>
+                <option value="xls">Excel 97-2003 (.xls)</option>
+                <option value="xlsx">Excel Workbook (.xlsx)</option>
+            </select>
         </div>
         <div class="row">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#coltoggle" aria-expanded="false" aria-controls="coltoggle">
