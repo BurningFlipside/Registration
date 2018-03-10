@@ -24,110 +24,12 @@ $art_count = $art_data_table->count($filter);
 $dmv_count = $dmv_data_table->count($filter);
 $event_count = $event_data_table->count($filter);
 
-$tc  = '';
-$art = '';
-$dmv = '';
-$evt = '';
-if($page->is_tc_admin)
-{
-    $tc = '<div class="col-lg-3 col-md-6">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <span class="fa fa-bed" style="font-size: 5em;"></span>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.$camp_count.'</div>
-                                <div>Theme Camps</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="tc.php">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right fa fa-arrow-circle-right"></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>';
-}
-if($page->is_art_admin)
-{
-    $art = '<div class="col-lg-3 col-md-6">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <span class="fa fa-picture-o" style="font-size: 5em;"></span>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.$art_count.'</div>
-                                <div>Art Projects</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="art.php">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right fa fa-arrow-circle-right"></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>';
-}
-if($page->is_dmv_admin)
-{
-    $dmv = '<div class="col-lg-3 col-md-6">
-                <div class="panel panel-red">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <span class="fa fa-car" style="font-size: 5em;"></span>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.$dmv_count.'</div>
-                                <div>Art Cars</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="dmv.php">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right fa fa-arrow-circle-right"></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>';
-}
-if($page->is_event_admin)
-{
-    $evt = '<div class="col-lg-3 col-md-6">
-                <div class="panel panel-yellow">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <span class="fa fa-calendar" style="font-size: 5em;"></span>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div style="font-size: 40px;">'.$event_count.'</div>
-                                <div>Events</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="evt.php">
-                        <div class="panel-footer">
-                            <span class="pull-left">View Details</span>
-                            <span class="pull-right fa fa-arrow-circle-right"></span>
-                            <div class="clearfix"></div>
-                        </div>
-                    </a>
-                </div>
-            </div>';
-}
+$filter = new \Data\Filter('final eq true and year eq '.$year);
+
+$done_camp_count = $camps_data_table->count($filter);
+
+$filter = new \Data\Filter('final eq true and year eq '.$year);
+$done_art_count = $art_data_table->count($filter);
 
 $page->body .= '
         <div class="row">
@@ -135,11 +37,36 @@ $page->body .= '
                 <h1 class="page-header">Dashboard</h1>
             </div>
         </div>
-        <div class="row">'.$tc.$art.$dmv.$evt.'
-        </div>
-    </div>
-</div>
-';
+        <div class="row">';
+if($page->is_tc_admin)
+{
+    $page->add_card('fa-bed', $camp_count, 'Theme Camps', 'tc.php');
+}
+if($page->is_art_admin)
+{
+    $page->add_card('fa-picture-o', $art_count, 'Art Projects', 'art.php', $page::CARD_GREEN); 
+}
+if($page->is_dmv_admin)
+{
+    $page->add_card('fa-car', $dmv_count, 'Art Cars', 'dmv.php', $page::CARD_YELLOW);
+}
+if($page->is_event_admin)
+{
+    $page->add_card('fa-calendar', $event_count, 'Events', 'event.php', $page::CARD_RED);
+}
+
+$page->body .= '</div><div class="row">';
+
+if($page->is_tc_admin)
+{
+    $page->add_card('fa-check', $done_camp_count, 'Finished Theme Camps', 'tc.php?finished=true', $page::CARD_RED);
+}
+if($page->is_art_admin)
+{
+    $page->add_card('fa-check', $done_art_count, 'Finished Art Projects', 'art.php?finished=true', $page::CARD_YELLOW);
+}
+
+$page->body .= '</div></div></div>';
 
 $page->print_page();
 // vim: set tabstop=4 shiftwidth=4 expandtab:

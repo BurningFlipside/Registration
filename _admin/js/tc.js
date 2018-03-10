@@ -73,12 +73,18 @@ function unlockObject()
      $.post('../api/v1/camps/'+_id+'/Actions/Unlock', '', unlockDone);
 }
 
+function getStructs()
+{
+     _id = get_id_for_event(this);
+     location = '../api/v1/camps/'+_id+'/structs?fmt=xlsx';
+}
+
 function data_obtained(data)
 {
     if(data.length === 0) return;
     var columns = [{
         'data': null,
-        'defaultContent': '<button name="edit"><span class="fa fa-pencil"></span></button> <button name="del"><span class="fa fa-remove"></span></button> <button name="unlock"><span class="fa fa-unlock"></span></button>'
+        'defaultContent': '<button name="edit"><span class="fa fa-pencil"></span></button> <button name="del"><span class="fa fa-remove"></span></button> <button name="unlock"><span class="fa fa-unlock"></span></button> <button name="structs"><span class="fa fa-home"></span></button>'
     }];
     for(var_name in data[0])
     {
@@ -105,6 +111,7 @@ function data_obtained(data)
             data[i]['final'] = false;
         }
     }
+    $.fn.dataTable.ext.errMode = 'none';
     $('#tc').dataTable({
         'data': data,
         'columns': columns
@@ -113,13 +120,20 @@ function data_obtained(data)
 
 function tc_page_loaded()
 {
+    var finished = getParameterByName('finished');
+    var filter = '';
+    if(finished !== null)
+    {
+    	filter = '&$filter=final eq true and year eq current';
+    }
     $.ajax({
-        url: '../api/v1/camps?no_logo=1',
+        url: '../api/v1/camps?no_logo=1'+filter,
         success: data_obtained
     });
     $('#tc tbody').on('click', 'button[name="edit"]', edit_obj);
     $('#tc tbody').on('click', 'button[name="del"]', del_obj);
     $('#tc tbody').on('click', 'button[name="unlock"]', unlockObject);
+    $('#tc tbody').on('click', 'button[name="structs"]', getStructs);
 }
 
 $(tc_page_loaded);
