@@ -279,6 +279,7 @@ function post_error(data)
     else
     {
         alert("Unable to save data for unknown reason!");
+        console.log(data);
     }
 }
 
