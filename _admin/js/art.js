@@ -90,6 +90,7 @@ function data_obtained(data)
         len = len-1;
         toggles.append('<a class="toggle-vis" data-column="'+len+'">'+var_name+'</a> | ');
     }
+    $.fn.dataTable.ext.errMode = 'none';
     $('#art').dataTable({
         'data': [],
         'columns': columns
