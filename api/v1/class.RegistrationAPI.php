@@ -55,6 +55,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
         if(!isset($entity['registrars']) || $entity['registrars'] == null)
         {
+            error_log('Missing registrars! '.print_r($entity, true));
             return false;
         }
         return in_array($this->user->uid, $entity['registrars']);
@@ -98,6 +99,11 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
            $odata->filter === false)
         {
             $odata->filter = new \Data\Filter('year eq '.$this->getCurrentYear());
+        }
+        else if($odata->filter !== false && $odata->filter->contains('year eq current'))
+        {
+            $clause = $odata->filter->getClause('year');
+            $clause->var2 = $this->getCurrentYear();
         }
         if(isset($queryParams['no_logo']))
         {
@@ -202,10 +208,125 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         return $response->withJson($areas[0]);
     }
 
-    public function readEntryField($request, $response, $args)
+    private function processStructs(&$camp)
     {
+        $totalSqFt = 0;
+        if(isset($camp['structs']['type']))
+        {
+            $structs = $camp['structs'];
+            $count = count($structs['type']);
+            for($i = 0; $i < $count; $i++)
+            {
+                $newStruct = new stdClass();
+                $newStruct->type = $structs['type'][$i];
+                $newStruct->width = $structs['width'][$i];
+                $newStruct->length = $structs['length'][$i];
+                $newStruct->height = $structs['height'][$i];
+                $newStruct->desc = $structs['desc'][$i];
+                $newStruct->sqFt = $newStruct->width*$newStruct->length;
+                $totalSqFt += $newStruct->sqFt;
+                $camp['structs'][$i] = $newStruct;
+            }
+            unset($camp['structs']['type']);
+            unset($camp['structs']['width']);
+            unset($camp['structs']['length']);
+            unset($camp['structs']['height']);
+            unset($camp['structs']['desc']);
+        }
+        if(isset($camp['placement']['tents']))
+        {
+            $tentCount = $camp['placement']['tents'];
+            unset($camp['placement']);
+            $camp['tents'] = $tentCount;
+            $camp['tentSqFt'] = $tentCount*100;
+            $totalSqFt += $camp['tentSqFt'];
+        }
+        $camp['totalSqFt'] = $totalSqFt;
+    }
+
+    private function doStructView($request, $response, $args)
+    {
+        if($this->canRead($request) === false)
+        {
+            return $response->withStatus(401);
+        }
+        if(!$this->user->isInGroupNamed('RegistrationAdmins') && !$this->user->isInGroupNamed($this->adminType))
+        {
+            return $response->withStatus(401);
+        }
+        $dataTable = $this->getDataTable();
+        $odata = $request->getAttribute('odata', new \ODataParams(array()));
         if($args['name'] !== '*')
         {
+            $odata->filter = $this->getFilterForPrimaryKey($args['name']);
+        }
+        else if($odata->filter === false)
+        {
+            $odata->filter = new \Data\Filter('year eq '.$this->getCurrentYear());
+        }
+        $hideLogo = array('fields'=>array('logo' => false, 'image_1' => false, 'image_2' => false, 'image_3' => false, 'image' => false));
+        $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
+                                 $odata->skip, $odata->orderby, $hideLogo);
+        if(empty($objs))
+        {
+            return $response->withStatus(404);
+        }
+        $res = array();
+        $campCount = count($objs);
+        for($i = 0; $i < $campCount; $i++)
+        {
+            $camp = $objs[$i];
+            $tmpObj = array('_id'=>$camp['_id'], 'name'=>$camp['name']);
+            //First put the regular tents
+            $tents = $tmpObj;
+            $tents['desc'] = 'Regular Tents 10x10';
+            $tents['count'] = $camp['placement']['tents'];
+            $tents['sqFt'] = $tents['count']*100;
+            array_push($res, $tents);
+            if(!isset($camp['structs']))
+            {
+                continue;
+            }
+            $structCount = count($camp['structs']['type']);
+            for($j = 0; $j < $structCount; $j++)
+            {
+                $struct = $tmpObj;
+                $struct['desc'] = $camp['structs']['desc'][$j];
+                $struct['type'] = $camp['structs']['type'][$j];
+                $struct['width'] = $camp['structs']['width'][$j];
+                $struct['height'] = $camp['structs']['height'][$j];
+                $struct['length'] = $camp['structs']['length'][$j];
+                $struct['sqFt'] = $struct['width']*$struct['length'];
+                array_push($res, $struct);
+            }
+        }
+        return $response->withJson($res);
+    }
+
+    public function readEntryField($request, $response, $args)
+    {
+        if($args['field'] === 'doStructView')
+        {
+            return $this->doStructView($request, $response, $args);
+        }
+        if($args['name'] !== '*')
+        {
+            if($args['field'] === 'structs')
+            {
+                $dataTable = $this->getDataTable();
+                $odata = $request->getAttribute('odata', new \ODataParams(array()));
+                $odata->select = array($args['field'], 'placement');
+                $odata->filter = $this->getFilterForPrimaryKey($args['name']);
+                $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
+                                         $odata->skip, $odata->orderby);
+                if(empty($objs))
+                {
+                    return $response->withStatus(404);
+                }
+                $objs = $objs[0];
+                $this->processStructs($objs);
+                return $response->withJson($objs);
+            }
             $odata = $request->getAttribute('odata', new \ODataParams(array()));
             $odata->select = array($args['field']);
             $request = $request->withAttribute('odata', $odata);
@@ -228,6 +349,10 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         $count = count($objs);
         for($i = 0; $i < $count; $i++)
         {
+            if($args['field'] === 'structs')
+            {
+                $this->processStructs($objs[$i]);
+            }
             if(isset($objs[$i][$field]))
             {
                 array_push($res, $objs[$i][$field]);
@@ -337,7 +462,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
         $dataTable = $this->getDataTable();
         $filter = $this->getFilterForPrimaryKey($args['name']);
-        $res = $dataTable->update($filter, array('$unset'=>array('final'=>true)));
+        $res = $dataTable->update($filter, array('final'=>false));
         return $response->withJson($res);
     }
 }

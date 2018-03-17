@@ -11,6 +11,14 @@ var hidden = [
     '_id'
 ];
 
+function changeDLType()
+{
+    var format = $('#dlFormat').val();
+    var links = $('.dl_link').each(function(){
+        this.href = this.href.replace(/(fmt=)[^\&]+/, '$1'+format);
+    });
+}
+
 function get_id_for_event(trigger)
 {
     var tr = $(trigger).closest('tr');
