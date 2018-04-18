@@ -25,11 +25,15 @@ function get_id_for_event(trigger)
     var table = tr.closest('table');
     var api = table.DataTable();
     var row = api.row(tr).data();
-    if(row._id.$id !== undefined)
+    if(row._id !== undefined)
     {
-        return row._id.$id;
+        if(row._id.$id !== undefined)
+        {
+            return row._id.$id;
+        }
+        return row._id;
     }
-    return row._id;
+    return row[1];
 }
 
 function edit_obj()

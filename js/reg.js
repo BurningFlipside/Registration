@@ -169,6 +169,10 @@ function final_post_done(data)
     {
         location.href = '/register/add.php';
     }
+    else if(data['$id'] !== undefined)
+    {
+        location.href = '/register/add.php';
+    }
     else if(data.message !== undefined)
     {
         alert('Error! '+data.message);
