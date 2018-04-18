@@ -52,7 +52,7 @@ if($page->is_dmv_admin)
 }
 if($page->is_event_admin)
 {
-    $page->add_card('fa-calendar', $event_count, 'Events', 'event.php', $page::CARD_RED);
+    $page->add_card('fa-calendar', $event_count, 'Events', 'evt.php', $page::CARD_RED);
 }
 
 $page->body .= '</div><div class="row">';
