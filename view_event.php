@@ -40,6 +40,55 @@ $page->body .= '
             <textarea class="form-control" rows="6" name="description" id="description" readonly></textarea>
         </div>
     </div>
+    <div class="clearfix visible-sm visible-md visible-lg"></div>
+    <div class="form-group">
+        <label for="Thursday" class="col-sm-2 control-label">Thursday:</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="checkbox" name="Thursday" id="Thursday" readonly disabled/>
+        </div>
+    </div>
+    <div class="clearfix visible-sm visible-md visible-lg"></div>
+    <div class="form-group">
+        <label for="Friday" class="col-sm-2 control-label">Friday:</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="checkbox" name="Friday" id="Friday" readonly disabled/>
+        </div>
+    </div>
+    <div class="clearfix visible-sm visible-md visible-lg"></div>
+    <div class="form-group">
+        <label for="Saturday" class="col-sm-2 control-label">Saturday:</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="checkbox" name="Saturday" id="Saturday" readonly disabled/>
+        </div>
+    </div>
+    <div class="clearfix visible-sm visible-md visible-lg"></div>
+    <div class="form-group">
+        <label for="Sunday" class="col-sm-2 control-label">Sunday:</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="checkbox" name="Sunday" id="Sunday" readonly disabled/>
+        </div>
+    </div>
+    <div class="clearfix visible-sm visible-md visible-lg"></div>
+    <div class="form-group">
+        <label for="Monday" class="col-sm-2 control-label">Monday:</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="checkbox" name="Monday" id="Monday" readonly disabled/>
+        </div>
+    </div>
+    <div class="clearfix visible-sm visible-md visible-lg"></div>
+    <div class="form-group">
+        <label for="start" class="col-sm-2 control-label">Start:</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="text" name="start" id="start" readonly/>
+        </div>
+    </div>
+    <div class="clearfix visible-sm visible-md visible-lg"></div>
+    <div class="form-group">
+        <label for="end" class="col-sm-2 control-label">End:</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="text" name="end" id="end" readonly/>
+        </div>
+    </div>
 </div>
 ';
 
