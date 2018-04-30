@@ -12,6 +12,14 @@ var hidden = [
     'final'
 ];
 
+function changeDLType()
+{
+    var format = $('#dlFormat').val();
+    var links = $('.dl_link').each(function(){
+        this.href = this.href.replace(/(fmt=)[^\&]+/, '$1'+format);
+    });
+}
+
 
 function get_id_for_event(trigger)
 {
@@ -94,7 +102,7 @@ function data_obtained(data)
 function art_page_loaded()
 {
     $.ajax({
-        url: '/register/api/v1/event?$filter=year eq 2017&no_logo=1',
+        url: '/register/api/v1/event?no_logo=1&fmt=json-ss',
         success: data_obtained
     });
     $('#evt tbody').on('click', 'button[name="edit"]', edit_obj);
