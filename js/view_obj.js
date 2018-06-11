@@ -69,7 +69,21 @@ function obj_done(data)
         switch(propName)
         {
             default:
-                $('#'+propName).val(data[propName]);
+                var control = $('#'+propName);
+                if(control.length >= 1)
+                {
+                    if(control[0].type === 'checkbox')
+                    {
+                        if(data[propName])
+                        {
+                            control[0].checked = true;
+                        }
+                    }
+                    else
+                    {
+                        control.val(data[propName]);
+                    }
+                }
                 break;
             case 'logo':
                 if(data[propName].length > 0)

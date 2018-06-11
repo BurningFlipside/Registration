@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 require_once('class.RegisterPage.php');
 $page = new RegisterPage('Burning Flipside - Registration');
 
-$page->addJSByURI('js/view_obj.js');
+$page->addJS('js/view_obj.js');
 
 $page->body .= '
 <div id="content">

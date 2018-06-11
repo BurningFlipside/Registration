@@ -5,8 +5,8 @@ require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Art Project');
 
 $page->addWellKnownJS(JS_BOOTBOX, false);
-$page->addJSByURI('js/reg.js');
-$page->addJSByURI('js/art_reg.js');
+$page->addJS('js/reg.js');
+$page->addJS('js/art_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'This project needs logistical help', 'need_logistics', 'checkbox', 'This project has logistical needs such as needing help transporting to the site, heavy equipment needs, outside volunteers etc.', array('class'=>'ignore', 'data-tabcontrol'=>'logistics'));
@@ -251,7 +251,7 @@ if(isset($_GET['is_admin']))
     }
 }
 
-$page->print_page();
+$page->printPage();
 
 function camelize($value)
 {

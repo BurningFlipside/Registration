@@ -7,19 +7,17 @@ $page = new RegisterPage('Burning Flipside - Registration');
 $page->addWellKnownJS(JS_DATATABLE, false);
 $page->addWellKnownJS(JS_DATATABLE_ODATA, false);
 $page->addWellKnownCSS(CSS_DATATABLE);
-$page->addJSByURI('js/view.js');
 
 $page->body .= '
-<div id="content">
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="themeCampHeader">
+    <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="card">
+            <div class="card-header" role="tab" id="themeCampHeader">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#tc" aria-expanded="true" aria-controls="tc">Theme Camps</a>
                 </h4>
             </div>
-            <div id="tc" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="themeCampHeader">
-                <div class="panel-body">
+            <div id="tc" class="collapse show" role="tabpanel" aria-labelledby="themeCampHeader">
+                <div class="card-body">
                     <table class="table" id="tcTable">
                         <thead>
                             <tr>
@@ -33,14 +31,14 @@ $page->body .= '
                 </div>
             </idv>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="artHeader">
-                <h4 class="panel-title">
+        <div class="card">
+            <div class="card-header" role="tab" id="artHeader">
+                <h4 class="card-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#art" aria-expanded="true" aria-controls="art">Art Project</a>
                 </h4>
             </div>
-            <div id="art" class="panel-collapse collapse" role="tabpanel" aria-labelledby="artHeader">
-                <div class="panel-body">
+            <div id="art" class="collapse" role="tabpanel" aria-labelledby="artHeader">
+                <div class="card-body">
                     <table class="table" id="artTable">
                         <thead>
                             <tr>
@@ -54,14 +52,14 @@ $page->body .= '
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="dmvHeader">
-                <h4 class="panel-title">
+        <div class="card">
+            <div class="card-header" role="tab" id="dmvHeader">
+                <h4 class="card-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#dmv" aria-expanded="true" aria-controls="dmv">Art Cars</a>
                 </h4>
             </div>
-            <div id="dmv" class="panel-collapse collapse" role="tabpanel" aria-labelledby="dmvHeader">
-                <div class="panel-body">
+            <div id="dmv" class="collapse" role="tabpanel" aria-labelledby="dmvHeader">
+                <div class="card-body">
                     <table class="table" id="dmvTable">
                         <thead>
                             <tr>
@@ -75,14 +73,14 @@ $page->body .= '
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="eventHeader">
-                <h4 class="panel-title">
+        <div class="card">
+            <div class="card-header" role="tab" id="eventHeader">
+                <h4 class="card-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#event" aria-expanded="true" aria-controls="event">Events</a>
                 </h4>
             </div>
-            <div id="event" class="panel-collapse collapse" role="tabpanel" aria-labelledby="eventHeader">
-                <div class="panel-body">
+            <div id="event" class="collapse" role="tabpanel" aria-labelledby="eventHeader">
+                <div class="card-body">
                     <table class="table" id="eventTable">
                         <thead>
                             <tr>
@@ -97,6 +95,6 @@ $page->body .= '
             </div>
         </div>
     </div>
-</div>';
+';
 
 $page->printPage();

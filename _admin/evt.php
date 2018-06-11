@@ -23,7 +23,12 @@ else
         </div>
         <div class="row">
             <a class="dl_link" href="../api/v1/event?fmt=csv">Data Dump Of Doom</a> |
-            <a class="dl_link" href="../api/v1/event?no_logo=1&fmt=csv">No logos</a>
+            <a class="dl_link" href="../api/v1/event?no_logo=1&fmt=csv">No logos</a> |
+            <a class="dl_link" href="../api/v1/event?no_logo=1&$filter=year eq current and Thursday eq true&fmt=csv">Thursday</a> |
+            <a class="dl_link" href="../api/v1/event?no_logo=1&$filter=year eq current and Friday eq true&fmt=csv">Friday</a> |
+            <a class="dl_link" href="../api/v1/event?no_logo=1&$filter=year eq current and Saturday eq true&fmt=csv">Saturday</a> |
+            <a class="dl_link" href="../api/v1/event?no_logo=1&$filter=year eq current and Sunday eq true&fmt=csv">Sunday</a> |
+            <a class="dl_link" href="../api/v1/event?no_logo=1&$filter=year eq current and Monday eq true&fmt=csv">Monday</a>
             Format Preference: <select id="dlFormat" onChange="changeDLType()">
                 <option value="csv" selected="selected">Comma Sepearated Value (.csv)</option>
                 <option value="xls">Excel 97-2003 (.xls)</option>

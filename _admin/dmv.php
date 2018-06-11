@@ -22,7 +22,12 @@ else
             </div>
         </div>
         <div class="row">
-            <a href="../api/v1/dmv?fmt=xml">Data Dump Of Doom (.xml)</a>
+            <a class="dl_link" href="../api/v1/dmv?fmt=csv&filter=year eq current&no_logo">Big Spreadsheet of Everything</a>
+            Format Preference: <select id="dlFormat" onChange="changeDLType()">
+                <option value="csv" selected="selected">Comma Sepearated Value (.csv)</option>
+                <option value="xls">Excel 97-2003 (.xls)</option>
+                <option value="xlsx">Excel Workbook (.xlsx)</option>
+            </select>
         </div>
         <div class="row">
             <table id="dmv" class="table">
