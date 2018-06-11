@@ -70,5 +70,5 @@ for($i = 0; $i < $type_count; $i++)
     $page->add_spacer($index);
 }
 
-$page->print_page();
+$page->printPage();
 ?>

@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Theme Camp', 'Camp');
 
-$page->addJSByURI('js/reg.js');
-$page->addJSByURI('js/tc_reg.js');
+$page->addJS('js/reg.js');
+$page->addJS('js/tc_reg.js');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'Number of campers', 'num_campers', 'text', '', array('required'=>true));
@@ -220,7 +220,7 @@ if(isset($_GET['is_admin']))
     }
 }
 
-$page->print_page();
+$page->printPage();
 
 function camelize($value)
 {

@@ -1,6 +1,6 @@
 <?php
 require_once('class.FlipSession.php');
-class RegisterAdminPage extends FlipAdminPage
+class RegisterAdminPage extends \Http\FlipAdminPage
 {
     public  $is_tc_admin;
     public  $is_art_admin;
@@ -53,30 +53,27 @@ class RegisterAdminPage extends FlipAdminPage
                 }
             }
         }
-    }
-
-    function add_links()
-    {
-        $this->addLink('<span class="fa fa-tachometer"></span> Dashboard', 'index.php');
+        $this->content['header']['sidebar'] = array();
+        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-dashboard', 'url' => 'index.php');
         if($this->is_tc_admin)
         {
-            $this->addLink('<span class="fa fa-bed"></span> Theme Camps', 'tc.php');
+            $this->content['header']['sidebar']['Theme Camps'] = array('icon' => 'fa-bed', 'url' => 'tc.php');
         }
         if($this->is_art_admin)
         {
-            $this->addLink('<span class="fa fa-picture-o"></span> Art Projects', 'art.php');
+            $this->content['header']['sidebar']['Art Projects'] = array('icon' => 'fa-picture-o', 'url' => 'art.php');
         }
         if($this->is_dmv_admin)
         {
-            $this->addLink('<span class="fa fa-car"></span> Art Cars', 'dmv.php');
+            $this->content['header']['sidebar']['Art Cars'] = array('icon' => 'fa-car', 'menu' => 'dmv.php');
         }
         if($this->is_event_admin)
         {
-            $this->addLink('<span class="fa fa-calendar"></span> Events', 'dmv.php');
+            $this->content['header']['sidebar']['Events'] = array('icon' => 'fa-calendar', 'url' => 'evt.php');
         }
         if($this->is_admin)
         {
-            $this->addLink('<span class="fa fa-cog"></span> Variables', 'vars.php');
+            $this->content['header']['sidebar']['Variables'] = array('icon' => 'fa-cog', 'url' => 'vars.php');
         }
     }
 
