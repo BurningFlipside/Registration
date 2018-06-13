@@ -1,0 +1,41 @@
+{% extends "admin.html" %}
+
+{% block headBlock %}
+  {% if useCDN == null or useCND %}
+    {{ include('@Register/view-list-cdn.html') }}
+  {% else %}
+    {{ include('@Register/view-list-local.html') }}
+  {% endif %}
+  <script src="js/admin.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block contentTop %}
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">{{ title }}</h1>
+    </div>
+  </div>
+  <div class="row">
+   {% for report in reports %}
+     <a class="dl_link" href="{{ report.link }}">{{ report.title }}</a>
+     {% if loop.last == false %}
+      &nbsp;|&nbsp;
+     {% endif %}
+   {% endfor %} 
+   Format Preference: <select id="dlFormat" onchange="changeDLType()">
+     <option value="csv" selected="selected">Comma Sepearated Value (.csv)</option>
+     <option value="xls">Excel 97-2003 (.xls)</option>
+     <option value="xlsx">Excel Workbook (.xlsx)</option>
+   </select>
+  </div>
+  <div class="row" style="overflow-x: scroll;">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#coltoggle" aria-expanded="false" aria-controls="coltoggle">
+      Toggle Columns
+    </button>
+    <div class="collapse" id="coltoggle"></div>
+    <table id="listTable" class="table" data-source="{{ endpoint }}" data-editor="{{ editUri }}">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+{% endblock %}

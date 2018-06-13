@@ -1,0 +1,57 @@
+{% extends "@Secure/main.html" %}
+
+{% set css = ["#{root}css/secure.css"] %}
+
+{% block headBlock %}
+  <script src="js/view_list.js" type="text/javascript"></script>
+  {% if useCDN == null or useCND %}
+    {{ include('@Register/view-list-cdn.html') }}
+  {% else %}
+    {{ include('@Register/view-list-local.html') }}
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+  <ul class="nav nav-tabs" id="myWizard" role="tablist">
+    {% for step in steps %}
+      <li class="nav-item">
+        {% if loop.first %}
+          <a class="nav-link active" id="{{ step.id|default(loop.index) }}-tab" data-toggle="tab" href="#{{ step.id|default(loop.index) }}" role="tab" aria-controls="{{ step.id|default(loop.index) }}" aria-selected="true">{{ step.name }}</a>
+        {% else %}
+           <a class="nav-link" id="{{ step.id|default(loop.index) }}-tab" data-toggle="tab" href="#{{ step.id|default(loop.index) }}" role="tab" aria-controls="{{ step.id|default(loop.index) }}" aria-selected="false">{{ step.name }}</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+  {% for step in steps %}
+    {% if loop.first %}
+      <div class="tab-pane fade show active" id="{{ step.id|default(loop.index) }}" role="tabpanel" aria-labelledby="{{ step.id|default(loop.index) }}-tab">
+    {% else %}
+      <div class="tab-pane fade" id="{{ step.id|default(loop.index) }}" role="tabpanel" aria-labelledby="{{ step.id|default(loop.index) }}-tab">
+    {% endif %}
+      {% for tag in step.content %}
+        {% if tag.type == 'form-group' %}
+          <div class="form-group">
+            <label for={{ tag.name }} class="col-sm-2 col-form-label">{{ tag.label }}</label>
+            <div class="col-sm-10">
+              {% if tag.control.type == 'textarea'%}
+                <textarea class="form-control" rows="6" name={{ tag.name }} id={{ tag.name }} {% if tag.required %}required{% endif %} {% if tag.disabled %}disabled{% endif %}></textarea>
+              {% else %}
+                <input type="{{ tag.control.type }}" class="form-control" name={{ tag.name }} id={{ tag.name }} {% if tag.required %}required{% endif %} {% if tag.disabled %}disabled{% endif %}/>
+              {% endif %}
+            </div>
+          </div>
+        {% elseif tag.type == 'spacer' %}
+          <div class="clearfix visible-sm visible-md visible-lg"></div>
+        {% elseif tag.type == 'raw' %}
+          {{ tag.html|raw }}
+        {% else %}
+          {{ tag|json_encode() }}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+  </div>
+{% endblock %}

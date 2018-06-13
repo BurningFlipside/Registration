@@ -8,6 +8,13 @@ $page->addWellKnownJS(JS_DATATABLE, false);
 $page->addWellKnownJS(JS_DATATABLE_ODATA, false);
 $page->addWellKnownCSS(CSS_DATATABLE);
 
+$page->body .= '<ul>
+  <li><a href="view_tcs.php">View Registered Theme Camps</a></li>
+  <li><a href="view_arts.php">View Registered Art Projects</a></li>
+  <li><a href="view_dmvs.php">View Registered Art Cars</a></li>
+  <li><a href="view_events.php">View Registered Events</a></li>
+</ul>';
+/*
 $page->body .= '
     <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="card">
@@ -95,6 +102,6 @@ $page->body .= '
             </div>
         </div>
     </div>
-';
+';*/
 
 $page->printPage();

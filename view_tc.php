@@ -7,7 +7,6 @@ $page = new RegisterPage('Burning Flipside - Registration');
 $page->addJS('js/view_obj.js');
 
 $page->body .= '
-<div id="content">
     <div class="form-group">
         <label for="name" class="col-sm-2 control-label">Camp Name:</label>
         <div class="col-sm-10">
@@ -69,7 +68,6 @@ $page->body .= '
             </div>
         </div>
     </div>
-</div>
 ';
 
 $page->printPage();

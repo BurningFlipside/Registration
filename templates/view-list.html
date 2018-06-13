@@ -1,0 +1,26 @@
+{% extends "@Secure/main.html" %}
+
+{% set css = ["#{root}css/secure.css"] %}
+
+{% block headBlock %}
+  <script src="js/view_list.js" type="text/javascript"></script>
+  {% if useCDN == null or useCND %}
+    {{ include('@Register/view-list-cdn.html') }}
+  {% else %}
+    {{ include('@Register/view-list-local.html') }}
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+  <table class="table" id="listTable" data-endpoint={{ endpoint }} data-viewpage={{ viewpage }}>
+    <thead>
+      <tr>
+        <th>Logo</th>
+        <th>Name</th>
+        <th>Teaser</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+{% endblock %}

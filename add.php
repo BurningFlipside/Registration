@@ -14,6 +14,7 @@ $dmvDates = array();
 $evtDates = array();
 
 $now = time();
+$secsInDay = 86399;
 
 $data_set = DataSetFactory::getDataSetByName('registration');
 $vars_data_table = $data_set['vars'];
@@ -24,25 +25,25 @@ $year = intval($vars[0]['value']);
 $vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
 $tcDates = $vars[0]['value'];
 $tcStart = strtotime($tcDates['start']);
-$tcEnd   = strtotime($tcDates['end']);
+$tcEnd   = strtotime($tcDates['end'])+$secsInDay;
 $tcRegClosed = $now < $tcStart || $now > $tcEnd;
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq artRegDates'));
 $artDates = $vars[0]['value'];
 $artStart = strtotime($artDates['start']);
-$artEnd   = strtotime($artDates['end']);
+$artEnd   = strtotime($artDates['end'])+$secsInDay;
 $artRegClosed = $now < $artStart || $now > $artEnd;
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq dmvRegDates'));
 $dmvDates = $vars[0]['value'];
 $dmvStart = strtotime($dmvDates['start']);
-$dmvEnd   = strtotime($dmvDates['end']);
+$dmvEnd   = strtotime($dmvDates['end'])+$secsInDay;
 $dmvRegClosed = $now < $dmvStart || $now > $dmvEnd;
 
 $vars = $vars_data_table->read(new \Data\Filter('name eq eventRegDates'));
 $evtDates = $vars[0]['value'];
 $evtStart = strtotime($evtDates['start']);
-$evtEnd   = strtotime($evtDates['end']);
+$evtEnd   = strtotime($evtDates['end'])+$secsInDay;
 $evtRegClosed = $now < $evtStart || $now > $evtEnd;
 
 if($page->user)
@@ -66,10 +67,10 @@ $events_count = count($events);
 
 
 
-$manage_camp = '<li><a href="tc_reg.php">Register a Theme Camp</a></li>';
+$manage_camp = '<a class="btn btn-secondary btn-lg" href="tc_reg.php">Register a Theme Camp</a><';
 if($tcRegClosed)
 {
-    $manage_camp = '<li>Theme Camp Registration is Closed</li>';
+    $manage_camp = '<a class="btn btn-secondary btn-lg disabled" href="#">Theme Camp Registration is Closed</a>';
 }
 if($camps_count > 0)
 {
@@ -89,10 +90,10 @@ if($camps_count > 0)
 }
 
 
-$manage_art = '<li><a href="art_reg.php">Register an Art Project</a></li>';
+$manage_art = '<a class="btn btn-secondary btn-lg" href="art_reg.php">Register an Art Project</a>';
 if($artRegClosed)
 {
-    $manage_art = '<li>Art Registration is Closed</li>';
+    $manage_art = '<a class="btn btn-secondary btn-lg disabled" href="#">Art Registration is Closed</a>';
 }
 if($arts_count > 0)
 {
@@ -112,10 +113,10 @@ if($arts_count > 0)
 }
 
 
-$manage_car = '<li><a href="artCar_reg.php">Register an Art Car</a></li>';
+$manage_car = '<a class="btn btn-secondary btn-lg" href="artCar_reg.php">Register an Art Car</a>';
 if($dmvRegClosed)
 {
-    $manage_car = '<li>Art Car Registration is Closed</li>';
+    $manage_car = '<a class="btn btn-secondary btn-lg disabled" href="#">Art Car Registration is Closed</a>';
 }
 if($cars_count > 0)
 {
@@ -135,10 +136,10 @@ if($cars_count > 0)
 }
 
 
-$manage_event = '<li><a href="event_reg.php">Register an Event</a></li>';
+$manage_event = '<a class="btn btn-secondary btn-lg" href="event_reg.php">Register an Event</a>';
 if($evtRegClosed)
 {
-    $manage_event = '<li>Event Registration is Closed</li>';
+    $manage_event = '<a class="btn btn-secondary btn-lg disabled" href="#">Event Registration is Closed</a>';
 }
 if($events_count > 0)
 {
@@ -162,12 +163,10 @@ $page->body .= '
     <h1>Welcome to the Burning Flipside Registration System</h1>
     <p></p>
     <h1>What would you like register?</h1>
-    <ul>
-        '.$manage_camp.'
-        '.$manage_art.'
-        '.$manage_car.'
+        '.$manage_camp.'<div class="clearfix"></div>
+        '.$manage_art.'<div class="clearfix"></div>
+        '.$manage_car.'<div class="clearfix"></div>
         '.$manage_event.'
-    </ul>
 </div>';
 
 $page->printPage();
