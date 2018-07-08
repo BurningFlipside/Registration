@@ -1,0 +1,47 @@
+{% extends "@Secure/main.html" %}
+
+{% set css = ["#{root}css/secure.css"] %}
+{% set days = ['Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday'] %}
+
+{% block headBlock %}
+  {% if useCDN == null or useCND %}
+    {{ include('@Register/view-list-cdn.html') }}
+  {% else %}
+    {{ include('@Register/view-list-local.html') }}
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+<ul class="nav nav-tabs">
+  {% for day in days %}
+    <li class="nav-item">
+      {% if loop.first %}
+        <a class="nav-link active" id="{{ day }}-tab" data-toggle="tab" href="#{{ day }}" role="tab" aria-controls="{{ day }}" aria-selected="true">{{ day }}</a>
+      {% else %}
+        <a class="nav-link" id="{{ day }}-tab" data-toggle="tab" href="#{{ day }}" role="tab" aria-controls="{{ day }}" aria-selected="false">{{ day }}</a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+<div class="tab-content" id="myTabContent">
+  {% for day in days %}
+    {% if loop.first %}
+      <div class="tab-pane fade show active" id="{{ day }}" role="tabpanel" aria-labelledby="{{ day }}-tab">
+    {% else %}
+      <div class="tab-pane fade" id="{{ day }}" role="tabpanel" aria-labelledby="{{ day }}-tab">
+    {% endif %}
+      <table class="table" id="{{ day }}Table">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Name</th>
+            <th>Teaser</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

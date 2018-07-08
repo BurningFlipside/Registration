@@ -330,7 +330,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             $odata = $request->getAttribute('odata', new \ODataParams(array()));
             $odata->select = array($args['field']);
             $request = $request->withAttribute('odata', $odata);
-            return parent::readEntry($request, $response, $args);
+            return $this->readEntry($request, $response, $args);
         }
         $field = $args['field'];
         if($this->canRead($request) === false)
@@ -358,6 +358,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
                 array_push($res, $objs[$i][$field]);
             }
         }
+        $params = $request->getParams();
         return $response->withJson($res);
     }
 

@@ -9,6 +9,8 @@ class RegisterWizardPage extends SecureLoginRequiredPage
     function __construct($reg_type_long, $reg_type_short = FALSE)
     {
         parent::__construct('Burning Flipside - '.$reg_type_long.' Registration', true);
+        $this->addTemplateDir(dirname(__FILE__).'/templates', 'Register');
+        $this->setTemplateName('@Register/reg.html');
         if($reg_type_short == FALSE)
         {
             $this->reg_type_short = $reg_type_long;
@@ -63,7 +65,7 @@ class RegisterWizardPage extends SecureLoginRequiredPage
     function add_script()
     {
         $this->addWellKnownJS(JS_BOOTBOX, false);
-        $this->addJSByURI('js/reg.js', false);
+        $this->addJS('js/reg.js', false);
     }
 
     function add_wizard_step($name, $id = FALSE)
@@ -173,11 +175,7 @@ class RegisterWizardPage extends SecureLoginRequiredPage
         $max = count($this->steps);
         for($i = 0; $i < $max; $i++)
         {
-            $ret.='<li';
-            if($i == 0)
-            {
-                $ret.=' class="active"';
-            }
+            $ret.='<li class="nav-item" ';
             if(isset($this->steps[$i]['id']))
             {
                 $ret.=' id="'.$this->steps[$i]['id'].'"';
@@ -398,15 +396,16 @@ class RegisterWizardPage extends SecureLoginRequiredPage
         return $ret;
     }
 
-    function print_page($header=true)
+    function printPage()
     {
+        $this->content['steps'] = $this->steps;
+/*
         $this->body = '
-        <div id="content">
             <div id="rootwizard">
                 <div class="navbar navbar-default">
                     <div class="container-fluid">
                         <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#wizard-navbar-collapse-1">
+                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#wizard-navbar-collapse-1">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
@@ -415,7 +414,7 @@ class RegisterWizardPage extends SecureLoginRequiredPage
                         </div>
                     </div>
                     <div class="collapse navbar-collapse" id="wizard-navbar-collapse-1">
-                        <ul class="nav navbar-nav">'.$this->print_tabs().'</ul>
+                        <ul class="nav nav-tabs">'.$this->print_tabs().'</ul>
                     </div>
                 </div>
                 <div class="tab-content">'.$this->print_content().'</div>
@@ -425,9 +424,8 @@ class RegisterWizardPage extends SecureLoginRequiredPage
                         <li class="next"><a href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a></li>
                     </ul>
                 </nav>
-            </div>
-        </div>';
-        parent::printPage($header);
+            </div>';*/
+        parent::printPage();
     }
 
     static function camelize($value)

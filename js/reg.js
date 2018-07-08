@@ -665,7 +665,7 @@ function populate_prior_data()
 
 function wizard_init()
 {
-    _id = getParameterByName('_id');
+    _id = getParameterByName('id');
     $('[title]').tooltip();
     $('input[data-tabcontrol]').change(tabcontrol_change);
     $('input[data-groupcontrol]').change(groupcontrol_change);

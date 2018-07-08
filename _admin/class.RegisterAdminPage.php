@@ -1,7 +1,10 @@
 <?php
 require_once('class.FlipSession.php');
+require_once('../../class.SecurePage.php');
 class RegisterAdminPage extends \Http\FlipAdminPage
 {
+    use SecureWebPage;
+
     public  $is_tc_admin;
     public  $is_art_admin;
     public  $is_dmv_admin;
@@ -15,6 +18,9 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         $this->is_dmv_admin   = false;
         $this->is_event_admin = false;
         parent::__construct($title, 'RegistrationAdmins');
+        $this->addTemplateDir('../../templates', 'Secure');
+        $this->addTemplateDir('../templates', 'Register');
+        $this->secure_root = $this->getSecureRoot();
         if($this->user !== false && $this->user !== null)
         {
             if($this->user->isInGroupNamed('RegistrationAdmins'))
@@ -65,7 +71,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         }
         if($this->is_dmv_admin)
         {
-            $this->content['header']['sidebar']['Art Cars'] = array('icon' => 'fa-car', 'menu' => 'dmv.php');
+            $this->content['header']['sidebar']['Art Cars'] = array('icon' => 'fa-car', 'url' => 'dmv.php');
         }
         if($this->is_event_admin)
         {
@@ -75,6 +81,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         {
             $this->content['header']['sidebar']['Variables'] = array('icon' => 'fa-cog', 'url' => 'vars.php');
         }
+        $this->content['loginUrl'] = $this->secure_root.'api/v1/login';
     }
 
     public function isAdmin()
