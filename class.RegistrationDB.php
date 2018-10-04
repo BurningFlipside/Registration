@@ -8,19 +8,21 @@ class RegistrationDB
     
     function __construct()
     {
+        $host = FlipsideSettings::$dataset['registrations']['host'];
+        $db = FlipsideSettings::$dataset['registrations']['db'];
+        $user = FlipsideSettings::$dataset['registrations']['user'];
+        $pass = FlipsideSettings::$dataset['registrations']['pass'];
+
         if(class_exists('MongoClient'))
         {
-            $this->client = new MongoClient("mongodb://db.burningflipside.com/registrations", 
-                                        array('username'=>FlipsideSettings::$mongo['registrations']['user'], 'password'=>FlipsideSettings::$mongo['registrations']['pwd']));
+            $this->client = new MongoClient("mongodb://$host/$db", array('user'=>$user, 'pass'=>$pass));
             $this->db     = $this->client->registrations;
             $this->manager = null;
         }
         else if(class_exists('\MongoDB\Driver\Manager'))
         {
             $this->client = null;
-            $username = 'registration_rw';
-            $password = '8Vcf6LNA';
-            $this->manager = new \MongoDB\Driver\Manager("mongodb://$username:$password@db.burningflipside.com/registrations");
+            $this->manager = new \MongoDB\Driver\Manager("mongodb://$user:$pass@$host/$db");
             $this->db = 'registrations';
         }
         else
