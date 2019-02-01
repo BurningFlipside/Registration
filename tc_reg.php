@@ -33,77 +33,269 @@ $page->add_spacer($index);
 $index = $page->add_wizard_step('Camp Contacts');
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert">The email provided for the theme camp lead will be automatically added to the theme camp lead’s newsletter. This newsletter is designed to provide theme camp leads with valuable event and community information. The email addresses will be purged just before theme camp registration opens next year.</div>');
 $page->add_spacer($index);
-$accordion_ref = $page->add_accordion($index);
-$panels = array('Camp Lead', 'Safety Lead', 'Cleanup Lead', 'Volunteering', 'Sound Lead');
-$all_panels = array(
-    array('label'=>'Full Name:', 'name'=>'name', 'type'=>'text', 'tooltip'=>'This is the name of the %s', 'required'=>TRUE),
-    array('label'=>'Burner Name:', 'name'=>'burnerName', 'type'=>'text', 'tooltip'=>'This is the burner name/nickname of the %s'),
-    array('label'=>'Email Address:', 'name'=>'email', 'type'=>'text', 'tooltip'=>'This is the email address of the %s', 'required'=>TRUE),
-    array('label'=>'Phone Number:', 'name'=>'phone', 'type'=>'text', 'tooltip'=>'This is the phone number of the %s', 'required'=>TRUE),
-    array('label'=>'This number can receive SMS messages:', 'name'=>'sms', 'type'=>'checkbox', 'tooltip'=>'This phone number can be used to recieve text messages'),
-);
-$other = array(
-    'Camp Lead' => array('label'=>'The camp lead is the only contact', 'id'=>'just_me', 'name'=>'just_me', 'type'=>'checkbox', 'tooltip'=>'The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound.'),
-    'Safety Lead' => array('label'=>'How will your camp handle Safety/Fire/Injury issues?', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'How will your camp handle Safety/Fire/Injury issues?', 'required'=>TRUE),
-    'Cleanup Lead' => array('label'=>'How will your camp ensure you leave no trace?', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'How will your camp ensure you leave no trace?', 'required'=>TRUE),
-    'Volunteering'=> array('label'=>'Volunteer skills for the event:', 'name'=>'plan', 'type'=>'textarea', 'tooltip'=>'What skills would your camp like to share with the event?', 'required'=>TRUE),
-);
-$panel_count = count($panels);
-$content_count = count($all_panels);
-for($i = 0; $i < $panel_count; $i++)
-{
-    $panel_ref = $page->add_accordion_panel($accordion_ref, $panels[$i]);
-    $camel = camelize($panels[$i]);
-    $lower = strtolower($panels[$i]);
-    for($j = 0; $j < $content_count; $j++)
-    {
-        $tooltip = sprintf($all_panels[$j]['tooltip'], $lower);
-        if(isset($all_panels[$j]['required']))
-        {
-            $extra = array('required'=>$all_panels[$j]['required']);
-        }
-        else
-        {
-            $extra = FALSE;
-        }
-        if($i > 0)
-        {
-            if($extra === FALSE)
-            {
-                $extra = array();
-            }
-            $extra['data-copyfrom'] = camelize($panels[0]).'_'.$all_panels[$j]['name'];
-            $extra['data-copytrigger'] = '#campLead_just_me';
-        }
-        else
-        {
-            if($all_panels[$j]['name'] === 'email')
-            {
-                if($extra === FALSE)
-                {
-                    $extra = array();
-                }
-                $extra['disabled'] = true;
-            }
-        }
-        $page->add_form_group($panel_ref, $all_panels[$j]['label'], $camel.'_'.$all_panels[$j]['name'], $all_panels[$j]['type'], $tooltip, $extra);
-        $page->add_spacer($panel_ref);
-    }
-    if(isset($other[$panels[$i]]))
-    {
-        $tooltip = sprintf($other[$panels[$i]]['tooltip'], $lower);
-        if(isset($other[$panels[$i]]['required']))
-        {
-            $extra = array('required'=>$other[$panels[$i]]['required']);
-        }
-        else
-        {
-            $extra = FALSE;
-        }
-        $page->add_form_group($panel_ref, $other[$panels[$i]]['label'], $camel.'_'.$other[$panels[$i]]['name'], $other[$panels[$i]]['type'], $tooltip, $extra);
-        $page->add_spacer($panel_ref);
-    }
-}
+
+$page->add_raw_html($index, '<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Camp Lead
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        <div class="form-group"><label for="campLead_name" class="col-sm-2 control-label">Full Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="campLead_name" id="campLead_name"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-original-title="This is the name of the camp lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="campLead_burnerName" class="col-sm-2 control-label non-required">Burner Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="campLead_burnerName" id="campLead_burnerName"
+                    data-toggle="tooltip" data-placement="top" title="" data-original-title="This is the burner name/nickname of the camp lead"
+                    aria-describedby="tooltip633155">
+                <div class="tooltip fade top in" role="tooltip" id="tooltip633155" style="top: -50px; left: 341.336px; display: block;">
+                    <div class="tooltip-arrow" style="left: 50%;"></div>
+                    <div class="tooltip-inner">This is the burner name/nickname of the camp lead</div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="campLead_email" class="col-sm-2 control-label">Email Address:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="campLead_email" id="campLead_email"
+                    data-toggle="tooltip" data-placement="top" title="" required="" disabled="" data-original-title="This is the email address of the camp lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="campLead_phone" class="col-sm-2 control-label">Phone Number:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="campLead_phone" id="campLead_phone"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-original-title="This is the phone number of the camp lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="campLead_sms" class="col-sm-2 control-label non-required">This number can
+                receive SMS messages:</label>
+            <div class="col-sm-10"><input class="form-control" type="checkbox" name="campLead_sms" id="campLead_sms"
+                    data-toggle="tooltip" data-placement="top" title="" data-original-title="This phone number can be used to recieve text messages"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="campLead_just_me" class="col-sm-2 control-label non-required">The camp lead is
+                the only contact</label>
+            <div class="col-sm-10"><input class="form-control" type="checkbox" name="campLead_just_me" id="campLead_just_me"
+                    data-toggle="tooltip" data-placement="top" title="" data-original-title="The camp lead will be contact for all issues about the camp including safety, cleanup, volunteering, and sound."></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Safety Lead
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+
+        <div class="form-group"><label for="safetyLead_name" class="col-sm-2 control-label">Full Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="safetyLead_name" id="safetyLead_name"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_name"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the name of the safety lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="safetyLead_burnerName" class="col-sm-2 control-label non-required">Burner Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="safetyLead_burnerName" id="safetyLead_burnerName"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_burnerName"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the burner name/nickname of the safety lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="safetyLead_email" class="col-sm-2 control-label">Email Address:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="safetyLead_email" id="safetyLead_email"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_email"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the email address of the safety lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="safetyLead_phone" class="col-sm-2 control-label">Phone Number:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="safetyLead_phone" id="safetyLead_phone"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_phone"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the phone number of the safety lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="safetyLead_sms" class="col-sm-2 control-label non-required">This number can
+                receive SMS messages:</label>
+            <div class="col-sm-10"><input class="form-control" type="checkbox" name="safetyLead_sms" id="safetyLead_sms"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_sms" data-copytrigger="#campLead_just_me"
+                    data-original-title="This phone number can be used to recieve text messages"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="safetyLead_plan" class="col-sm-2 control-label">How will your camp handle
+                Safety/Fire/Injury issues?</label>
+            <div class="col-sm-10"><textarea class="form-control" rows="6" name="safetyLead_plan" id="safetyLead_plan"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-original-title="How will your camp handle Safety/Fire/Injury issues?"></textarea></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Cleanup Lead
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+
+        <div class="form-group"><label for="cleanupLead_name" class="col-sm-2 control-label">Full Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="cleanupLead_name" id="cleanupLead_name"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_name"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the name of the cleanup lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="cleanupLead_burnerName" class="col-sm-2 control-label non-required">Burner
+                Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="cleanupLead_burnerName" id="cleanupLead_burnerName"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_burnerName"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the burner name/nickname of the cleanup lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="cleanupLead_email" class="col-sm-2 control-label">Email Address:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="cleanupLead_email" id="cleanupLead_email"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_email"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the email address of the cleanup lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="cleanupLead_phone" class="col-sm-2 control-label">Phone Number:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="cleanupLead_phone" id="cleanupLead_phone"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_phone"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the phone number of the cleanup lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="cleanupLead_sms" class="col-sm-2 control-label non-required">This number can
+                receive SMS messages:</label>
+            <div class="col-sm-10"><input class="form-control" type="checkbox" name="cleanupLead_sms" id="cleanupLead_sms"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_sms" data-copytrigger="#campLead_just_me"
+                    data-original-title="This phone number can be used to recieve text messages"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="cleanupLead_plan" class="col-sm-2 control-label">How will your camp ensure you
+                leave no trace?</label>
+            <div class="col-sm-10"><textarea class="form-control" rows="6" name="cleanupLead_plan" id="cleanupLead_plan"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-original-title="How will your camp ensure you leave no trace?"></textarea></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingFour">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          Sound Lead
+        </button>
+      </h5>
+    </div>
+    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+      <div class="card-body">
+
+        <div class="form-group"><label for="soundLead_name" class="col-sm-2 control-label">Full Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="soundLead_name" id="soundLead_name"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_name"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the name of the sound lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="soundLead_burnerName" class="col-sm-2 control-label non-required">Burner
+                Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="soundLead_burnerName" id="soundLead_burnerName"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_burnerName" data-copytrigger="#campLead_just_me"
+                    data-original-title="This is the burner name/nickname of the sound lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="soundLead_email" class="col-sm-2 control-label">Email Address:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="soundLead_email" id="soundLead_email"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_email"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the email address of the sound lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="soundLead_phone" class="col-sm-2 control-label">Phone Number:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="soundLead_phone" id="soundLead_phone"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_phone"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the phone number of the sound lead"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="soundLead_sms" class="col-sm-2 control-label non-required">This number can
+                receive SMS messages:</label>
+            <div class="col-sm-10"><input class="form-control" type="checkbox" name="soundLead_sms" id="soundLead_sms"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_sms" data-copytrigger="#campLead_just_me"
+                    data-original-title="This phone number can be used to recieve text messages"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingFour">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+          Volunteering Lead
+        </button>
+      </h5>
+    </div>
+    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+      <div class="card-body">
+
+        <div class="form-group"><label for="volunteering_name" class="col-sm-2 control-label">Full Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="volunteering_name" id="volunteering_name"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_name"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the name of the volunteering"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="volunteering_burnerName" class="col-sm-2 control-label non-required">Burner
+                Name:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="volunteering_burnerName" id="volunteering_burnerName"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_burnerName"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the burner name/nickname of the volunteering"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="volunteering_email" class="col-sm-2 control-label">Email Address:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="volunteering_email" id="volunteering_email"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_email"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the email address of the volunteering"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="volunteering_phone" class="col-sm-2 control-label">Phone Number:</label>
+            <div class="col-sm-10"><input class="form-control" type="text" name="volunteering_phone" id="volunteering_phone"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-copyfrom="campLead_phone"
+                    data-copytrigger="#campLead_just_me" data-original-title="This is the phone number of the volunteering"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="volunteering_sms" class="col-sm-2 control-label non-required">This number can
+                receive SMS messages:</label>
+            <div class="col-sm-10"><input class="form-control" type="checkbox" name="volunteering_sms" id="volunteering_sms"
+                    data-toggle="tooltip" data-placement="top" title="" data-copyfrom="campLead_sms" data-copytrigger="#campLead_just_me"
+                    data-original-title="This phone number can be used to recieve text messages"></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+        <div class="form-group"><label for="volunteering_plan" class="col-sm-2 control-label">Volunteer skills for the
+                event:</label>
+            <div class="col-sm-10"><textarea class="form-control" rows="6" name="volunteering_plan" id="volunteering_plan"
+                    data-toggle="tooltip" data-placement="top" title="" required="" data-original-title="What skills would your camp like to share with the event?"></textarea></div>
+        </div>
+        <div class="clearfix visible-sm visible-md visible-lg"></div>
+
+
+      </div>
+    </div>
+  </div>
+</div>');
 
 $index = $page->add_wizard_step('Sound Information','sound_step');
 $page->add_form_group($index, 'Sound System Description', 'sound_desc', 'textarea', 'Describe your sound equipment and how you plan to adhere to the Event Sound Policy');
