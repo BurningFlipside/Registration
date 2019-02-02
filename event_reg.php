@@ -4,9 +4,9 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Event');
 
+
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'Event Host', 'host', 'text', 'The camp, art project, or person who is hosting the event.', array('required'=>'true'));
-
 $page->add_form_group($index, 'Event Location', 'location', 'text', 'The camp, art project, or other location at which this event will be held.', array('required'=>'true'));
 
 
@@ -21,10 +21,11 @@ $days = array(
 $day_count = count($days);
 for($i = 0; $i < $day_count; $i++)
 {
-    $page->add_form_group($index, $days[$i]['name'], $days[$i]['id'], 'checkbox');
-    
+    $page->add_raw_html($index, '<div class="form-check">
+        <input class="form-check-input" type="checkbox" name="'.$days[$i]['id'].'" id="'.$days[$i]['id'].'">
+        <label for="need_logistics" class="form-check-label non-required">'.$days[$i]['name'].'</label>
+    </div>');
 }
-
 $options = array(
     array('value'=>'all', 'text'=>'All Day', 'selected'=>TRUE),
     array('value'=>'0100', 'text'=>'1 AM'),
@@ -55,19 +56,35 @@ $options = array(
     array('value'=>'?', 'text'=>'Until we run out of stuff or are tired!')
 );
 $page->add_form_group($index, 'Start Time:', 'start', 'select', 'When your event will start.', array('options'=>$options));
-
 $page->add_form_group($index, 'End Time:', 'end', 'select', 'When your event will end.', array('options'=>$options));
 
 
 $index = $page->add_wizard_step('Event Type');
-$types = array("Amenities and Services", "Art Installation", "Costumed or Themed Event", "Dance Party", "Flash Mob or Rampage", "Food Event", "Game, Contest or Competition",
-               "General Shenanigans", "Interactive Display", "Kiki, We Wanna Have a Kiki", "Live Music", "Musical Event", "Participatory Art Project", "Skills Demonstration",
-               "Social Interaction");
+$types = array(
+    array('id'=>'amenities', 'name'=>'Amenities and Services'),
+    array('id'=>'art', 'name'=>'Art Installation'),
+    array('id'=>'costume', 'name'=>'Costumed or Themed Event'),
+    array('id'=>'dance', 'name'=>'Dance Party'),
+    array('id'=>'rampage', 'name'=>'Flash Mob or Rampage'),
+    array('id'=>'food', 'name'=>'Food Event'),
+    array('id'=>'game', 'name'=>'Game'),
+    array('id'=>'contest', 'name'=>'Contest or Competition'),
+    array('id'=>'shenanigans', 'name'=>'General Shenanigans'),
+    array('id'=>'interactive', 'name'=>'Interactive Display'),
+    array('id'=>'whatthefuckisakiki', 'name'=>'Kiki, We Wanna Have a Kiki'),
+    array('id'=>'performance', 'name'=>'Live Music'),
+    array('id'=>'musical', 'name'=>'Musical Event'),
+    array('id'=>'participation', 'name'=>'Participatory Art Project'),
+    array('id'=>'skills', 'name'=>'Skills Demonstration'),
+    array('id'=>'social', 'name'=>'Social Interaction')
+);
 $type_count = count($types);
 for($i = 0; $i < $type_count; $i++)
 {
-    $page->add_form_group($index, $types[$i], $types[$i], 'checkbox');
-    
+    $page->add_raw_html($index, '<div class="form-check">
+        <input class="form-check-input" type="checkbox" name="'.$types[$i]['id'].'" id="'.$types[$i]['id'].'">
+        <label for="need_logistics" class="form-check-label non-required">'.$types[$i]['name'].'</label>
+    </div>');
 }
 
 $page->printPage();
