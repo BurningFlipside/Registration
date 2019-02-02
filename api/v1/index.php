@@ -6,12 +6,13 @@ require('Autoload.php');
 require('class.RegisterAPI.php');
 require('class.VariablesAPI.php');
 require('class.RegistrationAPI.php');
+require('class.CampRegistrationPDF.php');
 
 $site = new \Http\WebSite();
 $site->registerAPI('/', new RegisterAPI());
 $site->registerAPI('/vars', new VariablesAPI());
 $site->registerAPI('/art', new RegistrationAPI('art', 'ArtAdmins'));
-$site->registerAPI('/camps', new RegistrationAPI('camps', 'CampAdmins'));
+$site->registerAPI('/camps', new RegistrationAPI('camps', 'CampAdmins', '\CampRegistrationPDF'));
 $site->registerAPI('/dmv', new RegistrationAPI('dmv', 'DMVAdmins'));
 $site->registerAPI('/event', new RegistrationAPI('event', 'EventAdmins'));
 $site->run();
