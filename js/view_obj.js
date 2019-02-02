@@ -8,12 +8,12 @@ function validate_contact_dialog()
         var value = control.val()
         if(value == null || value.length == 0)
         {
-            control.parents('.form-group').prop('class', 'form-group has-error');
+            control.prop('class', 'form-control is-invalid');
             ret = false;
         }
         else
         {
-            control.prop('class', 'form-control has-success');
+            control.prop('class', 'form-control is-valid');
         }
     }
     return ret;

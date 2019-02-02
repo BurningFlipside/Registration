@@ -53,8 +53,8 @@ function validate_control_set(set)
         var value = control.val();
         if(value == null || value.length == 0)
         {
-            control.parents('.form-group').prop('class', 'form-group has-error');
-            control.parents('tr').prop('class', 'has-error');
+            control.prop('class', 'form-control is-invalid');
+            control.parents('tr').prop('class', 'is-invalid');
             if(control.parents('.panel-collapse').length > 0)
             {
                 control.parents('.panel-collapse').collapse('show');
@@ -63,7 +63,7 @@ function validate_control_set(set)
         }
         else
         {
-            control.parents('.form-group').prop('class', 'form-group has-success');
+            control.prop('class', 'form-control is-valid');
         }
     }
     return ret;
@@ -78,7 +78,7 @@ function name_check_done(data)
 {
     if(data.responseJSON !== undefined && data.responseJSON.length > 0)
     {
-        $('#name').parents('.form-group').prop('class', 'form-group has-error'); 
+        $('#name').prop('class', 'form-group is-invalid'); 
         this.callback(false);
     }
     else
@@ -111,7 +111,7 @@ function validate_current(callback)
                 {
                     control.attr('title', raw_control.validationMessage);
                 }
-                control.parents('.form-group').prop('class', 'form-group has-error');
+                control.prop('class', 'form-control is-invalid');
                 if(control.parents('.panel-collapse').length > 0)
                 {
                     control.parents('.panel-collapse').collapse('show');
@@ -120,7 +120,7 @@ function validate_current(callback)
             }
             else
             {
-                control.parents('.form-group').prop('class', 'form-group has-success');
+                control.parents('.form-group').prop('class', 'form-control is-valid');
                 control.removeAttr('title');
             }
         }
