@@ -6,9 +6,9 @@ $page = new RegisterWizardPage('Event');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'Event Host', 'host', 'text', 'The camp, art project, or person who is hosting the event.', array('required'=>'true'));
-$page->add_spacer($index);
+
 $page->add_form_group($index, 'Event Location', 'location', 'text', 'The camp, art project, or other location at which this event will be held.', array('required'=>'true'));
-$page->add_spacer($index);
+
 
 $index = $page->add_wizard_step('Day and Time');
 $days = array(
@@ -22,7 +22,7 @@ $day_count = count($days);
 for($i = 0; $i < $day_count; $i++)
 {
     $page->add_form_group($index, $days[$i]['name'], $days[$i]['id'], 'checkbox');
-    $page->add_spacer($index);
+    
 }
 
 $options = array(
@@ -55,9 +55,9 @@ $options = array(
     array('value'=>'?', 'text'=>'Until we run out of stuff or are tired!')
 );
 $page->add_form_group($index, 'Start Time:', 'start', 'select', 'When your event will start.', array('options'=>$options));
-$page->add_spacer($index);
+
 $page->add_form_group($index, 'End Time:', 'end', 'select', 'When your event will end.', array('options'=>$options));
-$page->add_spacer($index);
+
 
 $index = $page->add_wizard_step('Event Type');
 $types = array("Amenities and Services", "Art Installation", "Costumed or Themed Event", "Dance Party", "Flash Mob or Rampage", "Food Event", "Game, Contest or Competition",
@@ -67,7 +67,7 @@ $type_count = count($types);
 for($i = 0; $i < $type_count; $i++)
 {
     $page->add_form_group($index, $types[$i], $types[$i], 'checkbox');
-    $page->add_spacer($index);
+    
 }
 
 $page->printPage();

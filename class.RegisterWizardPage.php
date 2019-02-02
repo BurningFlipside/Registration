@@ -28,33 +28,28 @@ class RegisterWizardPage extends SecureLoginRequiredPage
                             'required'=>'true',
                             'control'=>array('type'=>'text')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>$this->reg_type_short.' Logo',
                             'name'=>'logo',
                             'control'=>array('type'=>'file')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>$this->reg_type_short.' Website',
                             'name'=>'site',
                             'control'=>array('type'=>'text')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>'One Line Teaser',
                             'name'=>'teaser',
                             'required'=>'true',
                             'control'=>array('type'=>'text')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>'Description',
                             'name'=>'description',
                             'required'=>'true',
                             'control'=>array('type'=>'textarea')
                       ),
-                      array('type'=>'spacer')
                   )
             )
         );

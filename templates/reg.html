@@ -55,8 +55,6 @@
           tag.required %}required{% endif %} {% if tag.disabled %}disabled{% endif %} />
         {% endif %}
       </div>
-      {% elseif tag.type == 'spacer' %}
-      <div class="clearfix visible-sm visible-md visible-lg"></div>
       {% elseif tag.type == 'raw' %}
       {{ tag.html|raw }}
       {% else %}
