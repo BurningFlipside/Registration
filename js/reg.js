@@ -675,7 +675,6 @@ function wizard_init()
     $('input[data-groupcontrol]').each(groupcontrol_change);
     $('input[data-questcontrol]').each(questcontrol_change);
     $('input[data-copytrigger]').each(setup_copycontrol);
-    $('.navbar-nav').click(show_tab);
     $('.previous').attr('class', 'previous disabled');
     $('a[data-toggle="tab"]').on('shown.bs.tab', tab_changed);
     if(browser_supports_input_type('url'))
