@@ -6,7 +6,9 @@ $page = new RegisterWizardPage('Art Car');
 
 
 $index = $page->add_wizard_step('Basic Questions');
-$page->add_form_group($index, 'Vehicle Owner\'s Name', 'vehicle_owner', 'text', 'This is the person who will be attending the event and be responsible for: any and all actions of vehicle, driver and passengers of mutant vehicle; and liability of said vehicle.', array('required'=>'true'));
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert">Please make sure you have read and understand the Guidlines for Mutant Vehicles <a class="alert-link" href="https://www.burningflipside.com/art/mutant-vehicles">here</a> before registering.</div>');
+$page->add_form_group($index, 'Vehicle Owner\'s Legal Name', 'vehicle_owner', 'text', 'This is the legal name of the person who will be attending the event and be responsible for: any and all actions of vehicle, driver and passengers of mutant vehicle; and liability of said vehicle.', array('required'=>'true'));
+$page->add_form_group($index, 'Vehicle Owner\'s Burner Name', 'vehicle_owner', 'text', 'This is the burner/nickname of the person who will be attending the event and be responsible for: any and all actions of vehicle, driver and passengers of mutant vehicle; and liability of said vehicle.', array('required'=>'true'));
 $page->add_form_group($index, 'Email Address', 'vehicle_email', 'text', 'So we can get in touch with you.', array('required'=>'true'));
 $page->add_form_group($index, 'Phone Number', 'vehicle_phone', 'text', 'So we can get in touch with you.');
 $page->add_form_group($index, 'Theme Camp (if any)', 'vehicle_camp', 'text', 'So we can find you on site.');
