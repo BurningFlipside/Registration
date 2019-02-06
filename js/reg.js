@@ -346,7 +346,7 @@ function do_next_tab(cont)
 {
     if(cont)
     {
-        $('li.active').nextAll(":not('.disabled')").first().contents().tab('show');
+        $('.nav-tabs .active').parent().next('li').find('a').trigger('click');
         if(!final_done)
         {
             post_data();
@@ -363,7 +363,7 @@ function final_post(e)
 
 function next_tab(e)
 {
-    if(final_done)
+    if(!final_done)
     {
         do_next_tab(true);
     }
