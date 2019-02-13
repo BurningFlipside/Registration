@@ -8,11 +8,12 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
 {
     protected $adminType;
 
-    public function __construct($dataTable, $adminType, $htmlRenderer=false)
+    public function __construct($dataTable, $adminType, $htmlRenderer=false, $email=false)
     {
         parent::__construct('registration', $dataTable, '_id');
         $this->adminType = $adminType;
         $this->htmlRender = $htmlRenderer;
+        $this->email = $email;
     }
 
     public function setup($app)
@@ -134,6 +135,18 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         {
             array_push($obj['registrars'], $this->user->uid);
         }
+        if(isset($obj['final']) && $obj['final'] === true)
+        {
+            if(isset($this->email))
+            {
+                $email = new $this->email($obj);
+                $email_provider = EmailProvider::getInstance();
+                if($email_provider->sendEmail($email) === false)
+                {
+                    throw new \Exception('Unable to send ticket email!');
+                }
+            }
+        }
         return true;
     }
 
@@ -161,6 +174,18 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         if(!isset($newObj['_id']))
         {
              $newObj['_id'] = (string)$oldObj['_id'];
+        }
+        if(isset($newObj['final']) && $newObj['final'] === true)
+        {
+            if(isset($this->email))
+            {
+                $email = new $this->email(array_merge($oldObj, $newObj));
+                $email_provider = EmailProvider::getInstance();
+                if($email_provider->sendEmail($email) === false)
+                {
+                    throw new \Exception('Unable to send ticket email!');
+                }
+            }
         }
     }
 

@@ -80,6 +80,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         if($this->is_admin)
         {
             $this->content['header']['sidebar']['Variables'] = array('icon' => 'fa-cog', 'url' => 'vars.php');
+            $this->content['header']['sidebar']['PDFs/Emails'] = array('icon' => 'fa-file', 'url' => 'text.php');
         }
         $this->content['loginUrl'] = $this->secure_root.'api/v1/login';
     }

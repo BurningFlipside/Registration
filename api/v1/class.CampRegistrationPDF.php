@@ -1,66 +1,13 @@
 <?php
 
-class CampRegistrationPDF extends \Serialize\Serializer
+trait CampToVarArray
 {
-    protected $source = '
-<style type="text/css">
-tr {
-  text-align: left
-}
-
-.campType {
-  height: 64px;
-  width: 64px;
-}
-
-@media print {
-  footer {page-break-after: always;}
-}
-</style>
-<table border="0" cellpadding="0" cellspacing="0" style="margin:0 auto; width:60%; float: left">
-  <tr><th>Camp Number: ${campId}</th></tr>
-  <tr><th>Map Coordinates: ${coords}</th></tr>
-  <tr><th><h2>Camp Name: ${name}</h2></th></tr>
-  <tr><td><i>${teaser}</i></td></tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" style="margin:0 auto; width:40%; float: right">
-  <tr><td><img class="campType" src="https://secure.burningflipside.com/register/image1.png">
-          <img class="campType" src="https://secure.burningflipside.com/register/image2.png">
-          <img class="campType" src="https://secure.burningflipside.com/register/image3.png"></td></tr>
-  <tr><td><img class="campType" src="https://secure.burningflipside.com/register/image4.png">
-          <img class="campType" src="https://secure.burningflipside.com/register/image5.png">
-          <img class="campType" src="https://secure.burningflipside.com/register/image6.png"></td></tr>
-</table>
-
-<div><h3>Camp Information</h3>
-Number of Campers: ${campers}<br>
-${prior}</div>
-
-<p><h3>CAMP LEAD INFO</h3>
-Full Name: ${campLead.name}<br>
-Burner Name: ${campLead.burnerName}<br>
-Email Address: ${campLead.email}<br>
-Phone Number: ${campLead.phone}</p>
-
-<p><h3>PLACEMENT INFO</h3>
-Preferences: ${placement.pref1}, ${placement.pref2}, ${placement.pref3}<br>
-Placement Details: ${placement.desc}<br>
-Special Considerations: ${placement.special}</p>
-
-<p><h3>LIST OF STRUCTURES</h3>
-Number of Standard Sized Tents: ${placement.tents}<br>
-
-Other Structures<br>
-${structsTable}
-
-<p><strong>SOUND INFO</strong>
-<p>Sound System Description: ${sound.desc}<br>
-<p>Sound Hours: ${sound.from} - ${sound.to}</p>
-<footer></footer>
-';
-
-    protected function campToHtml($camp)
+    public function getVariablesFromCamp($camp)
     {
+        if(is_array($camp))
+        {
+            $camp = $this->toObject($camp);
+        }
         $vars = array();
         $this->setVar($vars, $camp, '${campId}', 'location');
         $this->setVar($vars, $camp, '${coords}', 'coords');
@@ -111,7 +58,106 @@ ${structsTable}
                 $vars['${'.$key.'}'] = $value;
             }
         }
-        $html           = strtr($this->source, $vars);
+        $vars['${image_table}'] = $this->getCampImageTableBody($camp);
+        return $vars;
+    }
+
+    protected function setVar(&$vars, &$array, $subName, $arrayName, $default='<i>Unspecified</i>')
+    {
+        $vars[$subName] = $default;
+        if(isset($array->$arrayName))
+        {
+            $vars[$subName] = $array->$arrayName;
+            unset($array->$arrayName);
+        }
+    }
+
+    protected function getCampImageTableBody($camp)
+    {
+        $count = 0;
+        $html = '<tbody><tr><td>';
+        if($camp->has->heavy)
+        {
+            $count++;
+            $html.= '<img class="campType" src="https://secure.burningflipside.com/register/image1.png">';
+        }
+        if($camp->has->burnable)
+        {
+            $count++;
+            $html.= '<img class="campType" src="https://secure.burningflipside.com/register/image2.png">';
+        }
+        if($camp->has->sex)
+        {
+            $count++;
+            $html.= '<img class="campType" src="https://secure.burningflipside.com/register/image3.png">';
+        }
+        if($count == 3)
+        {
+            $html.= '</td></tr><tr><td>';
+        }
+        if($camp->has->sound)
+        {
+            $count++;
+            $html.= '<img class="campType" src="https://secure.burningflipside.com/register/image4.png">';
+        }
+        if($count == 3)
+        {
+            $html.= '</td></tr><tr><td>';
+        }
+        if($camp->has->kids)
+        {
+            $count++;
+            $html.= '<img class="campType" src="https://secure.burningflipside.com/register/image6.png">';
+        }
+        $html.= '</td></tr></tbody>';
+        return $html;
+    }
+
+    protected function getSourceFromVarName($var_name)
+    {
+        $dataTable = \DataSetFactory::getDataTableByNames('registration', 'textStrings');
+        $ret = $dataTable->read(new \Data\Filter('name eq '.$var_name));
+        if($ret === false || empty($ret))
+        {
+            return false;
+        }
+        return $ret[0]['text'];
+    }
+
+    protected function toObject($arr)
+    {
+       $obj = new stdClass;
+       foreach($arr as $key => $value)
+       {
+          if($key === 'structs')
+          {
+              $tmp = new stdClass;
+              $tmp->type = $value['type'];
+              $tmp->desc = $value['desc'];
+              $tmp->width = $value['width'];
+              $tmp->length = $value['length'];
+              $tmp->height = $value['height'];
+              $value = $tmp;
+          }
+          else if(is_array($value))
+          {
+              $value = $this->toObject($value);
+          }
+          $obj->{$key} = $value;
+       }
+       return $obj;
+    }
+}
+
+class CampRegistrationPDF extends \Serialize\Serializer
+{
+    use CampToVarArray;
+
+    protected function campToHtml($camp)
+    {
+        $source = $this->getSourceFromVarName('campPDF');
+        $vars = $this->getVariablesFromCamp($camp);
+        $html = strtr($source, $vars);
         return $html;
     }
 
@@ -133,14 +179,66 @@ ${structsTable}
         }
         return $html;
     }
+}
 
-    protected function setVar(&$vars, &$array, $subName, $arrayName, $default='<i>Unspecified</i>')
+class CampRegistrationEmail extends \Email\Email
+{
+    use CampToVarArray;
+
+    public function __construct($camp)
     {
-        $vars[$subName] = $default;
-        if(isset($array->$arrayName))
+        parent::__construct();
+        $this->addToAddress($camp['campLead']['email'], $camp['campLead']['name']);
+        if(isset($camp['cleanupLead']) && strlen($camp['cleanupLead']['email']) > 0)
         {
-            $vars[$subName] = $array->$arrayName;
-            unset($array->$arrayName);
+            $this->addCCAddress($camp['cleanupLead']['email']);
         }
+        if(isset($camp['safetyLead']) && strlen($camp['safetyLead']['email']) > 0)
+        {
+            $this->addCCAddress($camp['safetyLead']['email']);
+        }
+        if(isset($camp['volunteering']) && strlen($camp['volunteering']['email']) > 0)
+        {
+            $this->addCCAddress($camp['volunteering']['email']);
+        }
+        $this->camp = $camp;
+    }
+
+    public function getSubject()
+    {
+        return 'Burning Flipside Theme Camp Registration';
+    }
+
+    private function getBodyFromDB($html=true)
+    {
+        $source = $this->getSourceFromVarName('campEmail');
+        $vars = $this->getVariablesFromCamp($this->camp);
+        if($html === true)
+        {
+            return strtr($source, $vars);
+	}
+        else
+        {
+            $index = strpos($source, "<script");
+            if($index !== false)
+            {
+                $end = strpos($source, "</script>");
+                if($index === 0)
+                {
+                    $raw_text = substr($source, $end+9);
+                }
+            }
+            return strtr(strip_tags($source), $vars);
+        }
+    }
+
+    public function getHTMLBody()
+    {
+        return $this->getBodyFromDB();
+    }
+
+    public function getTextBody()
+    {
+        return $this->getBodyFromDB(false);
     }
 }
