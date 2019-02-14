@@ -226,6 +226,10 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             if(isset($args['field']))
             {
                 $field = $args['field'];
+                if(!isset($obj[$field]))
+                {
+                    return $response->withJson(null);
+                }
                 $value = $obj[$field];
                 if(!is_array($value) && strncmp($value, 'data:', 5) === 0)
                 {
