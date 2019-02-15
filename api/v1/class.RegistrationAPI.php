@@ -177,7 +177,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
         if(isset($newObj['final']) && $newObj['final'] === true)
         {
-            if(isset($this->email))
+            if(isset($this->email) && $this->email !== false)
             {
                 $email = new $this->email(array_merge($oldObj, $newObj));
                 $email_provider = EmailProvider::getInstance();
