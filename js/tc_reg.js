@@ -69,13 +69,6 @@ function tc_ajax_done(data, prefix)
             //console.log(data[key]);
         }
     }
-    var admin = getParameterByName('is_admin');
-    if(data.final === true && admin !== 'true')
-    {
-        add_notification($('#content'), 'Your registration has been marked as final. To edit this registration further please contact the City Planning Team.');
-        $(':input').prop('disabled', true);
-        final_done = true;
-    }
 }
 
 function tc_ajax_error(data)
@@ -154,10 +147,11 @@ function delete_struct_from_table(control)
 
 function pop_data()
 {
-    if(_id !== null)
+    var id = getParameterByName('_id');
+    if(id !== null)
     {
         $.ajax({
-            url: 'api/v1/camps/'+_id+'?full=true',
+            url: 'api/v1/camps/'+id+'?full=true',
             type: 'get',
             dataType: 'json',
             success: tc_ajax_done,

@@ -116,6 +116,10 @@ function data_obtained(data)
         'data': data,
         'columns': columns
     });
+    $('#listTable tbody').on('click', 'button[name="edit"]', edit_obj);
+    $('#listTable tbody').on('click', 'button[name="del"]', del_obj);
+    $('#listTable tbody').on('click', 'button[name="unlock"]', unlockObject);
+    $('#listTable tbody').on('click', 'button[name="structs"]', getStructs);
 }
 
 function tc_page_loaded()
@@ -130,8 +134,4 @@ function tc_page_loaded()
         url: '../api/v1/camps?no_logo=1'+filter,
         success: data_obtained
     });
-    $('#tc tbody').on('click', 'button[name="edit"]', edit_obj);
-    $('#tc tbody').on('click', 'button[name="del"]', del_obj);
-    $('#tc tbody').on('click', 'button[name="unlock"]', unlockObject);
-    $('#tc tbody').on('click', 'button[name="structs"]', getStructs);
 }
