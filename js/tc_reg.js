@@ -1,9 +1,18 @@
-function user_ajax_done(data)
+function user_ajax_done(jqXHR)
 {
-    $('#campLead_name').val(data.givenName+' '+data.sn);
-    $('#campLead_burnerName').val(data.displayName);
-    $('#campLead_email').val(data.mail);
-    $('#campLead_phone').val(data.mobile);
+    if(jqXHR.responseJSON !== undefined)
+    {
+      let data = jqXHR.responseJSON;
+      $('#campLead_name').val(data.givenName+' '+data.sn);
+      $('#campLead_burnerName').val(data.displayName);
+      $('#campLead_email').val(data.mail);
+      $('#campLead_phone').val(data.mobile);
+    }
+    else
+    {
+      alert('There was a problem attempting to get your registered email. Please try again and if it still fails try a different browser.');
+      console.log(jqXHR);
+    }
 }
 
 function tc_ajax_done(data, prefix)
@@ -46,7 +55,7 @@ function tc_ajax_done(data, prefix)
             }
             else if(control.filter('[type=checkbox]').length > 0)
             {
-                if(data[key] === 'true')
+                if(data[key] === 'true' ||  data[key] === true)
                 {
                     control.click();
                     control.attr('checked', 'true');
@@ -148,6 +157,10 @@ function delete_struct_from_table(control)
 function pop_data()
 {
     var id = getParameterByName('_id');
+    if(id === null)
+    {
+      id = getParameterByName('id');
+    }
     if(id !== null)
     {
         $.ajax({
@@ -167,7 +180,7 @@ function pop_data()
                 type: 'get',
                 dataType: 'json',
                 xhrFields: { withCredentials: true },
-                success: user_ajax_done});
+                complete: user_ajax_done});
         }
         else
         {
