@@ -137,7 +137,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
         if(isset($obj['final']) && $obj['final'] === true)
         {
-            if(isset($this->email))
+            if(isset($this->email) && $this->email !== false)
             {
                 $email = new $this->email($obj);
                 $email_provider = EmailProvider::getInstance();

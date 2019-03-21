@@ -280,6 +280,10 @@ function post_error(data)
     {
         alert("Unable to save data because: "+data.message);
     }
+    else if(data.status === 401)
+    {
+        alert("Unable to save data because your session has expired! Please log back in and retry.");
+    }
     else
     {
         alert("Unable to save data for unknown reason!");
