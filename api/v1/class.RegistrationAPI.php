@@ -189,6 +189,25 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
     }
 
+    public function createEntry($request, $response, $args)
+    {
+        try
+        {
+            return parent::createEntry($request, $response, $args);
+        }
+        catch(Exception $e)
+        {
+            if($e->getCode() === 11000)
+            {
+                return $this->updateEntry($request, $response, $args);
+            }
+            else
+            {
+                return $response->withJson($e, 500);
+            }
+        }
+    }
+
     public function readEntries($request, $response, $args)
     {
         $overrides = $request->getAttribute('serializeOverrides');
