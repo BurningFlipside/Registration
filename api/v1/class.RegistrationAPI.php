@@ -199,6 +199,14 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         {
             if($e->getCode() === 11000)
             {
+                $obj = $request->getParsedBody();
+                if($obj == NULL)
+                {
+                    $obj = json_decode($request->getBody()->getContents(), true);
+                }
+                $dataTable = $this->getDataTable();
+                $oldData = $dataTable->read(new \Data\Filter("name eq '".$obj['name']." and year eq ".$this->getCurrentYear()));
+                $args['name'] = $oldData[0]['_id']->{'$id'};
                 return $this->updateEntry($request, $response, $args);
             }
             else
