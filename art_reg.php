@@ -5,7 +5,6 @@ require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Art Project');
 
 $page->addWellKnownJS(JS_BOOTBOX, false);
-$page->addJS('js/reg.js');
 $page->addJS('js/art_reg.js');
 
 
