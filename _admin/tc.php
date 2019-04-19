@@ -21,7 +21,8 @@ else
       array('link'=>'../api/v1/camps/*/volunteering?fmt=csv&filter=year eq current', 'title'=>'Volunteering Leads'),
       array('link'=>'../api/v1/camps/*/cleanupLead?fmt=csv&filter=year eq current', 'title'=>'Cleanup Leads'),
       array('link'=>'../api/v1/camps/*/doStructView?fmt=csv&filter=year eq current', 'title'=>'Structs'),
-      array('link'=>'../api/v1/camps?fmt=csv&$filter=earlyArrival.bool eq true and year eq current', 'title'=>'Early Arrival')
+      array('link'=>'../api/v1/camps?fmt=csv&$filter=earlyArrival.bool eq true and year eq current', 'title'=>'Early Arrival'),
+      array('link'=>'../api/v1/camps?fmt=csv&$filter=has.heavy eq true and year eq current', 'title'=>'Heavy Equipment')
     );
     $page->content['othertop'] = '<a href="../api/v1/camps?$format=text/html">One Page Per Camp</a>';
     $page->content['endpoint'] = 'camps';
