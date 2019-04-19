@@ -36,9 +36,11 @@
       Toggle Columns
     </button>
     <div class="collapse" id="coltoggle"></div>
-    <table id="listTable" class="table" data-source="{{ endpoint }}" data-editor="{{ editUri }}">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+    <div class="container-fluid overflow-auto">
+      <table id="listTable" class="table" data-source="{{ endpoint }}" data-editor="{{ editUri }}">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 {% endblock %}
