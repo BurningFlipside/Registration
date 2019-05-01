@@ -60,7 +60,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
             }
         }
         $this->content['header']['sidebar'] = array();
-        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-dashboard', 'url' => 'index.php');
+        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-tachometer-alt', 'url' => 'index.php');
         if($this->is_tc_admin)
         {
             $this->content['header']['sidebar']['Theme Camps'] = array('icon' => 'fa-bed', 'url' => 'tc.php');
