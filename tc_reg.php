@@ -5,7 +5,7 @@ require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Theme Camp', 'Camp');
 
 $index = $page->add_wizard_step('Basic Questions');
-$page->add_form_group($index, 'Number of campers', 'num_campers', 'text', '', array('required'=>true));
+$page->add_form_group($index, 'Number of campers', 'num_campers', 'number', '', array('required'=>true));
 $page->add_raw_html($index, '<div class="form-check">
     <input class="form-check-input" type="checkbox" name="camp_reg_prev" id="camp_reg_prev"
         data-toggle="tooltip" data-placement="top" title="" 
@@ -17,12 +17,6 @@ $page->add_raw_html($index, '<div class="form-check">
         data-toggle="tooltip" data-placement="top" title="" 
         data-original-title="This camp has any form of amplified sound.">
     <label for="has_sound" class="form-check-label non-required">This camp has amplified sound</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_heavy" id="has_heavy"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will be bringing heavy equipment.">
-    <label for="has_heavy" class="form-check-label non-required">This camp will need heavy equipment</label>
 </div>');
 $page->add_raw_html($index, '<div class="form-check">
     <input class="form-check-input" type="checkbox" name="has_burnable" id="has_burnable"
@@ -352,7 +346,7 @@ $page->add_form_group($index, 'Special Considerations:', 'placement_special', 't
 
 
 $index = $page->add_wizard_step('Camp Infrastructure');
-$page->add_form_group($index, 'Number of Standard Size (10x10) Tents:', 'placement_tents', 'text', 'Number of Standard Size (10x10) Tents');
+$page->add_form_group($index, 'Number of Standard Size (10x10 or less) Tents:', 'placement_tents', 'number', 'Number of Standard Size (10x10 or less) Tents', array('required'=>true));
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert">Please note that the only vehicles permitted to be left in theme camp spaces are artified cars/trucks used for car camping and registered RVs. To ensure your vehicle meets our guidelines, please visit <a href="'.$page->wwwUrl.'/sg" class="alert-link">'.$page->wwwUrl.'/sg</a> for more information. Vehicles that do not meet our criteria will need to be moved to Parking.</div>');
 $page->add_raw_html($index, '<div class="alert alert-danger" role="alert"><span class="fa fa-fire" aria-hidden="true"></span> Pyro art must be registered separately on the art registration form <a href="art_reg.php" class="alert-link">here</a>. Please do note on that form that this piece is part of a theme camp.</div>');
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="fa fa-map" aria-hidden="true"></span> Any art pieces to be included on the map and art cars attending Flipside must also be registered on the art registration form or DMV form <a href="add.php" class="alert-link">here</a>.</div>');
@@ -379,7 +373,12 @@ $page->add_raw_html($index, '
             </tr>
         </tfoot>
     </table>');
-
+$page->add_raw_html($index, '<div class="form-check">
+    <input class="form-check-input" type="checkbox" name="has_heavy" id="has_heavy"
+        data-toggle="tooltip" data-placement="top" title=""
+        data-original-title="This camp will be bringing heavy equipment.">
+    <label for="has_heavy" class="form-check-label non-required">This camp will need heavy equipment</label>
+</div>');
 $page->add_raw_html($index, '<h3>About Early Arrival</h3>
 <p>Early Arrival (arriving Wednesday afternoon) is ONLY to help ensure the safe and smooth arrival of Flipizens and certain infrastructure prior to the opening of the event. City Planning will review your request and determine if it’s in the best interest of the event to approve early arrival. Prior to requesting early arrival, please <a href="'.$page->wwwUrl.'/event/theme-camps/faq">review the FAQ</a>. If you would like to be considered for early arrival for art projects, please register your art on the art registration form.</p>
 <p style="font-weight: bold;">Theme camp early arrival does not exist so that people can have a fully functional camp before the event starts Thursday morning.</p>

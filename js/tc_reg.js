@@ -125,13 +125,13 @@ function add_new_struct_to_table(type, width, length, height, desc)
     dropdown.val(type);
     cell.appendTo(row);
     cell = $('<td/>');
-    $('<input>', {type: "text", name: 'structs_width[]', class: 'form-control', val: width}).appendTo(cell);
+    $('<input>', {type: "number", name: 'structs_width[]', class: 'form-control', val: width}).appendTo(cell);
     cell.appendTo(row);
     cell = $('<td/>');
-    $('<input>', {type: "text", name: 'structs_length[]', class: 'form-control', val: length}).appendTo(cell);
+    $('<input>', {type: "number", name: 'structs_length[]', class: 'form-control', val: length}).appendTo(cell);
     cell.appendTo(row);
     cell = $('<td/>');
-    $('<input>', {type: "text", name: 'structs_height[]', class: 'form-control', val: height}).appendTo(cell);
+    $('<input>', {type: "number", name: 'structs_height[]', class: 'form-control', val: height}).appendTo(cell);
     cell.appendTo(row);
     cell = $('<td/>');
     $('<input>', {type: "text", name: 'structs_desc[]', class: 'form-control', val: desc}).appendTo(cell);
