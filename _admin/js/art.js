@@ -141,8 +141,8 @@ function art_page_loaded()
         url: '/register/api/v1/art?no_logo=1&fmt=json-ss'+filter,
         success: data_obtained
     });
-    $('#art tbody').on('click', 'button[name="edit"]', edit_obj);
-    $('#art tbody').on('click', 'button[name="del"]', del_obj);
+    $('#listTable tbody').on('click', 'button[name="edit"]', edit_obj);
+    $('#listTable tbody').on('click', 'button[name="del"]', del_obj);
 }
 
 $(art_page_loaded);

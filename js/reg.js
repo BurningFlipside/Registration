@@ -280,6 +280,10 @@ function post_error(data)
     {
         alert("Unable to save data because: "+data.message);
     }
+    else if(data.status === 401)
+    {
+        alert("Unable to save data because your session has expired! Please log back in and retry.");
+    }
     else
     {
         alert("Unable to save data for unknown reason!");
@@ -346,7 +350,7 @@ function do_next_tab(cont)
 {
     if(cont)
     {
-        $('li.active').nextAll(":not('.disabled')").first().contents().tab('show');
+        $('.nav-tabs .active').parent().next('li').find('a').trigger('click');
         if(!final_done)
         {
             post_data();
@@ -363,7 +367,7 @@ function final_post(e)
 
 function next_tab(e)
 {
-    if(final_done)
+    if(!final_done)
     {
         do_next_tab(true);
     }
@@ -577,9 +581,11 @@ function form_data_to_obj()
 
 function prior_ajax_done(data, prefix)
 {
+    var first = false;
     if(prefix === undefined || prefix === 'success')
     {
         prefix = '';
+        first = true;
     }
     for(var key in data)
     {
@@ -630,10 +636,27 @@ function prior_ajax_done(data, prefix)
         }
         else
         {
-            console.log("[id='"+prefix+key+"']");
+            //console.log("[id='"+prefix+key+"']");
         }
     }
-    console.log(data);
+    if(first)
+    {
+      var obj = null;
+      var page = get_page_name();
+      if(page.startsWith('tc_'))
+      {
+        obj = data['camplead'];
+      }
+      else if(page.startsWith('art_'))
+      {
+        obj = data['artlead'];
+      }
+      if(obj !== null) {
+        if(obj === undefined || obj.email === undefined || obj.email === '') {
+          getUserData();
+        }
+      }
+    }
 }
 
 function prior_ajax_error(data)
@@ -649,6 +672,42 @@ function prior_ajax_error(data)
     }
 }
 
+function gotUserData(jqxhr) {
+  var objName = null;
+  var page = get_page_name();
+  if(page.startsWith('tc_')) {
+    objName = 'camplead';
+  }
+  else if(page.startsWith('art_')) {
+    objName = 'artlead';
+  }
+  if(objName !== null) {
+    if(jqxhr.status !== 200) {
+      alert('Unable to obtain logged in user! Try logging out and logging back in!');
+      console.log(jqxhr);
+    }
+    var data = jqxhr.responseJSON;
+    $('#'+objName+'_name').val(data.givenName+' '+data.sn);
+    $('#'+objName+'_burnerName').val(data.displayName);
+    $('#'+objName+'_email').val(data.mail);
+    $('#'+objName+'_phone').val(data.mobile);
+  }
+}
+
+function getUserData() {
+   if(browser_supports_cors()) {
+     $.ajax({
+       url: window.profilesUrl+'/api/v1/users/me',
+       type: 'get',
+       dataType: 'json',
+       xhrFields: { withCredentials: true },
+       complete: gotUserData});
+  }
+  else {
+    add_notification($('#content'), 'Your browser is out of date. Due to this some data may not be set automatically. Please make sure it is complete');
+  }
+}
+
 function populate_prior_data()
 {
     if(_id !== null)
@@ -661,11 +720,17 @@ function populate_prior_data()
             error: prior_ajax_error
         });
     }
+    else {
+      getUserData();
+    }
 }
 
 function wizard_init()
 {
     _id = getParameterByName('id');
+    if(_id === null) {
+      _id = getParameterByName('_id');
+    }
     $('[title]').tooltip();
     $('input[data-tabcontrol]').change(tabcontrol_change);
     $('input[data-groupcontrol]').change(groupcontrol_change);

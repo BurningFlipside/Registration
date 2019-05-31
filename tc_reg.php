@@ -4,9 +4,6 @@ error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Theme Camp', 'Camp');
 
-$page->addJS('js/reg.js');
-$page->addJS('js/tc_reg.js');
-
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'Number of campers', 'num_campers', 'text', '', array('required'=>true));
 $page->add_raw_html($index, '<div class="form-check">
@@ -25,7 +22,7 @@ $page->add_raw_html($index, '<div class="form-check">
     <input class="form-check-input" type="checkbox" name="has_heavy" id="has_heavy"
         data-toggle="tooltip" data-placement="top" title="" 
         data-original-title="This camp will be bringing heavy equipment.">
-    <label for="has_heavy" class="form-check-label non-required">This camp will be bringing heavy equipment</label>
+    <label for="has_heavy" class="form-check-label non-required">This camp will need heavy equipment</label>
 </div>');
 $page->add_raw_html($index, '<div class="form-check">
     <input class="form-check-input" type="checkbox" name="has_burnable" id="has_burnable"
@@ -342,12 +339,10 @@ $page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3"
 </div>');
 $options = array(
     array('value'=>'any', 'text'=>'Any', 'selected'=>TRUE),
-    array('value'=>'zone1', 'text'=>'Zone 1 (includes RV Park)'),
-    array('value'=>'zone2', 'text'=>'Zone 2'),
-    array('value'=>'zone3', 'text'=>'Zone 3'),
-    array('value'=>'zone4', 'text'=>'Zone 4'),
-    array('value'=>'zone5', 'text'=>'Zone 5'),
-    array('value'=>'zone6', 'text'=>'Zone 6')
+    array('value'=>'borderlands', 'text'=>'Borderlands (includes RV Park)'),
+    array('value'=>'corral', 'text'=>'Corral'),
+    array('value'=>'effigy', 'text'=>'Effigy Loop'),
+    array('value'=>'mid', 'text'=>'Mid-City')
 );
 $page->add_form_group($index, 'Preference 1:', 'placement_pref1', 'select', 'Your first choice for a general type of placement.', array('options'=>$options));
 $page->add_form_group($index, 'Preference 2:', 'placement_pref2', 'select', 'Your second choice for a general type of placement.', array('options'=>$options));

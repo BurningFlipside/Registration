@@ -67,7 +67,7 @@ $events_count = count($events);
 
 
 
-$manage_camp = '<a class="btn btn-secondary btn-lg" href="tc_reg.php">Register a Theme Camp</a><';
+$manage_camp = '<a class="btn btn-secondary btn-lg" href="tc_reg.php">Register a Theme Camp</a>';
 if($tcRegClosed)
 {
     $manage_camp = '<a class="btn btn-secondary btn-lg disabled" href="#">Theme Camp Registration is Closed</a>';

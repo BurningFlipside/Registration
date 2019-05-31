@@ -8,11 +8,12 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
 {
     protected $adminType;
 
-    public function __construct($dataTable, $adminType, $htmlRenderer=false)
+    public function __construct($dataTable, $adminType, $htmlRenderer=false, $email=false)
     {
         parent::__construct('registration', $dataTable, '_id');
         $this->adminType = $adminType;
         $this->htmlRender = $htmlRenderer;
+        $this->email = $email;
     }
 
     public function setup($app)
@@ -134,6 +135,18 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         {
             array_push($obj['registrars'], $this->user->uid);
         }
+        if(isset($obj['final']) && $obj['final'] === true)
+        {
+            if(isset($this->email) && $this->email !== false)
+            {
+                $email = new $this->email($obj);
+                $email_provider = EmailProvider::getInstance();
+                if($email_provider->sendEmail($email) === false)
+                {
+                    throw new \Exception('Unable to send ticket email!');
+                }
+            }
+        }
         return true;
     }
 
@@ -161,6 +174,45 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         if(!isset($newObj['_id']))
         {
              $newObj['_id'] = (string)$oldObj['_id'];
+        }
+        if(isset($newObj['final']) && $newObj['final'] === true)
+        {
+            if(isset($this->email) && $this->email !== false)
+            {
+                $email = new $this->email(array_merge($oldObj, $newObj));
+                $email_provider = EmailProvider::getInstance();
+                if($email_provider->sendEmail($email) === false)
+                {
+                    throw new \Exception('Unable to send ticket email!');
+                }
+            }
+        }
+    }
+
+    public function createEntry($request, $response, $args)
+    {
+        try
+        {
+            return parent::createEntry($request, $response, $args);
+        }
+        catch(Exception $e)
+        {
+            if($e->getCode() === 11000)
+            {
+                $obj = $request->getParsedBody();
+                if($obj == NULL)
+                {
+                    $obj = json_decode($request->getBody()->getContents(), true);
+                }
+                $dataTable = $this->getDataTable();
+                $oldData = $dataTable->read(new \Data\Filter("name eq '".$obj['name']." and year eq ".$this->getCurrentYear()));
+                $args['name'] = $oldData[0]['_id']->{'$id'};
+                return $this->updateEntry($request, $response, $args);
+            }
+            else
+            {
+                return $response->withJson($e, 500);
+            }
         }
     }
 
@@ -201,6 +253,10 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             if(isset($args['field']))
             {
                 $field = $args['field'];
+                if(!isset($obj[$field]))
+                {
+                    return $response->withJson(null);
+                }
                 $value = $obj[$field];
                 if(!is_array($value) && strncmp($value, 'data:', 5) === 0)
                 {

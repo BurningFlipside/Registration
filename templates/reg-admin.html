@@ -28,14 +28,19 @@
      <option value="xlsx">Excel Workbook (.xlsx)</option>
    </select>
   </div>
+  <div class="row">
+    {{ othertop|raw }}
+  </div>
   <div class="row" style="overflow-x: scroll;">
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#coltoggle" aria-expanded="false" aria-controls="coltoggle">
       Toggle Columns
     </button>
     <div class="collapse" id="coltoggle"></div>
-    <table id="listTable" class="table" data-source="{{ endpoint }}" data-editor="{{ editUri }}">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
+    <div class="container-fluid overflow-auto">
+      <table id="listTable" class="table" data-source="{{ endpoint }}" data-editor="{{ editUri }}">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 {% endblock %}

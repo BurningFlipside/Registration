@@ -8,33 +8,25 @@ $page->addJS('js/view_obj.js');
 
 $page->body .= '
 <div id="content">
-    <div class="form-group">
+    <div class="row">
         <label for="name" class="col-sm-2 control-label">Art Car Name:</label>
         <div class="col-sm-10">
             <input class="form-control" type="text" name="name" id="name" readonly/>
         </div>
-    </div>
-    <div class="clearfix visible-sm visible-md visible-lg"></div>
-    <div class="form-group">
+        <div class="w-100"></div>
         <label for="logo" class="col-sm-2 control-label">Art Car Logo:</label>
         <div class="col-sm-10" id="logo">
         </div>
-    </div>
-    <div class="clearfix visible-sm visible-md visible-lg"></div>
-    <div class="form-group">
+        <div class="w-100"></div>
         <label for="site" class="col-sm-2 control-label">Art Car Website:</label>
         <div class="col-sm-10" id="site">
         </div>
-    </div>
-    <div class="clearfix visible-sm visible-md visible-lg"></div>
-    <div class="form-group">
+        <div class="w-100"></div>
         <label for="teaser" class="col-sm-2 control-label">One Line Teaser:</label>
         <div class="col-sm-10">
             <input class="form-control" type="text" name="teaser" id="teaser" readonly/>
         </div>
-    </div>
-    <div class="clearfix visible-sm visible-md visible-lg"></div>
-    <div class="form-group">
+        <div class="w-100"></div>
         <label for="description" class="col-sm-2 control-label">Description:</label>
         <div class="col-sm-10">
             <textarea class="form-control" rows="6" name="description" id="description" readonly></textarea>

@@ -60,7 +60,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
             }
         }
         $this->content['header']['sidebar'] = array();
-        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-dashboard', 'url' => 'index.php');
+        $this->content['header']['sidebar']['Dashboard'] = array('icon' => 'fa-tachometer-alt', 'url' => 'index.php');
         if($this->is_tc_admin)
         {
             $this->content['header']['sidebar']['Theme Camps'] = array('icon' => 'fa-bed', 'url' => 'tc.php');
@@ -80,6 +80,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         if($this->is_admin)
         {
             $this->content['header']['sidebar']['Variables'] = array('icon' => 'fa-cog', 'url' => 'vars.php');
+            $this->content['header']['sidebar']['PDFs/Emails'] = array('icon' => 'fa-file', 'url' => 'text.php');
         }
         $this->content['loginUrl'] = $this->secure_root.'api/v1/login';
     }

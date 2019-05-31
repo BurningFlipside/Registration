@@ -1,9 +1,18 @@
-function user_ajax_done(data)
+function user_ajax_done(jqXHR)
 {
-    $('#campLead_name').val(data.givenName+' '+data.sn);
-    $('#campLead_burnerName').val(data.displayName);
-    $('#campLead_email').val(data.mail);
-    $('#campLead_phone').val(data.mobile);
+    if(jqXHR.responseJSON !== undefined)
+    {
+      let data = jqXHR.responseJSON;
+      $('#campLead_name').val(data.givenName+' '+data.sn);
+      $('#campLead_burnerName').val(data.displayName);
+      $('#campLead_email').val(data.mail);
+      $('#campLead_phone').val(data.mobile);
+    }
+    else
+    {
+      alert('There was a problem attempting to get your registered email. Please try again and if it still fails try a different browser.');
+      console.log(jqXHR);
+    }
 }
 
 function tc_ajax_done(data, prefix)
@@ -46,7 +55,7 @@ function tc_ajax_done(data, prefix)
             }
             else if(control.filter('[type=checkbox]').length > 0)
             {
-                if(data[key] === 'true')
+                if(data[key] === 'true' ||  data[key] === true)
                 {
                     control.click();
                     control.attr('checked', 'true');
@@ -68,13 +77,6 @@ function tc_ajax_done(data, prefix)
             //console.log(prefix+key);
             //console.log(data[key]);
         }
-    }
-    var admin = getParameterByName('is_admin');
-    if(data.final === true && admin !== 'true')
-    {
-        add_notification($('#content'), 'Your registration has been marked as final. To edit this registration further please contact the City Planning Team.');
-        $(':input').prop('disabled', true);
-        final_done = true;
     }
 }
 
@@ -154,10 +156,15 @@ function delete_struct_from_table(control)
 
 function pop_data()
 {
-    if(_id !== null)
+    var id = getParameterByName('_id');
+    if(id === null)
+    {
+      id = getParameterByName('id');
+    }
+    if(id !== null)
     {
         $.ajax({
-            url: 'api/v1/camps/'+_id+'?full=true',
+            url: 'api/v1/camps/'+id+'?full=true',
             type: 'get',
             dataType: 'json',
             success: tc_ajax_done,
@@ -173,7 +180,7 @@ function pop_data()
                 type: 'get',
                 dataType: 'json',
                 xhrFields: { withCredentials: true },
-                success: user_ajax_done});
+                complete: user_ajax_done});
         }
         else
         {
