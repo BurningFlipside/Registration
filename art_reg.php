@@ -343,7 +343,9 @@ $page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3"
 </div>');
 $page->add_form_group($index, 'Show on map:', 'placement_on_map', 'checkbox', 'Check this box if you want your art installation to be shown on city planning map.');
 $page->add_form_group($index, 'In Theme Camp:', 'placement_in_camp', 'text', 'If your art will be placed within the borders of a theme camp enter the camp name here.');
-$page->add_form_group($index, 'Dimensions (in feet):', 'placement_size', 'text', 'Approximate project dimensions, in feet* [width / length / height]');
+$page->add_form_group($index, 'Width (in feet):', 'placement_width', 'number', 'Approximate project width, in feet');
+$page->add_form_group($index, 'Length (in feet):', 'placement_length', 'number', 'Approximate project length, in feet');
+$page->add_form_group($index, 'Height (in feet):', 'placement_height', 'number', 'Approximate project height, in feet');
 $options = array(
     array('value'=>'any', 'text'=>'Any', 'selected'=>TRUE),
     array('value'=>'corral', 'text'=>'Corral'),

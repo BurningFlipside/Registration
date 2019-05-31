@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
 $page = new RegisterAdminPage('Burning Flipside - Registration');
-$page->setTemplateName('@Register/reg-admin.html');
+$page->setTemplateName('@Register/reg-admin-ag.html');
 
 if(!$page->is_art_admin)
 {

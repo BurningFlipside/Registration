@@ -163,7 +163,6 @@ class CampRegistrationPDF extends \Serialize\Serializer
 
     public function serializeData(&$type, $array)
     {
-        $type = 'text/html';
         $html = '';
         if(is_array($array))
         {
@@ -177,6 +176,14 @@ class CampRegistrationPDF extends \Serialize\Serializer
         {
             $html = $this->campToHtml($array);
         }
+        if($type === 'application/pdf')
+        {
+            $pdf = new \PDF\PDF();
+            $pdf->setPDFFromHTML($html);
+            $type = 'applcation/pdf';
+            return $pdf->toPDFBuffer();
+        }
+        $type = 'text/html';
         return $html;
     }
 }

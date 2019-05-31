@@ -282,6 +282,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         if($overrides !== null)
         {
             $overrides['text/html'] = $this->htmlRender;
+            $overrides['application/pdf'] = $this->htmlRender;
         }
         return $response->withJson($areas[0]);
     }
