@@ -725,6 +725,22 @@ function populate_prior_data()
     }
 }
 
+function toggleClassVisible(elem, classId) {
+  var all = $('.'+classId);
+  var invis = all.filter('.d-none');
+  var vis = all.filter(':not(.d-none)');
+  invis.removeClass('d-none');
+  vis.addClass('d-none');
+}
+
+function toggleVisible(elem, elemId) {
+  var all = $('#'+elemId);
+  var invis = all.parent('.d-none');
+  var vis = all.parent(':not(.d-none)');
+  invis.removeClass('d-none');
+  vis.addClass('d-none');
+}
+
 function wizard_init()
 {
     _id = getParameterByName('id');

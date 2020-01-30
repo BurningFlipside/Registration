@@ -6,60 +6,51 @@ $page = new RegisterWizardPage('Theme Camp', 'Camp');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'Number of campers', 'num_campers', 'number', '', array('required'=>true));
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="camp_reg_prev" id="camp_reg_prev"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp has been registered at Burning Flipside in a previous year.">
-    <label for="camp_reg_prev" class="form-check-label non-required">This camp has been previously registered at Flipside</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_sound" id="has_sound"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp has any form of amplified sound.">
-    <label for="has_sound" class="form-check-label non-required">This camp has amplified sound</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_burnable" id="has_burnable"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will have burnable art or flame effects.">
-    <label for="has_burnable" class="form-check-label non-required">This camp will have burnable art or flame effects</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_food" id="has_food"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will have Food (example: grilled cheese giveaway at noon).">
-    <label for="has_food" class="form-check-label non-required">This camp will have food</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_beverage" id="has_beverage"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will have Drinks/Bar/Coffee/Tea.">
-    <label for="has_beverage" class="form-check-label non-required">This camp will have Drinks/Bar/Coffee/Tea</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_music" id="has_music"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will have Music, DJ, Performance / Interactive Art (ex. puppet show, face painting).">
-    <label for="has_music" class="form-check-label non-required">This camp will have music</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_sex" id="has_sex"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will have X-Rated Activities (sex/fetish/kink related).">
-    <label for="has_sex" class="form-check-label non-required">This camp will have X-Rated Activities</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_spa" id="has_spa"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will have Spa / Massage.">
-    <label for="has_spa" class="form-check-label non-required">This camp will have Spa / Massage</label>
-</div>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_kids" id="has_kids"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This camp will be Kid-Friendly.">
-    <label for="has_kids" class="form-check-label non-required">This camp is Kid-Friendly</label>
-</div>');
+$page->add_form_group($index, 'This camp has been registered at Burning Flipside in a previous year.', 'camp_reg_prev', 'checkbox', 'This camp has been registered at Burning Flipside in a previous year.');
+$page->add_form_group($index, 'This camp has amplified sound, not including personal bluetooth speakers.', 'has_sound', 'checkbox', 'This camp has any form of amplified sound not including something small like a bluetooth speaker.', array('onclick'=>'toggleClassVisible(this, \'sound\')'));
+$page->add_form_group($index, 'Sound System Description', 'sound_desc', 'textarea', 'Describe your sound equipment and how you plan to adhere to the Event Sound Policy', array('groupClass' => 'sound d-none'));
+$options = array(
+    array('value'=>'all', 'text'=>'All Day', 'selected'=>TRUE),
+    array('value'=>'0100', 'text'=>'1 AM'),
+    array('value'=>'0200', 'text'=>'2 AM'),
+    array('value'=>'0300', 'text'=>'3 AM'),
+    array('value'=>'0400', 'text'=>'4 AM'),
+    array('value'=>'0500', 'text'=>'5 AM'),
+    array('value'=>'0600', 'text'=>'6 AM'),
+    array('value'=>'0700', 'text'=>'7 AM'),
+    array('value'=>'0800', 'text'=>'8 AM'),
+    array('value'=>'0900', 'text'=>'9 AM'),
+    array('value'=>'1000', 'text'=>'10 AM'),
+    array('value'=>'1100', 'text'=>'11 AM'),
+    array('value'=>'1200', 'text'=>'Noon'),
+    array('value'=>'1300', 'text'=>'1 PM'),
+    array('value'=>'1400', 'text'=>'2 PM'),
+    array('value'=>'1500', 'text'=>'3 PM'),
+    array('value'=>'1600', 'text'=>'4 PM'),
+    array('value'=>'1700', 'text'=>'5 PM'),
+    array('value'=>'1800', 'text'=>'6 PM'),
+    array('value'=>'1900', 'text'=>'7 PM'),
+    array('value'=>'2000', 'text'=>'8 PM'),
+    array('value'=>'2100', 'text'=>'9 PM'),
+    array('value'=>'2200', 'text'=>'10 PM'),
+    array('value'=>'2300', 'text'=>'11 PM'),
+    array('value'=>'0000', 'text'=>'Midnight')
+);
+$page->add_form_group($index, 'Sound Hours - From:', 'sound_from', 'select', 'When will you start sound on your project.', array('options'=>$options, 'groupClass' => 'sound d-none'));
+$page->add_form_group($index, 'Sound Hours - To:', 'sound_to', 'select', 'When will you stop sound on your project.', array('options'=>$options, 'groupClass' => 'sound d-none'));
+$page->add_form_group($index, 'This camp will have burnable art or flame effects', 'has_burnable', 'checkbox', 'This camp will have burnable art or flame effects.');
+$page->add_form_group($index, 'This camp will serve food to participants', 'has_food', 'checkbox', 'This camp will have Food (example: grilled cheese giveaway at noon).');
+$page->add_form_group($index, 'This camp will have Drinks/Bar/Coffee/Tea', 'has_beverage', 'checkbox', 'This camp will have Drinks/Bar/Coffee/Tea.');
+$page->add_form_group($index, 'This camp will have X-Rated Activities', 'has_sex', 'checkbox', 'This camp will have X-Rated Activities (sex/fetish/kink related).');
+$page->add_form_group($index, 'This camp will have Spa/Massage', 'has_spa', 'checkbox', 'This camp will have Spa/Massage.');
+$page->add_form_group($index, 'This camp is Kid-Friendly', 'has_kids', 'checkbox', 'This camp will be Kid-Friendly.');
+$page->add_form_group($index, 'This camp will need heavy equipment', 'has_heavy', 'checkbox', 'This camp will need heavy equipment to build one or more structures.');
+$page->add_raw_html($index, '<h3>About Early Arrival</h3>
+<p>Early Arrival (arriving Wednesday afternoon) is ONLY to help ensure the safe and smooth arrival of Flipizens and certain infrastructure prior to the opening of the event. City Planning will review your request and determine if it’s in the best interest of the event to approve early arrival. Prior to requesting early arrival, please <a href="'.$page->wwwUrl.'/event/theme-camps/faq">review the FAQ</a>. If you would like to be considered for early arrival for art projects, please register your art on the art registration form.</p>
+<p style="font-weight: bold;">Theme camp early arrival does not exist so that people can have a fully functional camp before the event starts Thursday morning.</p>
+<p>It requires a great deal of work to help facilitate folk coming in who are setting up their projects. The event volunteers and safety teams work double time to make early arrival possible for those that really need it, so please understand that not everyone who is going to desire early arrival will get a positive response.</p>');
+$page->add_form_group($index, 'I would like my camp to be considered for Early Arrival', 'earlyArrival_bool', 'checkbox', 'I feel that my camp meets the criterea for Early Arrival and would like the City Planning team to consider allowing us this gift. I understand that checking this does not guarantee my camp Early Arrival.', array('onclick'=>'toggleVisible(this, \'earlyArrival_desc\')'));
+$page->add_form_group($index, 'Please describe the special circumstances which you believe require Early Arrival:', 'earlyArrival_desc', 'textarea', 'Describe why you believe you need Early Arrival.', array('groupClass' => 'd-none'));
 
 
 $index = $page->add_wizard_step('Camp Contacts');
@@ -288,40 +279,6 @@ $page->add_raw_html($index, '<div id="accordion">
     </div>
 </div>');
 
-
-$index = $page->add_wizard_step('Sound Information','sound_step');
-$page->add_form_group($index, 'Sound System Description', 'sound_desc', 'textarea', 'Describe your sound equipment and how you plan to adhere to the Event Sound Policy');
-$options = array(
-    array('value'=>'all', 'text'=>'All Day', 'selected'=>TRUE),
-    array('value'=>'0100', 'text'=>'1 AM'),
-    array('value'=>'0200', 'text'=>'2 AM'),
-    array('value'=>'0300', 'text'=>'3 AM'),
-    array('value'=>'0400', 'text'=>'4 AM'),
-    array('value'=>'0500', 'text'=>'5 AM'),
-    array('value'=>'0600', 'text'=>'6 AM'),
-    array('value'=>'0700', 'text'=>'7 AM'),
-    array('value'=>'0800', 'text'=>'8 AM'),
-    array('value'=>'0900', 'text'=>'9 AM'),
-    array('value'=>'1000', 'text'=>'10 AM'),
-    array('value'=>'1100', 'text'=>'11 AM'),
-    array('value'=>'1200', 'text'=>'Noon'),
-    array('value'=>'1300', 'text'=>'1 PM'),
-    array('value'=>'1400', 'text'=>'2 PM'),
-    array('value'=>'1500', 'text'=>'3 PM'),
-    array('value'=>'1600', 'text'=>'4 PM'),
-    array('value'=>'1700', 'text'=>'5 PM'),
-    array('value'=>'1800', 'text'=>'6 PM'),
-    array('value'=>'1900', 'text'=>'7 PM'),
-    array('value'=>'2000', 'text'=>'8 PM'),
-    array('value'=>'2100', 'text'=>'9 PM'),
-    array('value'=>'2200', 'text'=>'10 PM'),
-    array('value'=>'2300', 'text'=>'11 PM'),
-    array('value'=>'0000', 'text'=>'Midnight')
-);
-$page->add_form_group($index, 'Sound Hours - From:', 'sound_from', 'select', 'When will you start sound on your project.', array('options'=>$options));
-$page->add_form_group($index, 'Sound Hours - To:', 'sound_to', 'select', 'When will you stop sound on your project.', array('options'=>$options));
-
-
 $index = $page->add_wizard_step('Placement Information');
 $page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3">
   <object class="embed-responsive-item" type="application/pdf" data="img/guide_map16a.pdf">
@@ -373,24 +330,6 @@ $page->add_raw_html($index, '
             </tr>
         </tfoot>
     </table>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="has_heavy" id="has_heavy"
-        data-toggle="tooltip" data-placement="top" title=""
-        data-original-title="This camp will be bringing heavy equipment.">
-    <label for="has_heavy" class="form-check-label non-required">This camp will need heavy equipment</label>
-</div>');
-$page->add_raw_html($index, '<h3>About Early Arrival</h3>
-<p>Early Arrival (arriving Wednesday afternoon) is ONLY to help ensure the safe and smooth arrival of Flipizens and certain infrastructure prior to the opening of the event. City Planning will review your request and determine if it’s in the best interest of the event to approve early arrival. Prior to requesting early arrival, please <a href="'.$page->wwwUrl.'/event/theme-camps/faq">review the FAQ</a>. If you would like to be considered for early arrival for art projects, please register your art on the art registration form.</p>
-<p style="font-weight: bold;">Theme camp early arrival does not exist so that people can have a fully functional camp before the event starts Thursday morning.</p>
-<p>It requires a great deal of work to help facilitate folk coming in who are setting up their projects. The event volunteers and safety teams work double time to make early arrival possible for those that really need it, so please understand that not everyone who is going to desire early arrival will get a positive response.</p>');
-$page->add_raw_html($index, '<div class="form-check">
-    <input class="form-check-input" type="checkbox" name="earlyArrival_bool" id="earlyArrival_bool"
-        data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="i feel that my camp meets the criterea for Early Arrival and would like the City Planning team to consider allowing us this gift. I understand that checking this does not guarantee my camp Early Arrival.">
-    <label for="earlyArrival_bool" class="form-check-label non-required">I would like my camp to be considered for Early Arrival</label>
-</div>');
-$page->add_form_group($index, 'Please describe the special circumstances which you believe require Early Arrival:', 'earlyArrival_desc', 'textarea', 'Describe why you believe you need Early Arrival.');
-
 
 if(isset($_GET['is_admin']))
 {
