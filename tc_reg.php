@@ -93,6 +93,12 @@ $page->add_raw_html($index, '<div id="accordion">
                 </div>
 
                 <div class="form-group">
+                    <label for="campLead_alternateEmail">Alternate Email Address:</label>
+                    <input class="form-control" type="email" name="campLead_alternateEmail" id="campLead_alternateEmail"
+                        data-toggle="tooltip" data-placement="top" title="I never check the email associated with this account and can\'t be bothered to make a new account.">
+                </div>
+
+                <div class="form-group">
                     <label for="campLead_phone">Phone Number:</label>
                     <input class="form-control" type="text" name="campLead_phone" id="campLead_phone"
                         data-toggle="tooltip" data-placement="top" title="" required="" data-original-title="This is the phone number of the camp lead">
