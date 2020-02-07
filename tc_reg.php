@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once('class.RegisterWizardPage.php');
 $page = new RegisterWizardPage('Theme Camp', 'Camp');
+$page->addJS('js/wizard.js');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_form_group($index, 'Number of campers', 'num_campers', 'number', '', array('required'=>true));
@@ -310,19 +311,15 @@ $page->add_form_group($index, 'Special Considerations:', 'placement_special', 't
 
 $index = $page->add_wizard_step('Camp Infrastructure');
 $page->add_form_group($index, 'Number of Standard Size (10x10 or less) Tents:', 'placement_tents', 'number', 'Number of Standard Size (10x10 or less) Tents', array('required'=>true));
-$page->add_raw_html($index, '<div class="alert alert-info" role="alert">Please note that the only vehicles permitted to be left in theme camp spaces are artified cars/trucks used for car camping and registered RVs. To ensure your vehicle meets our guidelines, please visit <a href="'.$page->wwwUrl.'/sg" class="alert-link">'.$page->wwwUrl.'/sg</a> for more information. Vehicles that do not meet our criteria will need to be moved to Parking.</div>');
-$page->add_raw_html($index, '<div class="alert alert-danger" role="alert"><span class="fa fa-fire" aria-hidden="true"></span> Pyro art must be registered separately on the art registration form <a href="art_reg.php" class="alert-link">here</a>. Please do note on that form that this piece is part of a theme camp.</div>');
-$page->add_raw_html($index, '<div class="alert alert-info" role="alert"><span class="fa fa-map" aria-hidden="true"></span> Any art pieces to be included on the map and art cars attending Flipside must also be registered on the art registration form or DMV form <a href="add.php" class="alert-link">here</a>.</div>');
 $page->add_raw_html($index, '
-    <table id="structs_table" class="table table-responsive">
+    <table id="structs_table" class="table">
         <thead>
             <tr>
                 <th class="col-xs-1"></th>
                 <th class="col-xs-2">Type</th>
-                <th class="col-xs-1">Width (in feet)</th>
-                <th class="col-xs-1">Length (in feet)</th>
-                <th class="col-xs-1">Height (in feet)</th>
-                <th class="col-xs-4">Description</th>
+                <th class="col-xs-1">Footprint</th>
+                <th class="col-xs-1">Height</th>
+                <th class="col-xs-4">Other</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -330,12 +327,139 @@ $page->add_raw_html($index, '
             <tr>
                 <td colspan="6">
                     <div>
-                        <button type="button" class="btn btn-primary" id="add_new_struct" onclick="add_new_struct_to_table()">Add New Structure</button>
+                        <button type="button" class="btn btn-primary" id="add_new_struct" onclick="$(\'#structureWizard\').modal(\'show\');">Add New Structure</button>
                     </div>
                 </td>
             </tr>
         </tfoot>
     </table>');
+
+$page->add_raw_html($index, '<div class="modal fade bd-example-modal-lg" id="structureWizard" tabindex="-1" role="dialog" aria-labelledby="structureWizardTitle" aria-hidden="true" data-backdrop="static" data-complete="addStruct">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="structureWizardTitle">New Structure</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row flex-xl-nowrap">
+          <div class="d-none d-sm-none d-md-none d-lg-none d-xl-block col-xl-3 bd-sidebar">
+            <ul class="list-group">
+              <li class="list-group-item active">Structure Type</li>
+              <li class="list-group-item">Dimensions</li>
+              <li class="list-group-item">Additional Information</li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-8 col-xl-8 bd-content">
+            <div id="structureType" class="d-block">
+              This is some basic information so we know what type of structure you are bringing.
+              <div class="alert alert-info" role="alert" id="alert-car" style="display:none;">
+                Please note that the only vehicles permitted to be left in theme camp spaces are artified cars/trucks used for car camping and registered RVs. To ensure your vehicle meets our guidelines, please visit <a href="'.$page->wwwUrl.'/sg" class="alert-link">'.$page->wwwUrl.'/sg</a> for more information. Vehicles that do not meet our criteria will need to be moved to Parking.
+              </div>
+              <div class="alert alert-danger" role="alert" id="alert-pyroart" style="display:none;">
+                <span class="fa fa-fire" aria-hidden="true"></span> Pyro art must be registered separately on the art registration form <a href="art_reg.php" class="alert-link">here</a>. Please do note on that form that this piece is part of a theme camp.
+              </div>
+              <div class="alert alert-info" role="alert" id="alert-art" style="display:none;">
+                <span class="fa fa-map" aria-hidden="true"></span> Any art pieces to be included on the map and art cars attending Flipside must also be registered on the art registration form or DMV form <a href="add.php" class="alert-link">here</a>.
+              </div>
+              <div class="row">
+                <label for="structClass" class="col-sm-2 col-form-label">Structure Class:</label>
+                <div class="col-sm-9">
+                  <select id="structClass" name="structClass" class="form-control" onchange="changeStructClass();">
+                    <option value="living">Living Structure</option>
+                    <option value="art">Art Project</option>
+                    <option value="infrastructure">Camp Infrastructure</option>
+                  </select>
+                </div>
+                <div class="w-100"></div>
+                <label for="structType" class="col-sm-2 col-form-label">Structure Type:</label>
+                <div class="col-sm-9">
+                  <select id="structType" name="structType" class="form-control" onchange="changeStructType();">
+                    <option value="rv">RV/BoxTruck/Bus</option>
+                    <option value="popup">Pop-up Camper (<200lbs otherwise it is an RV)</option>
+                    <option value="trailer">Trailer</option>
+                    <option value="car">Artified Car for Camping</option>
+                    <option value="tent">Regular Tent (10\'x10\'x8\')</option>
+                    <option value="bigtent">Oversized Tent</option>
+                    <option value="dome" style="display:none;">Dome</option>
+                    <option value="lounge" style="display:none;">Lounge</option>
+                    <option value="bar" style="display:none;">Bar</option>
+                    <option value="stage" style="display:none;">Stage</option>
+                    <option value="art" style="display:none;">Non-Pyro Art</option>
+                    <option value="pyroart" style="display:none;">Pyro Art</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="structDimensions" class="d-none">
+              We need to know about how big a structure is so that we can give you enough space for it. If you don\'t know the size. Just guess...
+              <div class="row">
+                <label for="structLength" class="col-sm-2 col-form-label">Length:</label>
+                <div class="col-sm-9">
+                  <input class="form-control" type="number" name="structLength" id="structLength" min="1" max="150" required/>
+                </div>
+                <div class="w-100"></div>
+                <label for="structWidth" class="col-sm-2 col-form-label">Width:</label>
+                <div class="col-sm-9">
+                  <input class="form-control" type="number" name="structWidth" id="structWidth" min="1" max="150" required/>
+                </div>
+                <div class="w-100"></div>
+                <label for="structHeight" class="col-sm-2 col-form-label">Height:</label>
+                <div class="col-sm-9">
+                  <input class="form-control" type="number" name="structHeight" id="structHeight" min="1" max="150" required/>
+                </div>
+                <div class="w-100"></div>
+                <label for="structWeight" class="col-sm-2 col-form-label vehicle">Weight:</label>
+                <div class="col-sm-9 vehicle">
+                  <select id="structWeigth" name="structWeight" class="form-control">
+                    <option value="lite">&lt; 2500 lbs</option>
+                    <option value="heavy">&gt;= 2500 lbs</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="additionalInfo" class="d-none">
+              We need some additional information to complete registration.
+              <div class="row">
+                <div class="form-check classCond infrastructure d-none">
+                  <input class="form-check-input" type="checkbox" name="structFrontage" id="structFrontage" title="This structure should be along a road or path."/>
+                  <label for="structFrontage" class="col-form-label">This be part of your camp frontage</label>
+                </div>
+                <div class="w-100"></div>
+                <div class="form-check classCond infrastructure d-none">
+                  <input class="form-check-input" type="checkbox" name="structLit" id="structLit" title="This structure is lit up well at night."/>
+                  <label for="structLit" class="col-form-label">This will be lit</label>
+                </div>
+                <div class="w-100"></div>
+                <div class="form-check classCond infrastructure art d-none">
+                  <input class="form-check-input" type="checkbox" name="structFire" id="structFire" title="This structure will either burn or incorporates fire effects."/>
+                  <label for="structFire" class="col-form-label">This will have burnable or flame effects</label>
+                </div>
+                <div class="w-100"></div>
+                <div class="form-check classCond infrastructure d-none">
+                  <input class="form-check-input" type="checkbox" name="structHeavy" id="structHeavy" title="This structure needs heavy equipment to be setup."/>
+                  <label for="structHeavy" class="col-form-label">This structure needs heavy equipment</label>
+                </div>
+                <div class="w-100"></div>
+                <label for="structCount" class="col-sm-2 col-form-label">How Many:</label>
+                <div class="col-sm-9">
+                  <input class="form-control" type="number" name="structCount" id="structCount" min="1" max="150" value="1" required title="All must be the same size and thing!"/>
+                </div>
+                <div class="w-100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="prevStep" type="button" class="btn btn-outline-primary" disabled onClick="prevWizardStep(this);">Previous</button>
+        <button id="nextStep" type="button" class="btn btn-outline-primary" onClick="nextWizardStep(this);">Next</button>
+      </div>
+    </div>
+  </div>
+</div>');
 
 if(isset($_GET['is_admin']))
 {

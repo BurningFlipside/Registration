@@ -26,16 +26,16 @@ function tab_changed(e)
     {
         if(final_done)
         {
-            $('.next').html('<a onclick="window.location=\'add.php\'" style="cursor: pointer;">Exit</a>');
+            $('.next').html('<a class="page-link" onclick="window.location=\'add.php\'" style="cursor: pointer;">Exit</a>');
         }
         else
         {
-            $('.next').html('<a onclick="final_post(event)" style="cursor: pointer;">Save and Finish</a>');
+            $('.next').html('<a class="page-link" onclick="final_post(event)" style="cursor: pointer;">Save and Finish</a>');
         }
     }
     else
     {
-        $('.next').html('<a href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a>');
+        $('.next').html('<a class="page-link" href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a>');
     }
 }
 
@@ -149,18 +149,18 @@ function validate_current(callback)
 
 function post_done(data)
 {
-    if(data._id !== undefined)
-    {
-        _id = data._id; 
-    }
-    else if(data['$id'] !== undefined)
-    {
-        _id = data['$id'];
-    }
-    else
-    {
-        console.log(data);
-    }
+  if(data._id !== undefined) {
+    _id = data._id; 
+  }
+  else if(data['$id'] !== undefined) {
+    _id = data['$id'];
+  }
+  else if(data['$oid'] !== undefined) {
+    _id = data['$oid'];
+  }
+  else {
+    console.log(data);
+  }
 }
 
 function final_post_done(data)
@@ -298,6 +298,12 @@ function post_data()
     {
         data['_id'] = _id;
     }
+    if(window.getAdditionalData !== undefined) {
+      data = Object.assign(data, getAdditionalData());
+    }
+    if(window.filterData !== undefined) {
+      data = filterData(data);
+    }
     $.ajax({
         url: get_post_url(),
         type: 'post',
@@ -315,6 +321,13 @@ function do_final_post(cont)
     if(cont)
     {
         var data = form_data_to_obj();
+        if(window.getAdditionalData !== undefined) {
+          data = Object.assign(data, getAdditionalData());
+        }
+        if(window.filterData !== undefined) {
+          data = filterData(data);
+          console.log(data);
+        }
         data['_id'] = _id;
         data['final'] = true;
         $.ajax({

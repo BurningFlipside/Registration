@@ -206,7 +206,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
                 }
                 $dataTable = $this->getDataTable();
                 $oldData = $dataTable->read(new \Data\Filter("name eq '".$obj['name']." and year eq ".$this->getCurrentYear()));
-                $args['name'] = $oldData[0]['_id']->{'$id'};
+                $args['name'] = (string)$oldData[0]['_id'];
                 return $this->updateEntry($request, $response, $args);
             }
             else
@@ -450,7 +450,9 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             $value = str_replace('"','',$value);
             if($value[0] === '/')
             {
-                $params[$key] = array('$regex'=>new MongoRegex("$value"));
+                //$params[$key] = array('$regex'=>new MongoRegex("$value"));
+                $parts = explode('/', substr($value, 1));
+                $params[$key] = new \MongoDB\BSON\Regex($parts[0], $parts[1]);
             }
         }
         if(!isset($params['year']))
