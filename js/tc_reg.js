@@ -150,6 +150,15 @@ function tc_ajax_done(data, prefix)
 
 function deleteStruct(control) {
   var tr = $(control).closest('tr');
+  var obj = tr.data('structure');
+  if(obj.Type === 'tent') {
+    var val = $('#placement_tents').val();
+    val = parseInt(val) - 1;
+    if(val < 0) {
+      val = 0;
+    }
+    $('#placement_tents').val(val);
+  }
   tr.remove();
 }
 
@@ -199,6 +208,7 @@ function shouldShow(opt, structClass) {
     switch(opt) {
       case 'art':
       case 'pyroart':
+      case 'artcar':
         return true;
       default:
         return false;
@@ -242,11 +252,23 @@ function changeStructType() {
   var val = $('#structType').val();
   $('[id|=alert]').hide();
   $('#alert-'+val).show();
+  $('.typeCond').addClass('d-none');
+  $('.'+val).removeClass('d-none');
   if(val === 'car' || val === 'rv' || val === 'popup' || val === 'trailer') {
     $('.vehicle').removeClass('d-none');
   }
   else {
     $('.vehicle').addClass('d-none');
+  }
+  if(val === 'tent') {
+    $('#structLength').val(10).attr('disabled', true);
+    $('#structWidth').val(10).attr('disabled', true);
+    $('#structHeight').val(8).attr('disabled', true);
+  }
+  else {
+    $('#structLength').val('').removeAttr('disabled');
+    $('#structWidth').val('').removeAttr('disabled');
+    $('#structHeight').val('').removeAttr('disabled');
   }
 }
 
@@ -294,6 +316,11 @@ function addStruct(e) {
   tbody.append(row);
   for(var i = 1; i < count; i++) {
     tbody.append(row.clone());
+  }
+  if(obj.Type === 'tent') {
+    var val = $('#placement_tents').val();
+    val = parseInt(val)+count;
+    $('#placement_tents').val(val);
   }
   $('#structureWizard').modal('hide');
   resetWizard($('#structureWizard'));

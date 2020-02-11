@@ -310,8 +310,8 @@ $page->add_form_group($index, 'Special Considerations:', 'placement_special', 't
 
 
 $index = $page->add_wizard_step('Camp Infrastructure');
-$page->add_form_group($index, 'Number of Standard Size (10x10 or less) Tents:', 'placement_tents', 'number', 'Number of Standard Size (10x10 or less) Tents', array('required'=>true));
 $page->add_raw_html($index, '
+    <input type="hidden" id="placement_tents" name="placement_tents" value=0/>
     <table id="structs_table" class="table">
         <thead>
             <tr>
@@ -389,6 +389,7 @@ $page->add_raw_html($index, '<div class="modal fade bd-example-modal-lg" id="str
                     <option value="stage" style="display:none;">Stage</option>
                     <option value="art" style="display:none;">Non-Pyro Art</option>
                     <option value="pyroart" style="display:none;">Pyro Art</option>
+                    <option value="artcar" style="display:none;">Mutant Vehicle</option>
                   </select>
                 </div>
               </div>
@@ -422,18 +423,21 @@ $page->add_raw_html($index, '<div class="modal fade bd-example-modal-lg" id="str
             </div>
             <div id="additionalInfo" class="d-none">
               We need some additional information to complete registration.
+              <div class="alert alert-info classCond art d-none" role="alert">
+                <span class="fa fa-map" aria-hidden="true"></span> By putting this art piece on this form you are indicating it will be part of your camp and not placed at a seperate location. If you do not want this piece in your camp then it must be registered only on the art registration form <a href="add.php" class="alert-link">here</a>.
+              </div>
               <div class="row">
                 <div class="form-check classCond infrastructure d-none">
                   <input class="form-check-input" type="checkbox" name="structFrontage" id="structFrontage" title="This structure should be along a road or path."/>
-                  <label for="structFrontage" class="col-form-label">This be part of your camp frontage</label>
+                  <label for="structFrontage" class="col-form-label">This will be part of your camp frontage</label>
                 </div>
                 <div class="w-100"></div>
                 <div class="form-check classCond infrastructure d-none">
                   <input class="form-check-input" type="checkbox" name="structLit" id="structLit" title="This structure is lit up well at night."/>
-                  <label for="structLit" class="col-form-label">This will be lit</label>
+                  <label for="structLit" class="col-form-label">This structure will have lighting at night</label>
                 </div>
                 <div class="w-100"></div>
-                <div class="form-check classCond infrastructure art d-none">
+                <div class="form-check typeCond infrastructure pyroart d-none">
                   <input class="form-check-input" type="checkbox" name="structFire" id="structFire" title="This structure will either burn or incorporates fire effects."/>
                   <label for="structFire" class="col-form-label">This will have burnable or flame effects</label>
                 </div>
