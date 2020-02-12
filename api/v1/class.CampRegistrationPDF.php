@@ -43,7 +43,7 @@ trait CampToVarArray
                 switch($key)
                 {
                   case '_id':
-                    $vars['${_id}'] = $value->{'$id'};
+                    $vars['${_id}'] = $value->{'$oid'};
                     break;
                   default:
                     $childVars = get_object_vars($value);
