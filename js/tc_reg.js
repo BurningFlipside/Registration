@@ -232,10 +232,10 @@ function changeStructClass() {
   var opts = $('#structType option');
   for(var i = 0; i < opts.length; i++) {
     if(shouldShow(opts[i].value, val)) {
-      $(opts[i]).show();
+      $(opts[i]).show().removeAttr('disabled');
     }
     else {
-      $(opts[i]).hide();
+      $(opts[i]).hide().attr('disabled', true);
     }
   }
   var style = $('#structType option:selected').attr('style');
