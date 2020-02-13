@@ -254,11 +254,14 @@ function changeStructType() {
   $('#alert-'+val).show();
   $('.typeCond').addClass('d-none');
   $('.'+val).removeClass('d-none');
-  if(val === 'car' || val === 'rv' || val === 'popup' || val === 'trailer') {
+  if(val === 'car' || val === 'rv' || val === 'popup' || val === 'trailer' || val === 'artcar') {
     $('.vehicle').removeClass('d-none');
   }
   else {
     $('.vehicle').addClass('d-none');
+  }
+  if(val === 'artcar') {
+    $('#artRegAlert').addClass('d-none');
   }
   if(val === 'tent') {
     $('#structLength').val(10).attr('disabled', true);
@@ -323,6 +326,8 @@ function addStruct(e) {
     $('#placement_tents').val(val);
   }
   $('#structureWizard').modal('hide');
+  $('#structWeigth').val('lite');
+  $('#structCount').val(1);
   resetWizard($('#structureWizard'));
 }
 

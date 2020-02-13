@@ -423,7 +423,7 @@ $page->add_raw_html($index, '<div class="modal fade bd-example-modal-lg" id="str
             </div>
             <div id="additionalInfo" class="d-none">
               We need some additional information to complete registration.
-              <div class="alert alert-info classCond art d-none" role="alert">
+              <div id="artRegAlert" class="alert alert-info classCond art d-none" role="alert">
                 <span class="fa fa-map" aria-hidden="true"></span> By putting this art piece on this form you are indicating it will be part of your camp and not placed at a seperate location. If you do not want this piece in your camp then it must be registered only on the art registration form <a href="add.php" class="alert-link">here</a>.
               </div>
               <div class="row">
