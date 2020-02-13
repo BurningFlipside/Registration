@@ -79,6 +79,11 @@ function getStructs()
      location = '../api/v1/camps/'+_id+'/structs?fmt=xlsx';
 }
 
+function calculateSquareFootage(data, type, row) {
+  console.log(data);
+  return '';
+}
+
 function data_obtained(data)
 {
     if(data.length === 0) return;

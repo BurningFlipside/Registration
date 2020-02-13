@@ -318,7 +318,9 @@ function addStruct(e) {
   var count = parseInt(e.structCount);
   tbody.append(row);
   for(var i = 1; i < count; i++) {
-    tbody.append(row.clone());
+    var clone = row.clone();
+    clone.data('structure', obj);
+    tbody.append(clone);
   }
   if(obj.Type === 'tent') {
     var val = $('#placement_tents').val();
@@ -334,6 +336,9 @@ function addStruct(e) {
 function addExistingStructsToTable(structs) {
   var tbody = $('#structs_table tbody');
   for(var i = 0; i < structs.length; i++) {
+    if(structs[i] === null) {
+      continue;
+    }
     var row = $('<tr class="structRow"/>');
     var cell = $('<td><button type="button" class="btn btn-link" onClick="deleteStruct(this)"><i class="fas fa-trash-alt"></i></button></td>');
     row.append(cell);
