@@ -330,6 +330,10 @@ function addStruct(e) {
   $('#structureWizard').modal('hide');
   $('#structWeigth').val('lite');
   $('#structCount').val(1);
+  $('#structFrontage').prop('checked', false);
+  $('#structLit').prop('checked', false);
+  $('#structFire').prop('checked', false);
+  $('#structHeavy').prop('checked', false);
   resetWizard($('#structureWizard'));
 }
 
