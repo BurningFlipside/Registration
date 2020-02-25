@@ -67,7 +67,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         }
         if($this->is_art_admin)
         {
-            $this->content['header']['sidebar']['Art Projects'] = array('icon' => 'fa-picture-o', 'url' => 'art.php');
+            $this->content['header']['sidebar']['Art Projects'] = array('icon' => 'fa-palette', 'url' => 'art.php');
         }
         if($this->is_dmv_admin)
         {

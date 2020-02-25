@@ -35,7 +35,7 @@ if($page->is_tc_admin)
 }
 if($page->is_art_admin)
 {
-    $page->addCard('fa-picture-o', $art_count.' Art Projects', 'art.php', $page::CARD_GREEN); 
+    $page->addCard('fa-palette', $art_count.' Art Projects', 'art.php', $page::CARD_GREEN); 
 }
 if($page->is_dmv_admin)
 {
