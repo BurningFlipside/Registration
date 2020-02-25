@@ -267,7 +267,9 @@ function columnsObtained(data) {
   var columns = [];
   columns.push({formatter: deleteIcon, width:40, align:"center", cellClick: deleteData});
   columns.push({field: 'name', title: 'Name', formatter: editLink});
-  columns.push({formatter: calculateSquareFootage, title: 'Square Footage'});
+  if($('#dataGrid').data('source') === 'camps') {
+    columns.push({formatter: calculateSquareFootage, title: 'Square Footage'});
+  }
   for(var_name in data[0]) {
     if(var_name === '' || var_name === 'name' || var_name === '_id') {
       continue;
