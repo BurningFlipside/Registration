@@ -65,6 +65,10 @@ function render_event_name(data, type, row, meta)
 
 function init_tables()
 {
+    if($('#tcTable').dataTable === undefined) {
+        window.setTimeout(init_table, 100);
+        return;
+    }
     $('#tcTable').dataTable({
         'sAjaxSource': 'api/v1/camps',
         'iODataVersion': 4,

@@ -288,6 +288,10 @@ function post_error(data)
     {
         alert("Unable to save data for unknown reason!");
         console.log(data);
+        Sentry.configureScope(function(scope) {
+  	  scope.setExtra("server_data", data);
+          Sentry.captureException(new Error("Failed to save registration data"));
+	});
     }
 }
 
