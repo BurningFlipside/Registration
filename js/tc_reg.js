@@ -63,8 +63,11 @@ function addChild(prefix, data) {
 function tcAjaxDone(jqXHR) {
   var data = jqXHR.responseJSON;
   if(jqXHR.status !== 200) {
-    if(data.message !== undefined) {
+    if(data !== undefined && data.message !== undefined) {
       alert("Unable to load data because: "+data.message);
+    }
+    else if(jqXHR.status === 401) {
+        alert("Unable to load data because your session has expired! Please log back in and retry.");
     }
     else {
       alert("Unable to load data for unknown reason!");
