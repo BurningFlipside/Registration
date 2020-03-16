@@ -702,6 +702,7 @@ function gotUserData(jqxhr) {
     if(jqxhr.status !== 200) {
       alert('Unable to obtain logged in user! Try logging out and logging back in!');
       console.log(jqxhr);
+      return;
     }
     var data = jqxhr.responseJSON;
     $('#'+objName+'_name').val(data.givenName+' '+data.sn);
