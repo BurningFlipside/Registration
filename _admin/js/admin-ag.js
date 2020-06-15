@@ -52,6 +52,18 @@ function editLink(cell, formatterParams, onRendered) {
   return '<a href="'+getEditPage()+'?is_admin=true&id='+data['_id']+'">'+data['name']+'</a>';
 }
 
+function calculateSquareFootage(cell, formatterParams, onRendered) {
+  var data = cell.getRow().getData();
+  var squareFootage = 0;
+  for(var i = 0; i < data.structs.length; i++) {
+    if(data.structs[i] === null) {
+      continue;
+    }
+    squareFootage += data.structs[i].Width*data.structs[i].Length;
+  }
+  return ''+squareFootage;
+}
+
 function toggleLead(e, column) {
   var children = column.getSubColumns();
   children.shift();
@@ -255,6 +267,9 @@ function columnsObtained(data) {
   var columns = [];
   columns.push({formatter: deleteIcon, width:40, align:"center", cellClick: deleteData});
   columns.push({field: 'name', title: 'Name', formatter: editLink});
+  if($('#dataGrid').data('source') === 'camps') {
+    columns.push({formatter: calculateSquareFootage, title: 'Square Footage'});
+  }
   for(var_name in data[0]) {
     if(var_name === '' || var_name === 'name' || var_name === '_id') {
       continue;

@@ -4,29 +4,29 @@ error_reporting(E_ALL);
 require_once('class.RegisterAdminPage.php');
 $page = new RegisterAdminPage('Burning Flipside - Registration');
 $page->setTemplateName('admin-dashboard.html');
-$data_set = DataSetFactory::getDataSetByName('registration');
+$data_set = \Flipside\DataSetFactory::getDataSetByName('registration');
 $vars_data_table = $data_set['vars'];
 $camps_data_table = $data_set['camps'];
 $art_data_table = $data_set['art'];
 $dmv_data_table = $data_set['dmv'];
 $event_data_table = $data_set['event'];
 
-$vars = $vars_data_table->read(new \Data\Filter('name eq year'));
+$vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq year'));
 $year = $vars[0]['value'];
 
 //$filter = array('year'=>$year);
-$filter = new \Data\Filter('year eq '.$year);
+$filter = new \Flipside\Data\Filter('year eq '.$year);
 
 $camp_count = $camps_data_table->count($filter);
 $art_count = $art_data_table->count($filter);
 $dmv_count = $dmv_data_table->count($filter);
 $event_count = $event_data_table->count($filter);
 
-$filter = new \Data\Filter('final eq true and year eq '.$year);
+$filter = new \Flipside\Data\Filter('final eq true and year eq '.$year);
 
 $done_camp_count = $camps_data_table->count($filter);
 
-$filter = new \Data\Filter('final eq true and year eq '.$year);
+$filter = new \Flipside\Data\Filter('final eq true and year eq '.$year);
 $done_art_count = $art_data_table->count($filter);
 
 if($page->is_tc_admin)
@@ -35,7 +35,7 @@ if($page->is_tc_admin)
 }
 if($page->is_art_admin)
 {
-    $page->addCard('fa-picture-o', $art_count.' Art Projects', 'art.php', $page::CARD_GREEN); 
+    $page->addCard('fa-palette', $art_count.' Art Projects', 'art.php', $page::CARD_GREEN); 
 }
 if($page->is_dmv_admin)
 {

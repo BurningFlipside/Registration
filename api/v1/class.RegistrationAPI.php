@@ -4,7 +4,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
-class RegistrationAPI extends Http\Rest\DataTableAPI
+class RegistrationAPI extends Flipside\Http\Rest\DataTableAPI
 {
     protected $adminType;
 
@@ -85,18 +85,18 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         $this->getDataTable();
         if(class_exists('MongoId'))
         {
-            return new \Data\Filter($this->primaryKeyName.' eq '.new \MongoId($value));
+            return new \Flipside\Data\Filter($this->primaryKeyName.' eq '.new \MongoId($value));
         }
         else
         {
-            return new \Data\Filter($this->primaryKeyName.' eq '.new \MongoDB\BSON\ObjectId($value));
+            return new \Flipside\Data\Filter($this->primaryKeyName.' eq '.new \MongoDB\BSON\ObjectId($value));
         }
     }
 
     protected function getCurrentYear()
     {
-        $varsDataTable = \DataSetFactory::getDataTableByNames($this->dataSetName, 'vars');
-        $arr = $varsDataTable->read(new \Data\Filter("name eq 'year'"));
+        $varsDataTable = \Flipside\DataSetFactory::getDataTableByNames($this->dataSetName, 'vars');
+        $arr = $varsDataTable->read(new \Flipside\Data\Filter("name eq 'year'"));
         return intval($arr[0]['value']);
     }
 
@@ -106,7 +106,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         if((!$this->user->isInGroupNamed('RegistrationAdmins') && !$this->user->isInGroupNamed($this->adminType)) ||
            $odata->filter === false)
         {
-            $odata->filter = new \Data\Filter('year eq '.$this->getCurrentYear());
+            $odata->filter = new \Flipside\Data\Filter('year eq '.$this->getCurrentYear());
         }
         else if($odata->filter !== false && $odata->filter->contains('year eq current'))
         {
@@ -124,7 +124,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
     {
         if(!isset($obj['name']) || !isset($obj['teaser']) || !isset($obj['description']))
         {
-            throw new Exception('Missing one or more required parameters!', \Http\Rest\INTERNAL_ERROR);
+            throw new Exception('Missing one or more required parameters!', \Flipside\Http\Rest\INTERNAL_ERROR);
         }
         $obj['year'] = $this->getCurrentYear();
         if(!isset($obj['registrars']))
@@ -140,7 +140,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             if(isset($this->email) && $this->email !== false)
             {
                 $email = new $this->email($obj);
-                $email_provider = EmailProvider::getInstance();
+                $email_provider = \Flipside\EmailProvider::getInstance();
                 if($email_provider->sendEmail($email) === false)
                 {
                     throw new \Exception('Unable to send ticket email!');
@@ -154,7 +154,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
     {
         if(!isset($newObj['name']) || !isset($newObj['teaser']) || !isset($newObj['description']))
         {
-            throw new Exception('Missing one or more required parameters!', \Http\Rest\INTERNAL_ERROR);
+            throw new Exception('Missing one or more required parameters!', \Flipside\Http\Rest\INTERNAL_ERROR);
         }
         $newObj['year'] = $this->getCurrentYear();
         if(!isset($newObj['registrars']))
@@ -180,7 +180,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             if(isset($this->email) && $this->email !== false)
             {
                 $email = new $this->email(array_merge($oldObj, $newObj));
-                $email_provider = EmailProvider::getInstance();
+                $email_provider = \Flipside\EmailProvider::getInstance();
                 if($email_provider->sendEmail($email) === false)
                 {
                     throw new \Exception('Unable to send ticket email!');
@@ -205,8 +205,8 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
                     $obj = json_decode($request->getBody()->getContents(), true);
                 }
                 $dataTable = $this->getDataTable();
-                $oldData = $dataTable->read(new \Data\Filter("name eq '".$obj['name']." and year eq ".$this->getCurrentYear()));
-                $args['name'] = $oldData[0]['_id']->{'$id'};
+                $oldData = $dataTable->read(new \Flipside\Data\Filter("name eq '".$obj['name']." and year eq ".$this->getCurrentYear()));
+                $args['name'] = (string)$oldData[0]['_id'];
                 return $this->updateEntry($request, $response, $args);
             }
             else
@@ -233,7 +233,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(401);
         }
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $filter = $this->getFilterForPrimaryKey($args['name']);
         $areas = $dataTable->read($filter, $odata->select, $odata->top,
                                   $odata->skip, $odata->orderby);
@@ -334,7 +334,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(401);
         }
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         if($args['name'] !== '*')
         {
             $odata->filter = $this->getFilterForPrimaryKey($args['name']);
@@ -393,7 +393,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             if($args['field'] === 'structs')
             {
                 $dataTable = $this->getDataTable();
-                $odata = $request->getAttribute('odata', new \ODataParams(array()));
+                $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
                 $odata->select = array($args['field'], 'placement');
                 $odata->filter = $this->getFilterForPrimaryKey($args['name']);
                 $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
@@ -406,7 +406,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
                 $this->processStructs($objs);
                 return $response->withJson($objs);
             }
-            $odata = $request->getAttribute('odata', new \ODataParams(array()));
+            $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
             $odata->select = array($args['field']);
             $request = $request->withAttribute('odata', $odata);
             return $this->readEntry($request, $response, $args);
@@ -421,7 +421,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(401);
         }
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
                                  $odata->skip, $odata->orderby);
         $res = array();
@@ -450,7 +450,9 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             $value = str_replace('"','',$value);
             if($value[0] === '/')
             {
-                $params[$key] = array('$regex'=>new MongoRegex("$value"));
+                //$params[$key] = array('$regex'=>new MongoRegex("$value"));
+                $parts = explode('/', substr($value, 1));
+                $params[$key] = new \MongoDB\BSON\Regex($parts[0], $parts[1]);
             }
         }
         if(!isset($params['year']))
@@ -567,7 +569,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
 
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
                                  $odata->skip, $odata->orderby);
         switch($this->dataTableName)
@@ -630,17 +632,17 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(404);
         }
         $lead = $obj[0][$lead];
-        $email_msg = new \Email\Email();
+        $email_msg = new \Flipside\Email\Email();
         $email_msg->setFromAddress('webmaster@burningflipside.com','Burning Flipside Contact Form');
         $email_msg->setReplyTo($this->user->mail);
         $email_msg->addToAddress($lead['email']);
         $email_msg->setTextBody($params['email_text']);
         $email_msg->setHTMLBody($params['email_text']);
         $email_msg->setSubject($params['subject']);
-        $email_provider = \EmailProvider::getInstance();
+        $email_provider = \Flipside\EmailProvider::getInstance();
         if($email_provider->sendEmail($email_msg) === false)
         {
-            throw new Exception('Unable to send mail!', \Http\Rest\INTERNAL_ERROR);
+            throw new Exception('Unable to send mail!', \Flipside\Http\Rest\INTERNAL_ERROR);
         }
         return $response->withJson(array('email'=>true));
     }

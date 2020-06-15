@@ -1,7 +1,6 @@
 <?php
-require_once('class.FlipSession.php');
 require_once('../../class.SecurePage.php');
-class RegisterAdminPage extends \Http\FlipAdminPage
+class RegisterAdminPage extends \Flipside\Http\FlipAdminPage
 {
     use SecureWebPage;
 
@@ -67,7 +66,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         }
         if($this->is_art_admin)
         {
-            $this->content['header']['sidebar']['Art Projects'] = array('icon' => 'fa-picture-o', 'url' => 'art.php');
+            $this->content['header']['sidebar']['Art Projects'] = array('icon' => 'fa-palette', 'url' => 'art.php');
         }
         if($this->is_dmv_admin)
         {
@@ -81,6 +80,7 @@ class RegisterAdminPage extends \Http\FlipAdminPage
         {
             $this->content['header']['sidebar']['Variables'] = array('icon' => 'fa-cog', 'url' => 'vars.php');
             $this->content['header']['sidebar']['PDFs/Emails'] = array('icon' => 'fa-file', 'url' => 'text.php');
+            $this->content['header']['sidebar']['DB Operations'] = array('icon' => 'fa-database', 'url' => 'database.php');
         }
         $this->content['loginUrl'] = $this->secure_root.'api/v1/login';
     }

@@ -8,22 +8,22 @@ class RegistrationPlugin extends SecurePlugin
         $data_set = false;
         
         try{
-        $data_set = DataSetFactory::getDataSetByName('registration');
+        $data_set = \Flipside\DataSetFactory::getDataSetByName('registration');
         } catch(Exception $e) {
             return;
         }
         $vars_data_table = $data_set['vars'];
 
-        $vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
+        $vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq tcRegDates'));
         $tcDates = $vars[0]['value'];
 
-        $vars = $vars_data_table->read(new \Data\Filter('name eq artRegDates'));
+        $vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq artRegDates'));
         $artDates = $vars[0]['value'];
 
-        $vars = $vars_data_table->read(new \Data\Filter('name eq dmvRegDates'));
+        $vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq dmvRegDates'));
         $dmvDates = $vars[0]['value'];
 
-        $vars = $vars_data_table->read(new \Data\Filter('name eq eventRegDates'));
+        $vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq eventRegDates'));
         $evtDates = $vars[0]['value'];
 
         $now = getdate();

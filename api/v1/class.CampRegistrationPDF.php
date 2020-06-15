@@ -22,11 +22,11 @@ trait CampToVarArray
         }
         if(isset($camp->structs))
         {
-            $structCount = count($camp->structs->type);
+            $structCount = count($camp->structs);
             $vars['${structsTable}'] = '<table>';
             for($i = 0; $i < $structCount; $i++)
             {
-                $vars['${structsTable}'].= '<tr><td>'.$camp->structs->desc[$i].'</td><td>'.$camp->structs->width[$i].'x'.$camp->structs->length[$i].'x'.$camp->structs->height[$i].'</td></tr>';
+                $vars['${structsTable}'].= '<tr><td>'.$camp->structs[$i]->Type.'</td><td>'.$camp->structs[$i]->Width.'x'.$camp->structs[$i]->Length.'x'.$camp->structs[$i]->Height.'</td></tr>';
             }
             $vars['${structsTable}'].= '</table>';
             unset($camp->structs);
@@ -43,7 +43,7 @@ trait CampToVarArray
                 switch($key)
                 {
                   case '_id':
-                    $vars['${_id}'] = $value->{'$id'};
+                    $vars['${_id}'] = $value->{'$oid'};
                     break;
                   default:
                     $childVars = get_object_vars($value);
@@ -115,8 +115,8 @@ trait CampToVarArray
 
     protected function getSourceFromVarName($var_name)
     {
-        $dataTable = \DataSetFactory::getDataTableByNames('registration', 'textStrings');
-        $ret = $dataTable->read(new \Data\Filter('name eq '.$var_name));
+        $dataTable = \Flipside\DataSetFactory::getDataTableByNames('registration', 'textStrings');
+        $ret = $dataTable->read(new \Flipside\Data\Filter("name eq '$var_name'"));
         if($ret === false || empty($ret))
         {
             return false;
@@ -131,12 +131,12 @@ trait CampToVarArray
        {
           if($key === 'structs')
           {
-              $tmp = new stdClass;
-              $tmp->type = $value['type'];
-              $tmp->desc = $value['desc'];
-              $tmp->width = $value['width'];
-              $tmp->length = $value['length'];
-              $tmp->height = $value['height'];
+              $tmp = array();
+              $count = count($value);
+              for($i = 0; $i < $count; $i++)
+              {
+                  $tmp[$i] = $this->toObject($value[$i]);
+              }
               $value = $tmp;
           }
           else if(is_array($value))
@@ -149,7 +149,7 @@ trait CampToVarArray
     }
 }
 
-class CampRegistrationPDF extends \Serialize\Serializer
+class CampRegistrationPDF extends \Flipside\Serialize\Serializer
 {
     use CampToVarArray;
 
@@ -169,7 +169,7 @@ class CampRegistrationPDF extends \Serialize\Serializer
             $count = count($array);
             for($i = 0; $i < $count; $i++)
             {
-                $html.=$this->campToHtml($array[$i]);
+                $html .= $this->campToHtml($array[$i]);
             }
         }
         else
@@ -178,7 +178,7 @@ class CampRegistrationPDF extends \Serialize\Serializer
         }
         if($type === 'application/pdf')
         {
-            $pdf = new \PDF\PDF();
+            $pdf = new \Flipside\PDF\PDF();
             $pdf->setPDFFromHTML($html);
             $type = 'applcation/pdf';
             return $pdf->toPDFBuffer();
@@ -188,7 +188,7 @@ class CampRegistrationPDF extends \Serialize\Serializer
     }
 }
 
-class CampRegistrationEmail extends \Email\Email
+class CampRegistrationEmail extends \Flipside\Email\Email
 {
     use CampToVarArray;
 

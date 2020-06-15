@@ -1,5 +1,5 @@
 <?php
-class VariablesAPI extends Http\Rest\DataTableAPI
+class VariablesAPI extends Flipside\Http\Rest\DataTableAPI
 {
     public function __construct()
     {
@@ -55,7 +55,7 @@ class VariablesAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(401);
         }
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $filter = $this->getFilterForPrimaryKey($args['name']);
         $areas = $dataTable->read($filter, $odata->select, $odata->top,
                                   $odata->skip, $odata->orderby);

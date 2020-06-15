@@ -38,8 +38,10 @@
 
       {% for tag in step.content %}
       {% if tag.type == 'form-group' %}
-      <div class="form-group">
-        <label for={{ tag.name }}>{{ tag.label }}</label>
+      <div class="form-group {% if tag.control.groupClass %}{{ tag.control.groupClass }}{% endif %}">
+        {% if tag.control.type != 'checkbox'%}
+          <label for={{ tag.name }}>{{ tag.label }}</label>
+        {% endif %}
         {% if tag.control.type == 'textarea'%}
         <textarea class="form-control" rows="6" name={{ tag.name }} id={{ tag.name }} {% if tag.required %}required{%
           endif %} {% if tag.disabled %}disabled{% endif %}></textarea>
@@ -50,6 +52,11 @@
           <option value="{{ option.value }}">{{ option.text }}</option>
           {% endfor %}
         </select>
+        {% elseif tag.control.type == 'checkbox'%}
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="{{ tag.name }}" id="{{ tag.name }}" data-toggle="tooltip" data-placement="top" title="{{ tag.control.tooltip }}" {% if tag.control.onclick %}onclick="{{ tag.control.onclick }}"{%endif%}>
+          <label for="{{ tag.name }}" class="form-check-label">{{ tag.label }}</label>
+        </div>
         {% else %}
         <input type="{{ tag.control.type }}" class="form-control" name={{ tag.name }} id={{ tag.name }} {% if
           tag.required %}required{% endif %} {% if tag.disabled %}disabled{% endif %} />
@@ -65,12 +72,12 @@
     {% endfor %}
   </div>
   <nav>
-    <ul class="pager">
-      <li class="previous disabled">
-        <a href="#" onclick="prev_tab(event)"><span aria-hidden="true">←</span> Previous</a>
+    <ul class="pagination">
+      <li class="page-item previous disabled">
+        <a class="page-link" href="#" onclick="prev_tab(event)"><span aria-hidden="true">←</span> Previous</a>
       </li>
-      <li class="next">
-        <a href="#" onclick="next_tab(event)">Save and Continue<span aria-hidden="true">→</span></a>
+      <li class="page-item next">
+        <a class="page-link" href="#" onclick="next_tab(event)">Save and Continue<span aria-hidden="true">→</span></a>
       </li>
     </ul>
   </nav>
