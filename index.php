@@ -8,14 +8,14 @@ $manage_add = '<li><a href="add.php">Add a new registration</a></li>';
 
 if($page->user)
 {
-    $data_set = DataSetFactory::getDataSetByName('registration');
+    $data_set = \Flipside\DataSetFactory::getDataSetByName('registration');
     $vars_data_table = $data_set['vars'];
     $camps_data_table = $data_set['camps'];
     $art_data_table = $data_set['art'];
     $dmv_data_table = $data_set['dmv'];
     $event_data_table = $data_set['event'];
 
-    $vars = $vars_data_table->read(new \Data\Filter('name eq year'));
+    $vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq year'));
     $year = $vars[0]['value'];
     
     $filter = array('year'=>intval($year), 'registrars'=>$page->user->uid);
