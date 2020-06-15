@@ -1,16 +1,24 @@
 <?php
-class RegistrationAPI extends Http\Rest\DataTableAPI
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
+class RegistrationAPI extends Flipside\Http\Rest\DataTableAPI
 {
     protected $adminType;
 
-    public function __construct($dataTable, $adminType)
+    public function __construct($dataTable, $adminType, $htmlRenderer=false, $email=false)
     {
         parent::__construct('registration', $dataTable, '_id');
         $this->adminType = $adminType;
+        $this->htmlRender = $htmlRenderer;
+        $this->email = $email;
     }
 
     public function setup($app)
     {
+        $app->get('/xlsx', array($this, 'getSpreadSheet'));
         parent::setup($app);
         $app->get('/Actions/Search', array($this, 'searchData'));
         $app->get('/{name}/{field}[/]', array($this, 'readEntryField'));
@@ -77,18 +85,18 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         $this->getDataTable();
         if(class_exists('MongoId'))
         {
-            return new \Data\Filter($this->primaryKeyName.' eq '.new \MongoId($value));
+            return new \Flipside\Data\Filter($this->primaryKeyName.' eq '.new \MongoId($value));
         }
         else
         {
-            return new \Data\Filter($this->primaryKeyName.' eq '.new \MongoDB\BSON\ObjectId($value));
+            return new \Flipside\Data\Filter($this->primaryKeyName.' eq '.new \MongoDB\BSON\ObjectId($value));
         }
     }
 
     protected function getCurrentYear()
     {
-        $varsDataTable = \DataSetFactory::getDataTableByNames($this->dataSetName, 'vars');
-        $arr = $varsDataTable->read(new \Data\Filter("name eq 'year'"));
+        $varsDataTable = \Flipside\DataSetFactory::getDataTableByNames($this->dataSetName, 'vars');
+        $arr = $varsDataTable->read(new \Flipside\Data\Filter("name eq 'year'"));
         return intval($arr[0]['value']);
     }
 
@@ -98,7 +106,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         if((!$this->user->isInGroupNamed('RegistrationAdmins') && !$this->user->isInGroupNamed($this->adminType)) ||
            $odata->filter === false)
         {
-            $odata->filter = new \Data\Filter('year eq '.$this->getCurrentYear());
+            $odata->filter = new \Flipside\Data\Filter('year eq '.$this->getCurrentYear());
         }
         else if($odata->filter !== false && $odata->filter->contains('year eq current'))
         {
@@ -116,7 +124,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
     {
         if(!isset($obj['name']) || !isset($obj['teaser']) || !isset($obj['description']))
         {
-            throw new Exception('Missing one or more required parameters!', \Http\Rest\INTERNAL_ERROR);
+            throw new Exception('Missing one or more required parameters!', \Flipside\Http\Rest\INTERNAL_ERROR);
         }
         $obj['year'] = $this->getCurrentYear();
         if(!isset($obj['registrars']))
@@ -127,6 +135,18 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         {
             array_push($obj['registrars'], $this->user->uid);
         }
+        if(isset($obj['final']) && $obj['final'] === true)
+        {
+            if(isset($this->email) && $this->email !== false)
+            {
+                $email = new $this->email($obj);
+                $email_provider = \Flipside\EmailProvider::getInstance();
+                if($email_provider->sendEmail($email) === false)
+                {
+                    throw new \Exception('Unable to send ticket email!');
+                }
+            }
+        }
         return true;
     }
 
@@ -134,7 +154,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
     {
         if(!isset($newObj['name']) || !isset($newObj['teaser']) || !isset($newObj['description']))
         {
-            throw new Exception('Missing one or more required parameters!', \Http\Rest\INTERNAL_ERROR);
+            throw new Exception('Missing one or more required parameters!', \Flipside\Http\Rest\INTERNAL_ERROR);
         }
         $newObj['year'] = $this->getCurrentYear();
         if(!isset($newObj['registrars']))
@@ -155,6 +175,55 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         {
              $newObj['_id'] = (string)$oldObj['_id'];
         }
+        if(isset($newObj['final']) && $newObj['final'] === true)
+        {
+            if(isset($this->email) && $this->email !== false)
+            {
+                $email = new $this->email(array_merge($oldObj, $newObj));
+                $email_provider = \Flipside\EmailProvider::getInstance();
+                if($email_provider->sendEmail($email) === false)
+                {
+                    throw new \Exception('Unable to send ticket email!');
+                }
+            }
+        }
+    }
+
+    public function createEntry($request, $response, $args)
+    {
+        try
+        {
+            return parent::createEntry($request, $response, $args);
+        }
+        catch(Exception $e)
+        {
+            if($e->getCode() === 11000)
+            {
+                $obj = $request->getParsedBody();
+                if($obj == NULL)
+                {
+                    $obj = json_decode($request->getBody()->getContents(), true);
+                }
+                $dataTable = $this->getDataTable();
+                $oldData = $dataTable->read(new \Flipside\Data\Filter("name eq '".$obj['name']." and year eq ".$this->getCurrentYear()));
+                $args['name'] = (string)$oldData[0]['_id'];
+                return $this->updateEntry($request, $response, $args);
+            }
+            else
+            {
+                return $response->withJson($e, 500);
+            }
+        }
+    }
+
+    public function readEntries($request, $response, $args)
+    {
+        $overrides = $request->getAttribute('serializeOverrides');
+        if($overrides !== null)
+        {
+            $overrides['text/html'] = $this->htmlRender;
+        }
+        return parent::readEntries($request, $response, $args);
     }
 
     public function readEntry($request, $response, $args)
@@ -164,7 +233,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(401);
         }
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $filter = $this->getFilterForPrimaryKey($args['name']);
         $areas = $dataTable->read($filter, $odata->select, $odata->top,
                                   $odata->skip, $odata->orderby);
@@ -184,6 +253,10 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             if(isset($args['field']))
             {
                 $field = $args['field'];
+                if(!isset($obj[$field]))
+                {
+                    return $response->withJson(null);
+                }
                 $value = $obj[$field];
                 if(!is_array($value) && strncmp($value, 'data:', 5) === 0)
                 {
@@ -204,6 +277,12 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             {
                 throw new Exception('Cannot edit object that is not yours', ACCESS_DENIED);
             }
+        }
+        $overrides = $request->getAttribute('serializeOverrides');
+        if($overrides !== null)
+        {
+            $overrides['text/html'] = $this->htmlRender;
+            $overrides['application/pdf'] = $this->htmlRender;
         }
         return $response->withJson($areas[0]);
     }
@@ -255,7 +334,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(401);
         }
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         if($args['name'] !== '*')
         {
             $odata->filter = $this->getFilterForPrimaryKey($args['name']);
@@ -314,7 +393,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             if($args['field'] === 'structs')
             {
                 $dataTable = $this->getDataTable();
-                $odata = $request->getAttribute('odata', new \ODataParams(array()));
+                $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
                 $odata->select = array($args['field'], 'placement');
                 $odata->filter = $this->getFilterForPrimaryKey($args['name']);
                 $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
@@ -327,7 +406,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
                 $this->processStructs($objs);
                 return $response->withJson($objs);
             }
-            $odata = $request->getAttribute('odata', new \ODataParams(array()));
+            $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
             $odata->select = array($args['field']);
             $request = $request->withAttribute('odata', $odata);
             return $this->readEntry($request, $response, $args);
@@ -342,7 +421,7 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(401);
         }
         $dataTable = $this->getDataTable();
-        $odata = $request->getAttribute('odata', new \ODataParams(array()));
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
         $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
                                  $odata->skip, $odata->orderby);
         $res = array();
@@ -371,7 +450,9 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             $value = str_replace('"','',$value);
             if($value[0] === '/')
             {
-                $params[$key] = array('$regex'=>new MongoRegex("$value"));
+                //$params[$key] = array('$regex'=>new MongoRegex("$value"));
+                $parts = explode('/', substr($value, 1));
+                $params[$key] = new \MongoDB\BSON\Regex($parts[0], $parts[1]);
             }
         }
         if(!isset($params['year']))
@@ -384,6 +465,126 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
         }
         $data = $dataTable->read($params);
         return $response->withJson($data);
+    }
+
+    protected function getArtSpreadSheet($objs)
+    {
+        $ssheat = new Spreadsheet();
+        $contacts = $ssheat->getActiveSheet();
+        $contacts->setTitle('Contacts');
+        $contacts->getCellByColumnAndRow(1, 1)->setValue('Project Name')->getStyle()->getFont()->setBold(true);
+        $contacts->getCellByColumnAndRow(2, 1)->setValue('Project Lead')->getStyle()->getFont()->setBold(true);
+        $contacts->getCellByColumnAndRow(3, 1)->setValue('Burner Name')->getStyle()->getFont()->setBold(true);
+        $contacts->getCellByColumnAndRow(4, 1)->setValue('Email')->getStyle()->getFont()->setBold(true);
+        $contacts->getCellByColumnAndRow(5, 1)->setValue('Phone')->getStyle()->getFont()->setBold(true);
+        $contacts->getCellByColumnAndRow(6, 1)->setValue('Can Text')->getStyle()->getFont()->setBold(true);
+        $fire = $ssheat->createSheet();
+        $fire->setTitle('Fire!');
+        $fire->getCellByColumnAndRow(1, 1)->setValue('Project Name')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(2, 1)->setValue('Teaser')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(3, 1)->setValue('Description')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(4, 1)->setValue('Has Flame Effects')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(5, 1)->setValue('Flame Effects')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(6, 1)->setValue('Burn Day')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(7, 1)->setValue('Burn Plan')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(8, 1)->setValue('Cleanup Plan')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(9, 1)->setValue('Fire Lead')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(10, 1)->setValue('Burner Name')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(11, 1)->setValue('Email')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(12, 1)->setValue('Phone')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(13, 1)->setValue('Can Text')->getStyle()->getFont()->setBold(true);
+        $fire->getCellByColumnAndRow(14, 1)->setValue('Camp')->getStyle()->getFont()->setBold(true);
+        $count = count($objs);
+        $fireIdx = 0;
+        for($i = 0; $i < $count; $i++)
+        {
+            if(is_object($objs[$i]))
+            {
+                $objs[$i] = (array)$objs[$i];
+            }
+            $contacts->setCellValueByColumnAndRow(1, $i+2, $objs[$i]['name']);
+            $contacts->setCellValueByColumnAndRow(2, $i+2, $objs[$i]['artLead']['name']);
+            $contacts->setCellValueByColumnAndRow(3, $i+2, $objs[$i]['artLead']['burnerName']);
+            $contacts->setCellValueByColumnAndRow(4, $i+2, $objs[$i]['artLead']['email']);
+            if($objs[$i]['artLead']['phone'])
+            {
+                $contacts->setCellValueByColumnAndRow(5, $i+2, $objs[$i]['artLead']['phone']);
+            }
+            if($objs[$i]['artLead']['sms'])
+            {
+                $contacts->setCellValueByColumnAndRow(6, $i+2, 1);
+            }
+            if(isset($objs[$i]['fire']))
+            {
+                $fire->setCellValueByColumnAndRow(1, $fireIdx+2, $objs[$i]['name']);
+                $fire->getStyleByColumnAndRow(2, $fireIdx+2)->getAlignment()->setWrapText(true);
+                $fire->setCellValueByColumnAndRow(2, $fireIdx+2, $objs[$i]['teaser']);
+                $fire->getStyleByColumnAndRow(3, $fireIdx+2)->getAlignment()->setWrapText(true);
+                $fire->setCellValueByColumnAndRow(3, $fireIdx+2, $objs[$i]['description']);
+                if(isset($objs[$i]['fire']['hasFlameEffects']) && $objs[$i]['fire']['hasFlameEffects'])
+                {
+                    $fire->setCellValueByColumnAndRow(4, $fireIdx+2, 1);
+                }
+                $fire->getStyleByColumnAndRow(5, $fireIdx+2)->getAlignment()->setWrapText(true);
+                $fire->setCellValueByColumnAndRow(5, $fireIdx+2, $objs[$i]['fire']['flameEffects']);
+                if(isset($objs[$i]['fire']['burnDay']))
+                {
+                    $fire->setCellValueByColumnAndRow(6, $fireIdx+2, $objs[$i]['fire']['burnDay']);
+                }
+                $fire->getStyleByColumnAndRow(7, $fireIdx+2)->getAlignment()->setWrapText(true);
+                $fire->setCellValueByColumnAndRow(7, $fireIdx+2, $objs[$i]['fire']['burnPlan']);
+                if(isset($objs[$i]['fire']['cleanupPlan']))
+                {
+                    $fire->getStyleByColumnAndRow(8, $fireIdx+2)->getAlignment()->setWrapText(true);
+                    $fire->setCellValueByColumnAndRow(8, $fireIdx+2, $objs[$i]['fire']['cleanupPlan']);
+                }
+                $fireIdx++;
+            }
+        }
+        $contacts->getColumnDimensionByColumn(1)->setAutoSize(true);
+        $contacts->getColumnDimensionByColumn(2)->setAutoSize(true);
+        $contacts->getColumnDimensionByColumn(3)->setAutoSize(true);
+        $contacts->getColumnDimensionByColumn(4)->setAutoSize(true);
+        $contacts->getColumnDimensionByColumn(5)->setAutoSize(true);
+        $contacts->getColumnDimensionByColumn(6)->setAutoSize(true);
+        $contacts->setAutoFilter('A1:F'.($count+1));
+        $fire->getColumnDimensionByColumn(1)->setWidth(59.0);
+        $fire->getColumnDimensionByColumn(2)->setWidth(70.0);
+        $fire->getColumnDimensionByColumn(3)->setWidth(100.0);
+        $fire->getColumnDimensionByColumn(5)->setWidth(100.0);
+        $fire->getColumnDimensionByColumn(7)->setWidth(100.0);
+        $ssheat->setActiveSheetIndex(0);
+        return $ssheat;
+    }
+
+    public function getSpreadSheet($request, $response, $args)
+    {
+        if($this->canRead($request) === false)
+        {
+            return $response->withStatus(401);
+        }
+        if(!$this->user->isInGroupNamed('RegistrationAdmins') && !$this->user->isInGroupNamed($this->adminType))
+        {
+            return $response->withStatus(401);
+        }
+
+        $dataTable = $this->getDataTable();
+        $odata = $request->getAttribute('odata', new \Flipside\ODataParams(array()));
+        $objs = $dataTable->read($odata->filter, $odata->select, $odata->top,
+                                 $odata->skip, $odata->orderby);
+        switch($this->dataTableName)
+        {
+            case 'art':
+                $ssheet = $this->getArtSpreadSheet($objs);
+        }
+        $writer = new Xlsx($ssheet);
+        $response = $response->withHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        ob_start();
+        $writer->save('php://output');
+        $string = ob_get_clean();
+        $body = $response->getBody();
+        $body->write($string);
+        return $response;
     }
 
     public function contactLead($request, $response, $args)
@@ -431,17 +632,17 @@ class RegistrationAPI extends Http\Rest\DataTableAPI
             return $response->withStatus(404);
         }
         $lead = $obj[0][$lead];
-        $email_msg = new \Email\Email();
+        $email_msg = new \Flipside\Email\Email();
         $email_msg->setFromAddress('webmaster@burningflipside.com','Burning Flipside Contact Form');
         $email_msg->setReplyTo($this->user->mail);
         $email_msg->addToAddress($lead['email']);
         $email_msg->setTextBody($params['email_text']);
         $email_msg->setHTMLBody($params['email_text']);
         $email_msg->setSubject($params['subject']);
-        $email_provider = \EmailProvider::getInstance();
+        $email_provider = \Flipside\EmailProvider::getInstance();
         if($email_provider->sendEmail($email_msg) === false)
         {
-            throw new Exception('Unable to send mail!', \Http\Rest\INTERNAL_ERROR);
+            throw new Exception('Unable to send mail!', \Flipside\Http\Rest\INTERNAL_ERROR);
         }
         return $response->withJson(array('email'=>true));
     }

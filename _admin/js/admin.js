@@ -1,3 +1,11 @@
+var idIndex = -1;
+var nameIndex = -1;
+
+function getAPISource()
+{
+  return '../api/v1/'+$('#listTable').data('source');
+}
+
 function getAPICall()
 {
   var finished = getParameterByName('finished');
@@ -6,12 +14,66 @@ function getAPICall()
   {
     filter = '&$filter=final eq true and year eq current';
   }
-  return '../api/v1/'+$('#listTable').data('source')+'?no_logo=1&fmt=json-ss'+filter;
+  return getAPISource()+'?no_logo=1&fmt=json-ss'+filter;
 }
 
 function getEditPage()
 {
   return $('#listTable').data('editor');
+}
+
+function getRowForEvent(trigger)
+{
+  var tr = $(trigger).closest('tr');
+  var table = tr.closest('table');
+  var api = table.DataTable();
+  return api.row(tr).data();
+}
+
+function getIdForEvent(trigger)
+{
+  var row = getRowForEvent(trigger);
+  if(row._id !== undefined)
+  {
+    if(row._id.$id !== undefined)
+    {
+      return row._id.$id;
+    }
+    return row._id;
+  }
+  return row[1];
+}
+
+function getNameForEvent(trigger)
+{
+  var row = getRowForEvent(trigger);
+  return row[2];
+}
+
+function doneDelete(jqXHR)
+{
+  if(jqXHR.status < 400) {
+    bootbox.alert("Deleted!", function(){location.reload();});
+  }
+  else {
+    console.log(jqXHR);
+    bootbox.alert("Unable to delete registraion!");
+  }
+}
+
+function deleteObject()
+{
+  var _id = getIdForEvent(this);
+  var name = getNameForEvent(this);
+  bootbox.confirm("Are you sure you want to delete this registration "+name+"?", function(result){
+    if(result) {
+      $.ajax({
+        type: 'DELETE',
+          url: getAPISource()+'/'+_id,
+          complete: doneDelete
+      });
+    }
+  });
 }
 
 function renderName(data, type, row)
@@ -83,8 +145,15 @@ function dataObtained(data)
     }
     table.row.add(arr);
   }
-  table.colReorder.move(idIndex, 1);
-  table.colReorder.move(nameIndex, 2);
+  if(nameIndex === 1)
+  {
+    table.colReorder.move(idIndex, 1);
+  }
+  else
+  {
+    table.colReorder.move(idIndex, 1, false, false);
+    table.colReorder.move(nameIndex, 2);
+  }
   table.order([2, 'desc']);
   table.draw(false);
   $('a.toggle-vis').on('click', function (e){
@@ -94,6 +163,9 @@ function dataObtained(data)
     // Toggle the visibility
     column.visible( ! column.visible() );
   });
+  $('#listTable tbody').on('click', 'button[name="edit"]', edit_obj);
+  $('#listTable tbody').on('click', 'button[name="del"]', deleteObject);
+  $('#listTable tbody').on('click', 'button[name="unlock"]', unlockObject);
 }
 
 function changeDLType()

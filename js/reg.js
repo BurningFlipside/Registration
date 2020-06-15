@@ -26,16 +26,16 @@ function tab_changed(e)
     {
         if(final_done)
         {
-            $('.next').html('<a onclick="window.location=\'add.php\'" style="cursor: pointer;">Exit</a>');
+            $('.next').html('<a class="page-link" onclick="window.location=\'add.php\'" style="cursor: pointer;">Exit</a>');
         }
         else
         {
-            $('.next').html('<a onclick="final_post(event)" style="cursor: pointer;">Save and Finish</a>');
+            $('.next').html('<a class="page-link" onclick="final_post(event)" style="cursor: pointer;">Save and Finish</a>');
         }
     }
     else
     {
-        $('.next').html('<a href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a>');
+        $('.next').html('<a class="page-link" href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a>');
     }
 }
 
@@ -53,8 +53,8 @@ function validate_control_set(set)
         var value = control.val();
         if(value == null || value.length == 0)
         {
-            control.parents('.form-group').prop('class', 'form-group has-error');
-            control.parents('tr').prop('class', 'has-error');
+            control.prop('class', 'form-control is-invalid');
+            control.parents('tr').prop('class', 'is-invalid');
             if(control.parents('.panel-collapse').length > 0)
             {
                 control.parents('.panel-collapse').collapse('show');
@@ -63,7 +63,7 @@ function validate_control_set(set)
         }
         else
         {
-            control.parents('.form-group').prop('class', 'form-group has-success');
+            control.prop('class', 'form-control is-valid');
         }
     }
     return ret;
@@ -78,7 +78,7 @@ function name_check_done(data)
 {
     if(data.responseJSON !== undefined && data.responseJSON.length > 0)
     {
-        $('#name').parents('.form-group').prop('class', 'form-group has-error'); 
+        $('#name').prop('class', 'form-group is-invalid'); 
         this.callback(false);
     }
     else
@@ -111,7 +111,7 @@ function validate_current(callback)
                 {
                     control.attr('title', raw_control.validationMessage);
                 }
-                control.parents('.form-group').prop('class', 'form-group has-error');
+                control.prop('class', 'form-control is-invalid');
                 if(control.parents('.panel-collapse').length > 0)
                 {
                     control.parents('.panel-collapse').collapse('show');
@@ -120,7 +120,7 @@ function validate_current(callback)
             }
             else
             {
-                control.parents('.form-group').prop('class', 'form-group has-success');
+                control.parents('.form-group').prop('class', 'form-control is-valid');
                 control.removeAttr('title');
             }
         }
@@ -149,18 +149,18 @@ function validate_current(callback)
 
 function post_done(data)
 {
-    if(data._id !== undefined)
-    {
-        _id = data._id; 
-    }
-    else if(data['$id'] !== undefined)
-    {
-        _id = data['$id'];
-    }
-    else
-    {
-        console.log(data);
-    }
+  if(data._id !== undefined) {
+    _id = data._id; 
+  }
+  else if(data['$id'] !== undefined) {
+    _id = data['$id'];
+  }
+  else if(data['$oid'] !== undefined) {
+    _id = data['$oid'];
+  }
+  else {
+    console.log(data);
+  }
 }
 
 function final_post_done(data)
@@ -280,10 +280,18 @@ function post_error(data)
     {
         alert("Unable to save data because: "+data.message);
     }
+    else if(data.status === 401)
+    {
+        alert("Unable to save data because your session has expired! Please log back in and retry.");
+    }
     else
     {
         alert("Unable to save data for unknown reason!");
         console.log(data);
+        Sentry.configureScope(function(scope) {
+  	  scope.setExtra("server_data", data);
+          Sentry.captureException(new Error("Failed to save registration data"));
+	});
     }
 }
 
@@ -293,6 +301,12 @@ function post_data()
     if(_id !== null)
     {
         data['_id'] = _id;
+    }
+    if(window.getAdditionalData !== undefined) {
+      data = Object.assign(data, getAdditionalData());
+    }
+    if(window.filterData !== undefined) {
+      data = filterData(data);
     }
     $.ajax({
         url: get_post_url(),
@@ -311,6 +325,13 @@ function do_final_post(cont)
     if(cont)
     {
         var data = form_data_to_obj();
+        if(window.getAdditionalData !== undefined) {
+          data = Object.assign(data, getAdditionalData());
+        }
+        if(window.filterData !== undefined) {
+          data = filterData(data);
+          console.log(data);
+        }
         data['_id'] = _id;
         data['final'] = true;
         $.ajax({
@@ -346,7 +367,7 @@ function do_next_tab(cont)
 {
     if(cont)
     {
-        $('li.active').nextAll(":not('.disabled')").first().contents().tab('show');
+        $('.nav-tabs .active').parent().next('li').find('a').trigger('click');
         if(!final_done)
         {
             post_data();
@@ -363,7 +384,7 @@ function final_post(e)
 
 function next_tab(e)
 {
-    if(final_done)
+    if(!final_done)
     {
         do_next_tab(true);
     }
@@ -577,9 +598,11 @@ function form_data_to_obj()
 
 function prior_ajax_done(data, prefix)
 {
+    var first = false;
     if(prefix === undefined || prefix === 'success')
     {
         prefix = '';
+        first = true;
     }
     for(var key in data)
     {
@@ -630,10 +653,27 @@ function prior_ajax_done(data, prefix)
         }
         else
         {
-            console.log("[id='"+prefix+key+"']");
+            //console.log("[id='"+prefix+key+"']");
         }
     }
-    console.log(data);
+    if(first)
+    {
+      var obj = null;
+      var page = get_page_name();
+      if(page.startsWith('tc_'))
+      {
+        obj = data['camplead'];
+      }
+      else if(page.startsWith('art_'))
+      {
+        obj = data['artlead'];
+      }
+      if(obj !== null) {
+        if(obj === undefined || obj.email === undefined || obj.email === '') {
+          getUserData();
+        }
+      }
+    }
 }
 
 function prior_ajax_error(data)
@@ -649,6 +689,43 @@ function prior_ajax_error(data)
     }
 }
 
+function gotUserData(jqxhr) {
+  var objName = null;
+  var page = get_page_name();
+  if(page.startsWith('tc_')) {
+    objName = 'camplead';
+  }
+  else if(page.startsWith('art_')) {
+    objName = 'artlead';
+  }
+  if(objName !== null) {
+    if(jqxhr.status !== 200) {
+      alert('Unable to obtain logged in user! Try logging out and logging back in!');
+      console.log(jqxhr);
+      return;
+    }
+    var data = jqxhr.responseJSON;
+    $('#'+objName+'_name').val(data.givenName+' '+data.sn);
+    $('#'+objName+'_burnerName').val(data.displayName);
+    $('#'+objName+'_email').val(data.mail);
+    $('#'+objName+'_phone').val(data.mobile);
+  }
+}
+
+function getUserData() {
+   if(browser_supports_cors()) {
+     $.ajax({
+       url: window.profilesUrl+'/api/v1/users/me',
+       type: 'get',
+       dataType: 'json',
+       xhrFields: { withCredentials: true },
+       complete: gotUserData});
+  }
+  else {
+    add_notification($('#content'), 'Your browser is out of date. Due to this some data may not be set automatically. Please make sure it is complete');
+  }
+}
+
 function populate_prior_data()
 {
     if(_id !== null)
@@ -661,11 +738,33 @@ function populate_prior_data()
             error: prior_ajax_error
         });
     }
+    else {
+      getUserData();
+    }
+}
+
+function toggleClassVisible(elem, classId) {
+  var all = $('.'+classId);
+  var invis = all.filter('.d-none');
+  var vis = all.filter(':not(.d-none)');
+  invis.removeClass('d-none');
+  vis.addClass('d-none');
+}
+
+function toggleVisible(elem, elemId) {
+  var all = $('#'+elemId);
+  var invis = all.parent('.d-none');
+  var vis = all.parent(':not(.d-none)');
+  invis.removeClass('d-none');
+  vis.addClass('d-none');
 }
 
 function wizard_init()
 {
     _id = getParameterByName('id');
+    if(_id === null) {
+      _id = getParameterByName('_id');
+    }
     $('[title]').tooltip();
     $('input[data-tabcontrol]').change(tabcontrol_change);
     $('input[data-groupcontrol]').change(groupcontrol_change);
@@ -675,7 +774,6 @@ function wizard_init()
     $('input[data-groupcontrol]').each(groupcontrol_change);
     $('input[data-questcontrol]').each(questcontrol_change);
     $('input[data-copytrigger]').each(setup_copycontrol);
-    $('.navbar-nav').click(show_tab);
     $('.previous').attr('class', 'previous disabled');
     $('a[data-toggle="tab"]').on('shown.bs.tab', tab_changed);
     if(browser_supports_input_type('url'))

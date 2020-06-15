@@ -28,33 +28,28 @@ class RegisterWizardPage extends SecureLoginRequiredPage
                             'required'=>'true',
                             'control'=>array('type'=>'text')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>$this->reg_type_short.' Logo',
                             'name'=>'logo',
                             'control'=>array('type'=>'file')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>$this->reg_type_short.' Website',
                             'name'=>'site',
                             'control'=>array('type'=>'text')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>'One Line Teaser',
                             'name'=>'teaser',
                             'required'=>'true',
                             'control'=>array('type'=>'text')
                       ),
-                      array('type'=>'spacer'),
                       array('type'=>'form-group',
                             'label'=>'Description',
                             'name'=>'description',
                             'required'=>'true',
                             'control'=>array('type'=>'textarea')
                       ),
-                      array('type'=>'spacer')
                   )
             )
         );
@@ -169,262 +164,9 @@ class RegisterWizardPage extends SecureLoginRequiredPage
         array_push($container['content'], array('type'=>'raw', 'html'=>$html));
     }
 
-    function print_tabs()
-    {
-        $ret = '';
-        $max = count($this->steps);
-        for($i = 0; $i < $max; $i++)
-        {
-            $ret.='<li class="nav-item" ';
-            if(isset($this->steps[$i]['id']))
-            {
-                $ret.=' id="'.$this->steps[$i]['id'].'"';
-            }
-            $ret.='><a href="#tab'.$i.'" data-toggle="tab">'.$this->steps[$i]['name'].'</a></li>';
-        }
-        return $ret;
-    }
-
-    function print_form_input_control($control, $name, $required)
-    {
-        $ret = '<input class="form-control';
-        if(isset($control['class']))
-        {
-            $ret.=' '.$control['class'];
-        }
-        $ret.='" type="'.$control['type'].'" name="'.$name.'" id="'.$name.'"';
-        if(isset($control['tooltip']))
-        {
-            $ret.=' data-toggle="tooltip" data-placement="top" title="'.$control['tooltip'].'"';
-        }
-        if($required)
-        {
-            $ret.=' required';
-        }
-        if(isset($control['disabled']) && $control['disabled'])
-        {
-            $ret.=' disabled';
-        }
-        foreach($control as $key=>$value)
-        {
-            if(substr($key, 0, 5) == 'data-')
-            {
-                $ret.=' '.$key.'="'.$value.'"';
-            }
-        }
-        $ret.='/>';
-        return $ret;
-    }
-
-    function print_form_textarea_control($control, $name, $required)
-    {
-        $ret = '<textarea class="form-control" rows="6" name="'.$name.'" id="'.$name.'"';
-        if(isset($control['tooltip']))
-        {
-            $ret.=' data-toggle="tooltip" data-placement="top" title="'.$control['tooltip'].'"';
-        }
-        if($required)
-        {
-            $ret.=' required';
-        }
-        $ret.='></textarea>';
-        return $ret;
-    }
-
-    function print_form_select_control($control, $name, $required)
-    {
-        $ret = '<select class="form-control" name="'.$name.'" id="'.$name.'"';
-        if(isset($control['tooltip']))
-        {
-            $ret.=' data-toggle="tooltip" data-placement="top" title="'.$control['tooltip'].'"';
-        }
-        if($required)
-        {
-            $ret.=' required';
-        }
-        $ret.='>';
-        if(isset($control['options']))
-        {
-            $count = count($control['options']);
-            for($i = 0; $i < $count; $i++)
-            {
-                $ret.='<option value="'.$control['options'][$i]['value'].'"';
-                if(isset($control['options'][$i]['selected']) && $control['options'][$i]['selected'])
-                {
-                    $ret.=' selected';
-                }
-                $ret.='>'.$control['options'][$i]['text'].'</option>';
-            }
-        }
-        $ret.='</select>';
-        return $ret;
-    }
-
-    function print_form_group($group)
-    {
-        $required = FALSE;
-        if(isset($group['required']))
-        {
-            $required = $group['required'];
-        }
-        $ret='<div class="form-group"><label for="'.$group['name'].'" class="col-sm-2 control-label';
-        if(!$required)
-        {
-            $ret.=' non-required';
-        }
-        $ret.='">'.$group['label'].'</label>';
-        $ret.='<div class="col-sm-10">';
-        switch($group['control']['type'])
-        {
-            case 'text':
-            case 'checkbox':
-            case 'file':
-                $ret.=$this->print_form_input_control($group['control'], $group['name'], $required);
-                break;
-            case 'textarea':
-                $ret.=$this->print_form_textarea_control($group['control'], $group['name'], $required);
-                break;
-            case 'select':
-                $ret.=$this->print_form_select_control($group['control'], $group['name'], $required);
-                break;
-            default:
-                $ret.='Error: Don\'t know how to render control type: '.$group['control']['type'];
-        }
-        $ret.='</div></div>';
-        return $ret;
-    }
-
-    function print_panel($panel, $selected = FALSE)
-    {
-       $ret = '<div class="panel panel-default';
-       $ret.='"><div class="panel-heading" role="tab" id="'.$panel['id'].'Heading"><h4 class="panel-title"><a ';
-       if(!$selected)
-       {
-           $ret.=' class="collapsed"';
-       }
-       $ret.='data-toggle="collapse" href="#'.$panel['id'].'" aria-expanded="true" aria-controls="'.$panel['id'].'">';
-       $ret.=$panel['heading'];
-       $ret.='</a></h4></div><div id="'.$panel['id'].'" class="panel-collapse collapse';
-       if($selected)
-       {
-           $ret.=' in';
-       }
-       $ret.='" role="tabpanel" aria-labelledby="'.$panel['id'].'Heading"><div class="panel-body"></div>';
-       $ret.=$this->print_container_content($panel);
-       $ret.='</div></div>';
-       return $ret;
-    }
-
-    function print_accordion($accordion)
-    {
-        $ret ='<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
-        $max = count($accordion['content']);
-        for($i = 0; $i < $max; $i++)
-        {
-            switch($accordion['content'][$i]['type'])
-            {
-                case 'panel':
-                    $ret.=$this->print_panel($accordion['content'][$i], $i == 0);
-                    break;
-                default:
-                    $ret.='<div>Error: don\'t know how to render type: '.$accordion['content'][$i]['type'].'</div>';
-            }
-        }
-        $ret.='</div>';
-        return $ret;
-    }
-
-    function print_container_content($container)
-    {
-        if(!isset($container['content']))
-        {
-            if(isset($container['name']))
-            {
-                $name = $container['name'];
-            }
-            else if(isset($container['heading']))
-            {
-                $name = $container['heading'];
-            }
-            return 'Error panel '.$name.' has no content!';
-        }
-        $ret = '';
-        $content = $container['content'];
-        $max = count($content);
-        for($i = 0; $i < $max; $i++)
-        {
-            switch($content[$i]['type'])
-            {
-                case 'form-group':
-                    $ret.=$this->print_form_group($content[$i]);
-                    break;
-                case 'spacer':
-                    $ret.='<div class="clearfix visible-sm visible-md visible-lg"></div>';
-                    break;
-                case 'accordion':
-                    $ret.=$this->print_accordion($content[$i]);
-                    break;
-                case 'raw':
-                    $ret.=$content[$i]['html'];
-                    break;
-                default:
-                    $ret.='<div>Error: don\'t know how to render type: '.$content[$i]['type'].'</div>';
-            }
-        }
-        return $ret;
-    }
-
-    function print_tab_content($index)
-    {
-        $container = $this->get_container($index);
-        return $this->print_container_content($container);
-    }
-
-    function print_content()
-    {
-        $ret = '';
-        $max = count($this->steps);
-        for($i = 0; $i < $max; $i++)
-        {
-            $ret.='<div role="tabpanel" class="tab-pane';
-            if($i == 0)
-            {
-                $ret.=' active';
-            }
-            $ret.='" id="tab'.$i.'">'.$this->print_tab_content($i).'</div>';
-        }
-        return $ret;
-    }
-
     function printPage()
     {
         $this->content['steps'] = $this->steps;
-/*
-        $this->body = '
-            <div id="rootwizard">
-                <div class="navbar navbar-default">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#wizard-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="collapse navbar-collapse" id="wizard-navbar-collapse-1">
-                        <ul class="nav nav-tabs">'.$this->print_tabs().'</ul>
-                    </div>
-                </div>
-                <div class="tab-content">'.$this->print_content().'</div>
-                <nav>
-                    <ul class="pager">
-                        <li class="previous"><a href="#" onclick="prev_tab(event)"><span aria-hidden="true">&larr;</span> Previous</a></li>
-                        <li class="next"><a href="#" onclick="next_tab(event)">Save and Continue <span aria-hidden="true">&rarr;</span></a></li>
-                    </ul>
-                </nav>
-            </div>';*/
         parent::printPage();
     }
 

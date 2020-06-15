@@ -1,15 +1,14 @@
 <?php
-class VariablesAPI extends Flipside\Http\Rest\DataTableAPI
+class TextAPI extends Flipside\Http\Rest\DataTableAPI
 {
     public function __construct()
     {
-        parent::__construct('registration', 'vars', 'name');
+        parent::__construct('registration', 'textStrings', 'name');
     }
 
     public function setup($app)
     {
         parent::setup($app);
-        $app->patch('/{name}/{subname}', array($this, 'updateSubEntry'));
     }
 
     protected function processEntry($obj)
@@ -43,8 +42,12 @@ class VariablesAPI extends Flipside\Http\Rest\DataTableAPI
 
     protected function validateUpdate(&$newObj, $request, $oldObj)
     {
-        $tmp = array('value'=>$newObj);
+        $tmp = array('text'=>$newObj);
         $newObj = array_merge($oldObj, $tmp);
+        if(isset($newObj['_id']))
+        {
+            unset($newObj['_id']);
+        }
         return true;
     }
 
@@ -67,49 +70,7 @@ class VariablesAPI extends Flipside\Http\Rest\DataTableAPI
         {
             $areas[0] = $this->processEntry($areas[0]);
         }
-        return $response->withJson($areas[0]['value']);
-    }
-
-    public function updateSubEntry($request, $response, $args)
-    {
-        if($this->canRead($request) === false)
-        {
-            return $response->withStatus(401);
-        }
-        $filter = $this->getFilterForPrimaryKey($args['name']);
-        $dataTable = $this->getDataTable();
-        $entry = $dataTable->read($filter);
-        if(empty($entry))
-        {
-            return $response->withStatus(404);
-        }
-        if(count($entry) === 1 && isset($entry[0]))
-        {
-            $entry = $entry[0];
-        }
-        if($this->canUpdate($request, $entry) === false)
-        {
-            return $response->withStatus(401);
-        }
-        $value = $entry['value'];
-        if(!isset($value[$args['subname']]))
-        {
-            return $response->withStatus(404);
-        }
-        $obj = $request->getParsedBody();
-        if($obj === null)
-        {
-            $request->getBody()->rewind();
-            $obj = $request->getBody()->getContents();
-            $tmp = json_decode($obj, true);
-            if($tmp !== null)
-            {
-                $obj = $tmp;
-            }
-        }
-        $entry['value'][$args['subname']] = $obj;
-        $ret = $dataTable->update($filter, $entry);
-        return $response->withJson($ret);
+        return $response->withJson($areas[0]['text']);
     }
 }
 /* vim: set tabstop=4 shiftwidth=4 expandtab: */

@@ -6,7 +6,11 @@
   {% else %}
     {{ include('@Register/view-list-local.html') }}
   {% endif %}
-  <script src="js/admin.js" type="text/javascript"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="js/admin-ag.js" type="text/javascript"></script>
+  <link href="https://unpkg.com/tabulator-tables@4.2.4/dist/css/tabulator.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.4/dist/js/tabulator.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.4/dist/js/jquery_wrapper.min.js"></script>
 {% endblock %}
 
 {% block contentTop %}
@@ -31,16 +35,7 @@
   <div class="row">
     {{ othertop|raw }}
   </div>
-  <div class="row" style="overflow-x: scroll;">
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#coltoggle" aria-expanded="false" aria-controls="coltoggle">
-      Toggle Columns
-    </button>
-    <div class="collapse" id="coltoggle"></div>
-    <div class="container-fluid overflow-auto">
-      <table id="listTable" class="table" data-source="{{ endpoint }}" data-editor="{{ editUri }}">
-        <thead></thead>
-        <tbody></tbody>
-      </table>
-    </div>
+  <div class="row">
+    <div id="dataGrid" data-source="{{ endpoint }}" data-editor="{{ editUri }}"></div>
   </div>
 {% endblock %}
