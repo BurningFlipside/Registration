@@ -9,7 +9,7 @@ require('class.TextAPI.php');
 require('class.RegistrationAPI.php');
 require('class.CampRegistrationPDF.php');
 
-$site = new \Http\WebSite();
+$site = new \Flipside\Http\WebSite();
 $site->registerAPI('/', new RegisterAPI());
 $site->registerAPI('/vars', new VariablesAPI());
 $site->registerAPI('/art', new RegistrationAPI('art', 'ArtAdmins'));

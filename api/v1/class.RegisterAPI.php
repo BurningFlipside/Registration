@@ -1,5 +1,5 @@
 <?php
-class RegisterAPI extends Http\Rest\RestAPI
+class RegisterAPI extends Flipside\Http\Rest\RestAPI
 {
     public function setup($app)
     {
@@ -37,7 +37,7 @@ class RegisterAPI extends Http\Rest\RestAPI
         if($newSize < $oldBinSize)
         {
             $entries[$i]['logo'] = $data[0].','.base64_encode(fread($tmpFile, $stat['size']));
-            $filter = new \Data\Filter('_id eq '.$entries[$i]['_id']);
+            $filter = new \Flipside\Data\Filter('_id eq '.$entries[$i]['_id']);
             $dataTable->update($filter, $entries[$i]);
         }
         unlink($path);
@@ -48,7 +48,7 @@ class RegisterAPI extends Http\Rest\RestAPI
     {
         $factory = new \ImageOptimizer\OptimizerFactory();
         $optimizer = $factory->get();
-        $dataTable = \DataSetFactory::getDataTableByNames('registration', 'art');
+        $dataTable = \Flipside\DataSetFactory::getDataTableByNames('registration', 'art');
         $entries = $dataTable->read();
         $count = count($entries);
         $ret = array();
@@ -61,9 +61,9 @@ class RegisterAPI extends Http\Rest\RestAPI
             $tmp = $this->optimizeImage($optimizer, $entries[$i], $dataTable);
             array_push($ret, $tmp);
         }
-        $dataSet = \DataSetFactory::getDataSetByName('registration');
+        $dataSet = \Flipside\DataSetFactory::getDataSetByName('registration');
         $dataSet->runCommand(array('compact' => 'art'));
-        $dataTable = \DataSetFactory::getDataTableByNames('registration', 'camps');
+        $dataTable = \Flipside\DataSetFactory::getDataTableByNames('registration', 'camps');
         $entries = $dataTable->read();
         $count = count($entries);
         $ret = array();
@@ -76,7 +76,7 @@ class RegisterAPI extends Http\Rest\RestAPI
             $tmp = $this->optimizeImage($optimizer, $entries[$i], $dataTable);
             array_push($ret, $tmp);
         }
-        $dataSet = \DataSetFactory::getDataSetByName('registration');
+        $dataSet = \Flipside\DataSetFactory::getDataSetByName('registration');
         $dataSet->runCommand(array('compact' => 'camps'));
         return $response->withJson($ret);
     }

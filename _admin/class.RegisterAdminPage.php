@@ -1,7 +1,6 @@
 <?php
-require_once('class.FlipSession.php');
 require_once('../../class.SecurePage.php');
-class RegisterAdminPage extends \Http\FlipAdminPage
+class RegisterAdminPage extends \Flipside\Http\FlipAdminPage
 {
     use SecureWebPage;
 
