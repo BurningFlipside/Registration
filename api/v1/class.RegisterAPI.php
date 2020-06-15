@@ -36,9 +36,9 @@ class RegisterAPI extends Flipside\Http\Rest\RestAPI
         $newSize = $stat['size'];
         if($newSize < $oldBinSize)
         {
-            $entries[$i]['logo'] = $data[0].','.base64_encode(fread($tmpFile, $stat['size']));
+            $entry['logo'] = $data[0].','.base64_encode(fread($tmpFile, $stat['size']));
             $filter = new \Flipside\Data\Filter('_id eq '.$entries[$i]['_id']);
-            $dataTable->update($filter, $entries[$i]);
+            $dataTable->update($filter, $entry);
         }
         unlink($path);
         return array('dbSize' => $base64size, 'oldSize' => $oldBinSize, 'newSize' => $newSize);
