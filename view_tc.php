@@ -54,7 +54,7 @@ $page->body .= '
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button id="contact_btn" type="button" class="btn btn-primary" onclick="contact_lead();">Contact</button>
+                <button id="contact_btn" type="button" class="btn btn-primary" onclick="contactLead();">Contact</button>
             </div>
         </div>
     </div>

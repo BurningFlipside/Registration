@@ -16,31 +16,31 @@ $evtDates = array();
 $now = time();
 $secsInDay = 86399;
 
-$data_set = DataSetFactory::getDataSetByName('registration');
+$data_set = \Flipside\DataSetFactory::getDataSetByName('registration');
 $vars_data_table = $data_set['vars'];
 
-$vars = $vars_data_table->read(new \Data\Filter('name eq year'));
+$vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq year'));
 $year = intval($vars[0]['value']);
 
-$vars = $vars_data_table->read(new \Data\Filter('name eq tcRegDates'));
+$vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq tcRegDates'));
 $tcDates = $vars[0]['value'];
 $tcStart = strtotime($tcDates['start']);
 $tcEnd   = strtotime($tcDates['end'])+$secsInDay;
 $tcRegClosed = $now < $tcStart || $now > $tcEnd;
 
-$vars = $vars_data_table->read(new \Data\Filter('name eq artRegDates'));
+$vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq artRegDates'));
 $artDates = $vars[0]['value'];
 $artStart = strtotime($artDates['start']);
 $artEnd   = strtotime($artDates['end'])+$secsInDay;
 $artRegClosed = $now < $artStart || $now > $artEnd;
 
-$vars = $vars_data_table->read(new \Data\Filter('name eq dmvRegDates'));
+$vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq dmvRegDates'));
 $dmvDates = $vars[0]['value'];
 $dmvStart = strtotime($dmvDates['start']);
 $dmvEnd   = strtotime($dmvDates['end'])+$secsInDay;
 $dmvRegClosed = $now < $dmvStart || $now > $dmvEnd;
 
-$vars = $vars_data_table->read(new \Data\Filter('name eq eventRegDates'));
+$vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq eventRegDates'));
 $evtDates = $vars[0]['value'];
 $evtStart = strtotime($evtDates['start']);
 $evtEnd   = strtotime($evtDates['end'])+$secsInDay;
@@ -121,7 +121,7 @@ if($dmvRegClosed)
 if($cars_count > 0)
 {
     $manage_car.= '<ul>';
-    for($i = 0; $i < $events_count; $i++)
+    for($i = 0; $i < $cars_count; $i++)
     {
         if($dmvRegClosed)
         {

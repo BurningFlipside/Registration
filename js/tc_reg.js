@@ -1,3 +1,5 @@
+/*global $*/
+/*exported filterData, getAdditionalData*/
 function user_ajax_done(jqXHR)
 {
     if(jqXHR.responseJSON !== undefined)
@@ -223,6 +225,7 @@ function shouldShow(opt, structClass) {
       case 'lounge':
       case 'bar':
       case 'stage':
+      case 'kitchen':
         return true;
       default:
         return false;
@@ -381,10 +384,9 @@ function addExistingStructsToTable(structs) {
 function getAdditionalData() {
   var obj = {structs: []};
   var structs = $('.structRow');
-  for(var i = 0; i < structs.length; i++) {
-    obj.structs.push($(structs[i]).data('structure'));
+  for(let struct of structs) {
+    obj.structs.push($(struct).data('structure'));
   }
-  console.log(structs.length);
   console.log(obj);
   return obj;
 }

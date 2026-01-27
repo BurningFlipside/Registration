@@ -90,10 +90,28 @@ function data_obtained(data)
     });
 }
 
+function unlockDone(data)
+{
+    if(data === true)
+    {
+        alert('Unlocked');
+    }
+    else
+    {
+        alert('Error!');
+    }
+}
+
+function unlockObject()
+{
+     _id = get_id_for_event(this);
+     $.post('../api/v1/dmv/'+_id+'/Actions/Unlock', '', unlockDone);
+}
+
 function art_page_loaded()
 {
     $.ajax({
-        url: '/register/api/v1/dmv?no_logo=1&fmt=json-ss'+filter,
+        url: '/register/api/v1/dmv?no_logo=1&fmt=json-ss',
         success: data_obtained
     });
     $('#dmv tbody').on('click', 'button[name="edit"]', edit_obj);

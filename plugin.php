@@ -1,5 +1,9 @@
 <?php
-class RegistrationPlugin extends SecurePlugin
+if(is_readable('../SecurePlugin.php'))
+{
+    require_once('../SecurePlugin.php');
+}
+class RegistrationPlugin extends \Flipside\Secure\SecurePlugin
 {
     function get_secure_menu_entries($page, $user)
     {
@@ -14,7 +18,7 @@ class RegistrationPlugin extends SecurePlugin
         }
         $vars_data_table = $data_set['vars'];
 
-        $vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq tcRegDates'));
+	$vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq tcRegDates'));
         $tcDates = $vars[0]['value'];
 
         $vars = $vars_data_table->read(new \Flipside\Data\Filter('name eq artRegDates'));

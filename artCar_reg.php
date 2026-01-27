@@ -7,6 +7,8 @@ $page = new RegisterWizardPage('Art Car');
 
 $index = $page->add_wizard_step('Basic Questions');
 $page->add_raw_html($index, '<div class="alert alert-info" role="alert">Please make sure you have read and understand the Guidlines for Mutant Vehicles <a class="alert-link" href="https://www.burningflipside.com/art/mutant-vehicles">here</a> before registering.</div>');
+$page->add_raw_html($index, '<div class="alert alert-info" role="alert">Beginning in 2023, there will be designated “Pick Up Points” located throughout the city of Pyropolis. These can be found on the map and clearly marked and visible during the event, situated at the Disinfo Kiosks.<br/>
+	Operators of mutant and artified vehicles are expected to stop at these points while driving through the event and offer rides to participants. More information regarding the Pick Up Points accessibility program will be available shortly.</div>');
 $page->add_form_group($index, 'Vehicle Owner\'s Legal Name', 'vehicle_owner', 'text', 'This is the legal name of the person who will be attending the event and be responsible for: any and all actions of vehicle, driver and passengers of mutant vehicle; and liability of said vehicle.', array('required'=>'true'));
 $page->add_form_group($index, 'Vehicle Owner\'s Burner Name', 'vehicle_owner_burner', 'text', 'This is the burner/nickname of the person who will be attending the event and be responsible for: any and all actions of vehicle, driver and passengers of mutant vehicle; and liability of said vehicle.', array('required'=>'true'));
 $page->add_form_group($index, 'Email Address', 'vehicle_email', 'text', 'So we can get in touch with you.', array('required'=>'true'));

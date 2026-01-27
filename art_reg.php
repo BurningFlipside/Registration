@@ -12,8 +12,14 @@ $index = $page->add_wizard_step('Basic Questions');
 $page->add_raw_html($index, '<div class="form-check">
     <input class="form-check-input" type="checkbox" name="need_logistics" id="need_logistics"
         data-toggle="tooltip" data-placement="top" title="" 
-        data-original-title="This project has logistical needs such as needing help transporting to the site, heavy equipment needs, outside volunteers etc.">
+        data-original-title="This project has logistical needs such as needing help transporting to the site, heavy equipment needs, etc.">
     <label for="need_logistics" class="form-check-label non-required">This project needs logistical help</label>
+</div>');
+$page->add_raw_html($index, '<div class="form-check">
+    <input class="form-check-input" type="checkbox" name="need_apes" id="need_apes"
+         data-toggle="tooltip" data-placement="top" title=""
+         data-original-title="This project needs extra volunteers to setup/teardown (Shaven Apes).">
+    <label for="need_apes" class="form-check-label non-required">This project needs volunteer help</label>
 </div>');
 $page->add_raw_html($index, '<div class="form-check">
     <input class="form-check-input" type="checkbox" name="has_sound" id="has_sound"
@@ -342,7 +348,6 @@ $page->add_raw_html($index, '<div class="embed-responsive embed-responsive-4by3"
   </object>
 </div>');
 $page->add_form_group($index, 'Show on map:', 'placement_on_map', 'checkbox', 'Check this box if you want your art installation to be shown on city planning map.');
-$page->add_form_group($index, 'In Theme Camp:', 'placement_in_camp', 'text', 'If your art will be placed within the borders of a theme camp enter the camp name here.');
 $page->add_form_group($index, 'Width (in feet):', 'placement_width', 'number', 'Approximate project width, in feet');
 $page->add_form_group($index, 'Length (in feet):', 'placement_length', 'number', 'Approximate project length, in feet');
 $page->add_form_group($index, 'Height (in feet):', 'placement_height', 'number', 'Approximate project height, in feet');
@@ -360,6 +365,7 @@ $options = array(
 $page->add_form_group($index, 'Preference 1:', 'placement_pref1', 'select', 'Your first choice for a general type of placement.', array('options'=>$options));
 $page->add_form_group($index, 'Preference 2:', 'placement_pref2', 'select', 'Your second choice for a general type of placement.', array('options'=>$options));
 $page->add_form_group($index, 'Preference 3:', 'placement_pref3', 'select', 'Your third choice for a general type of placement.', array('options'=>$options));
+$page->add_form_group($index, 'In Theme Camp:', 'placement_in_camp', 'text', 'If your art will be placed within the borders of a theme camp enter the camp name here.');
 $page->add_form_group($index, 'Preference Description:', 'placement_desc', 'textarea', 'Describe your ideal installation spot.');
 
 
@@ -384,7 +390,7 @@ $page->add_raw_html($index, '<div class="form-check">
         data-original-title="I will need help from Flipside volunteers such as Shaven Apes to help assemble, Fire Team, or other volunteers.">
     <label for="logistics_needsVols" class="form-check-label non-required">I will need help from volunteers other than the crew I can bring</label>
 </div>');
-$page->add_form_group($index, 'Please describe what volunteers you will need, what you need them to do, and for how long you will need them', 'logistics_descVols', 'textarea');
+$page->add_form_group($index, 'Shaven Apes are not here to build your project, they are here to help with extra hands for short periods as needed. Please describe what volunteers you need, what you need them to do, for how long you will need them, and when you anticipate this help to be needed, ie 2 volunteers for 2 hours, Thursday afternoon', 'logistics_descVols', 'textarea');
 
 
 $index = $page->add_wizard_step('Sound', 'sound');
@@ -426,7 +432,7 @@ $page->add_raw_html($index, '<div class="form-check">
     <input class="form-check-input" type="checkbox" name="fire_hasFlameEffects" id="fire_hasFlameEffects"
         data-toggle="tooltip" data-placement="top" title="" 
         data-original-title="">
-    <label for="fire_hasFlameEffects" class="form-check-label non-required">This project has fire effects</label>
+    <label for="fire_hasFlameEffects" class="form-check-label non-required">This project has flame effects</label>
 </div>');
 $page->add_form_group($index, 'Flame Effects Description', 'fire_flameEffects', 'textarea', 'Describe any flame effects such as propane or other flame effects that do not consume your artwork.');
 $options = array(

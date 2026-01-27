@@ -60,14 +60,14 @@ $page->add_raw_html($index, '<div id="accordion">
     <div class="card">
         <div class="card-header" id="headingOne">
             <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                     aria-controls="collapseOne">
                     Camp Lead
                 </button>
             </h5>
         </div>
 
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion">
             <div class="card-body">
                 <div class="form-group">
                     <label for="campLead_name">Full Name:</label>
@@ -122,13 +122,13 @@ $page->add_raw_html($index, '<div id="accordion">
     <div class="card">
         <div class="card-header" id="headingTwo">
             <h5 class="mb-0">
-                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
                     aria-controls="collapseTwo">
                     Safety Lead
                 </button>
             </h5>
         </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
             <div class="card-body">
 
                 <div class="form-group">
@@ -177,13 +177,13 @@ $page->add_raw_html($index, '<div id="accordion">
     <div class="card">
         <div class="card-header" id="headingThree">
             <h5 class="mb-0">
-                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
+                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree"
                     aria-expanded="false" aria-controls="collapseThree">
                     Cleanup Lead
                 </button>
             </h5>
         </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordion">
             <div class="card-body">
 
                 <div class="form-group">
@@ -232,13 +232,13 @@ $page->add_raw_html($index, '<div id="accordion">
     <div class="card">
         <div class="card-header" id="headingFour">
             <h5 class="mb-0">
-                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false"
+                <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false"
                     aria-controls="collapseFive">
                     Volunteer Lead
                 </button>
             </h5>
         </div>
-        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-bs-parent="#accordion">
             <div class="card-body">
 
                 <div class="form-group">
@@ -383,6 +383,7 @@ $page->add_raw_html($index, '<div class="modal fade bd-example-modal-lg" id="str
                     <option value="car">Artified Car for Camping</option>
                     <option value="tent">Regular Tent (10\'x10\'x8\')</option>
                     <option value="bigtent">Oversized Tent</option>
+                    <option value="kitchen" style="display:none;">Kitchen</option>
                     <option value="dome" style="display:none;">Dome</option>
                     <option value="lounge" style="display:none;">Lounge</option>
                     <option value="bar" style="display:none;">Bar</option>

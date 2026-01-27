@@ -12,11 +12,11 @@ $page->add_form_group($index, 'Event Location', 'location', 'text', 'The camp, a
 
 $index = $page->add_wizard_step('Day and Time');
 $days = array(
-    array('id'=>'Thursday', 'name'=>'Thursday May 25, 2017'),
-    array('id'=>'Friday', 'name'=>'Friday May 26, 2017'),
-    array('id'=>'Saturday', 'name'=>'Saturday May 27, 2017'),
-    array('id'=>'Sunday', 'name'=>'Sunday May 28, 2017'),
-    array('id'=>'Monday', 'name'=>'Monday May 29, 2017')
+    array('id'=>'Thursday', 'name'=>'Thursday'),
+    array('id'=>'Friday', 'name'=>'Friday'),
+    array('id'=>'Saturday', 'name'=>'Saturday'),
+    array('id'=>'Sunday', 'name'=>'Sunday'),
+    array('id'=>'Monday', 'name'=>'Monday')
 );
 $day_count = count($days);
 for($i = 0; $i < $day_count; $i++)
@@ -26,6 +26,29 @@ for($i = 0; $i < $day_count; $i++)
         <label for="need_logistics" class="form-check-label non-required">'.$days[$i]['name'].'</label>
     </div>');
 }
+/*$page->add_raw_html($index, "<script>
+window.onload = function() {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    let now = new Date();
+    let memorialDay = new Date(now.getFullYear(), 5, 0);
+    let weekDay = memorialDay.getDay();
+    memorialDay.setDate(memorialDay.getDate() - (weekDay < 1 ? 6 : weekDay - 1));
+    let days = ['Monday', 'Sunday', 'Saturday', 'Friday', 'Thursday'];
+    let dayCount = days.length;
+    for(let i = 0; i < dayCount; i++) {
+        let day = days[i];
+        let checkbox = document.getElementById(day);
+        let label = checkbox.nextElementSibling;
+        label.innerText = memorialDay.toLocaleDateString('en-US', options);
+        memorialDay.setDate(memorialDay.getDate() - 1);
+    }
+}
+</script>");*/
 $options = array(
     array('value'=>'all', 'text'=>'All Day', 'selected'=>TRUE),
     array('value'=>'0100', 'text'=>'1 AM'),

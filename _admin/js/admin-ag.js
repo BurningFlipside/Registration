@@ -43,16 +43,16 @@ function deleteData(e, cell) {
   });
 }
 
-function deleteIcon(cell, formatterParams, onRendered) {
+function deleteIcon() {
   return "<i class='fa fa-trash'></i>";
 }
 
-function editLink(cell, formatterParams, onRendered) {
+function editLink(cell) {
   var data = cell.getRow().getData();
   return '<a href="'+getEditPage()+'?is_admin=true&id='+data['_id']+'">'+data['name']+'</a>';
 }
 
-function calculateSquareFootage(cell, formatterParams, onRendered) {
+function calculateSquareFootage(cell) {
   var data = cell.getRow().getData();
   var squareFootage = 0;
   for(var i = 0; i < data.structs.length; i++) {
@@ -61,6 +61,7 @@ function calculateSquareFootage(cell, formatterParams, onRendered) {
     }
     squareFootage += data.structs[i].Width*data.structs[i].Length;
   }
+  data.squareFootage = squareFootage;
   return ''+squareFootage;
 }
 
@@ -250,14 +251,13 @@ function dataChanged(cell) {
 function dataObtained(data) {
   if(data.length === 0) return;
   var options = {
-    height: 1000,
+    height: '100%',
     columns: this,
     data: data,
     cellEdited: dataChanged,
   };
   var table = new Tabulator("#dataGrid", options);
   table.setSort('name', 'asc');
-  console.log(table);
 }
 
 function columnsObtained(data) {
@@ -265,13 +265,16 @@ function columnsObtained(data) {
     return;
   }
   var columns = [];
-  columns.push({formatter: deleteIcon, width:40, align:"center", cellClick: deleteData});
+  columns.push({formatter: deleteIcon, width:40, hozAlign:"center", cellClick: deleteData});
   columns.push({field: 'name', title: 'Name', formatter: editLink});
   if($('#dataGrid').data('source') === 'camps') {
-    columns.push({formatter: calculateSquareFootage, title: 'Square Footage'});
+    columns.push({formatter: calculateSquareFootage, title: 'Square Footage', field: 'squareFootage'});
   }
-  for(var_name in data[0]) {
+  for(let var_name in data[0]) {
     if(var_name === '' || var_name === 'name' || var_name === '_id') {
+      continue;
+    }
+    if(var_name.startsWith('structs[')) {
       continue;
     }
     if(var_name === 'safetylead.camp') {
@@ -316,7 +319,7 @@ function columnsObtained(data) {
 function changeDLType()
 {
   var format = $('#dlFormat').val();
-  var links = $('.dl_link').each(function(){
+  $('.dl_link').each(function(){
     this.href = this.href.replace(/(fmt=)[^\&]+/, '$1'+format);
   });
 }
@@ -326,6 +329,15 @@ function getColumns() {
     url: getAPISource()+'?no_logo=1&$format=json-ss&$top=1',
     success: columnsObtained
   });
+}
+
+function dumpPage() {
+  let format = $('#dlFormat').val();
+  if(format === 'xls') {
+    alert('XLS is not supported by this feature. Choose either XLSX or CSV.');
+    return;
+  }
+  Tabulator.prototype.findTable('#dataGrid')[0].download(format, 'data.'+format);
 }
 
 function initPage() {

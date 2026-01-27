@@ -1,42 +1,38 @@
-
-function getEndpoint()
-{
-    return 'api/v1/'+$('#listTable').data('endpoint');
+/*global Tabulator*/
+/*exported nukeImage*/
+function getEndpoint() {
+  return 'api/v1/'+document.getElementById('listTable').dataset.endpoint;
 }
 
-function renderLogo(data, type, row)
-{
-    return '<img src="'+getEndpoint()+'/'+data+'/logo"/ onerror="nukeImage(this)" style="max-width: 100px; max-height: 100px;">';
+function renderLogo(cell) {
+  let data = cell.getValue();
+  return '<img src="'+getEndpoint()+'/'+data+'/logo"/ onerror="nukeImage(this)" style="max-width: 100px; max-height: 100px;">';
 }
 
-function nukeImage(img)
-{
+function nukeImage(img) {
   delete img.onerror;
-  jQuery(img).hide();
+  img.style.display = 'none';
 }
 
-function rowClicked()
-{
-  var table = $('#listTable').DataTable();
-  var row = table.row(this);
-  var data = row.data();
-  window.location = $('#listTable').data('viewpage')+'?id='+data['_id'];
+function cellClicked(e, cell) {
+  let data = cell.getRow().getData();
+  let page = document.getElementById('listTable').dataset.viewpage;
+  window.location = page+'?id='+data['_id'];
 }
 
-function initPage()
-{
-    var table = $('#listTable').dataTable({
-        'ajax': getEndpoint()+'?fmt=data-table&$select=_id,name,teaser',
-        'order': [[ 1, 'desc' ]],
-        'columns': [
-          {'data': '_id', 'render': renderLogo},
-          {'data': 'name'},
-          {'data': 'teaser'}
-        ],
-        'deferRender': true
-    });
-    $('#listTable tbody').on('click', 'tr', rowClicked);
-    $('#listTable tbody').css( 'cursor', 'pointer' );
+function initPage() {
+  let listTable = new Tabulator('#listTable', {
+    ajaxURL: getEndpoint()+'?$select=_id,name,teaser',
+    rowHeight: 100,
+    columns: [
+      {title: 'Logo', field: '_id', formatter: renderLogo, width: 100, cellClick: cellClicked},
+      {title: 'Name', field: 'name', cellClick: cellClicked},
+      {title: 'Teaser', field: 'teaser', cellClick: cellClicked},
+    ],
+  });
+  listTable.on('tableBuilt', () => {
+    listTable.setData();
+  });
 }
 
-$(initPage);
+window.onload = initPage;

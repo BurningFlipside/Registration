@@ -7,9 +7,11 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 class RegistrationAPI extends Flipside\Http\Rest\DataTableAPI
 {
     protected $adminType;
+    protected $dataTable;
 
     public function __construct($dataTable, $adminType, $htmlRenderer=false, $email=false)
     {
+        $this->dataTable = $dataTable;
         parent::__construct('registration', $dataTable, '_id');
         $this->adminType = $adminType;
         $this->htmlRender = $htmlRenderer;
@@ -206,11 +208,48 @@ class RegistrationAPI extends Flipside\Http\Rest\DataTableAPI
                 }
                 $dataTable = $this->getDataTable();
                 $oldData = $dataTable->read(new \Flipside\Data\Filter("name eq '".$obj['name']." and year eq ".$this->getCurrentYear()));
+                if(empty($oldData))
+                {
+                    throw new Exception('Could not locate theme camp old registration data', 1, $e);
+                }
                 $args['name'] = (string)$oldData[0]['_id'];
+                if($args['name'] === null)
+                {
+                    unset($obj['_id']);
+                    $ret = $dataTable->create($obj);
+                    return $response->withJson($ret);
+                }
                 return $this->updateEntry($request, $response, $args);
+            }
+            else if($e->getCode() === \Flipside\Http\Rest\ACCESS_DENIED)
+            {
+                return $response->withStatus(401);
             }
             else
             {
+                \Sentry\init(['dsn' => 'https://8d76f6c4cb3b409bbe7ed4300e054afd@sentry.io/4283882' ]);
+                \Sentry\captureException($e);
+                return $response->withJson($e, 500);
+            }
+        }
+    }
+
+    public function updateEntry($request, $response, $args)
+    {
+        try
+        {
+            return parent::updateEntry($request, $response, $args);
+        }
+        catch(Exception $e)
+        {
+            if($e->getCode() === \Flipside\Http\Rest\ACCESS_DENIED)
+            {
+                return $response->withStatus(401);
+            }
+            else
+            {
+                \Sentry\init(['dsn' => 'https://8d76f6c4cb3b409bbe7ed4300e054afd@sentry.io/4283882' ]);
+                \Sentry\captureException($e);
                 return $response->withJson($e, 500);
             }
         }
@@ -607,7 +646,7 @@ class RegistrationAPI extends Flipside\Http\Rest\DataTableAPI
         {
             if($this->dataTable === 'art')
             {
-                $lead = 'artLead';
+                $lead = 'artlead';
             }
             else if($this->dataTable === 'camps')
             {
@@ -663,7 +702,15 @@ class RegistrationAPI extends Flipside\Http\Rest\DataTableAPI
             throw new \Exception('Only admin users can unlock a registration');
         }
         $dataTable = $this->getDataTable();
-        $filter = $this->getFilterForPrimaryKey($args['name']);
+        $filter = false;
+        if($id === '*')
+        {
+            $filter = new \Flipside\Data\Filter('year eq '.$this->getCurrentYear());
+        }
+        else
+        {
+            $filter = $this->getFilterForPrimaryKey($args['name']);
+        }
         $res = $dataTable->update($filter, array('final'=>false));
         return $response->withJson($res);
     }

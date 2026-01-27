@@ -1,12 +1,14 @@
+/*global $*/
+/*exported nextWizardStep, prevWizardStep, resetWizard, saveWizardStep*/
 function validateFields(content) {
   var res = true;
   var elements = content.find('input');
-  for(var i = 0; i < elements.length; i++) {
-    if(elements[i].hasAttribute('required') && elements[i].classList.contains('flatpickr-input')) {
+  for(let element of elements) {
+    if(element.hasAttribute('required') && element.classList.contains('flatpickr-input')) {
       //Work around for Firefox and Safari
-      if(elements[i].value == '') {
+      if(element.value === '') {
         res = false;
-        $(elements[i]).popover({
+        $(element).popover({
           content: 'Please enter a valid date!',
           title: 'Required field',
           tigger: 'click'
@@ -14,7 +16,7 @@ function validateFields(content) {
         continue;
       }
     }
-    if(elements[i].reportValidity() !== true) {
+    if(element.reportValidity() !== true) {
       res = false;
     }
   }
@@ -39,7 +41,7 @@ function nextWizardStep(target) {
   }
   var shown = next.data('onshow');
   if(shown !== undefined) {
-    var fn = window[shown];
+    var fn = window[shown]; // eslint-disable-line security/detect-object-injection
     fn(next);
   }
 }
@@ -58,7 +60,7 @@ function prevWizardStep(target) {
   }
   var shown = prev.data('onshow');
   if(shown !== undefined) {
-    var fn = window[shown];
+    var fn = window[shown]; // eslint-disable-line security/detect-object-injection
     fn(prev);
   }
 }
@@ -70,9 +72,8 @@ function addToObj(obj, id, value) {
       obj[split[0]] = {};
     }
     obj[split[0]][split[1]] = value;
-  }
-  else {
-    obj[id] = value;
+  } else {
+    obj[`${id}`] = value;
   }
   return obj;
 }
@@ -80,27 +81,26 @@ function addToObj(obj, id, value) {
 function saveWizardStep(target) {
   var dialog = $(target).parents('.modal');
   var complete = dialog.data('complete');
-  var fn = window[complete];
+  var fn = window[complete]; // eslint-disable-line security/detect-object-injection
   var inputs = dialog.find('input');
   var obj = {};
-  for(var i = 0; i < inputs.length; i++) {
-    if(inputs[i].id === '') {
+  for(let input of inputs) {
+    if(input.id === '') {
       continue;
     }
-    if(inputs[i].type === 'checkbox') {
-      obj = addToObj(obj, inputs[i].id, inputs[i].checked);
-    }
-    else {
-      obj = addToObj(obj, inputs[i].id, inputs[i].value);
+    if(input.type === 'checkbox') {
+      obj = addToObj(obj, input.id, input.checked);
+    } else {
+      obj = addToObj(obj, input.id, input.value);
     }
   }
   inputs = dialog.find('textarea');
-  for(var i = 0; i < inputs.length; i++) {
-    obj = addToObj(obj, inputs[i].id, inputs[i].value);
+  for(let input of inputs) {
+    obj = addToObj(obj, input.id, input.value);
   }
   inputs = dialog.find('select');
-  for(var i = 0; i < inputs.length; i++) {
-    obj = addToObj(obj, inputs[i].id, $(inputs[i]).val());
+  for(let input of inputs) {
+    obj = addToObj(obj, input.id, $(input).val());
   }
   console.log(obj);
   fn(obj);

@@ -73,6 +73,10 @@ function unlockObject()
      $.post('../api/v1/camps/'+_id+'/Actions/Unlock', '', unlockDone);
 }
 
+function unlockAll() {
+    $.post('../api/v1/camps/*/Actions/Unlock', '', unlockDone);
+}
+
 function getStructs()
 {
      _id = get_id_for_event(this);

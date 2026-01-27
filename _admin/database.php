@@ -17,7 +17,12 @@ else
             </div>
         </div>
         <div class="row">
-            <button type="button" class="btn btn-primary" onclick="compress();">Compress Images</button>
+            <div class="col-lg-2">
+                <button type="button" class="btn btn-primary" onclick="compress();">Compress Images</button>
+            </div>
+            <div class="col-lg-2">
+                <button type="button" class="btn btn-danger" id="removeBttn">Remove Old Images</button>
+            </div>
         </div>
 ';
 }

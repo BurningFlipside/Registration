@@ -17,10 +17,10 @@
   {% for step in steps %}
   <li class="nav-item">
     {% if loop.first %}
-    <a class="nav-link active" id="{{ step.id|default(loop.index) }}-tab" data-toggle="tab" href="#tab{{ step.id|default(loop.index) }}"
+    <a class="nav-link active" id="{{ step.id|default(loop.index) }}-tab" data-bs-toggle="tab" href="#tab{{ step.id|default(loop.index) }}"
       role="tab" aria-controls="{{ step.id|default(loop.index) }}" aria-selected="true">{{ step.name }}</a>
     {% else %}
-    <a class="nav-link" id="{{ step.id|default(loop.index) }}-tab" data-toggle="tab" href="#tab{{ step.id|default(loop.index) }}"
+    <a class="nav-link" id="{{ step.id|default(loop.index) }}-tab" data-bs-toggle="tab" href="#tab{{ step.id|default(loop.index) }}"
       role="tab" aria-controls="{{ step.id|default(loop.index) }}" aria-selected="false">{{ step.name }}</a>
     {% endif %}
   </li>
